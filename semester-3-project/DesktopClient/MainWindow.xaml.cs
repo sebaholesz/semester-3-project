@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccessLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,18 @@ namespace DesktopClient
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TestDAL dal = new TestDAL();
+            List<string> values = dal.GetAll();
+            string text = "";
+            foreach (var value in values)
+            {
+                text += "\n" + value;
+            }
+            TextBox.Text = text;
         }
     }
 }
