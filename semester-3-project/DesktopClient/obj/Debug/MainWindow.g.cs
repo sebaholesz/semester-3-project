@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿#pragma checksum "..\..\MainWindow.xaml" "{8829d00f-11b8-4213-878b-770e8597ac16}" "46ADE03C1C22DC5A0A55DEE1F10819B530CEDDEE710563AEA3995969FE9E2919"
+=======
+﻿#pragma checksum "..\..\MainWindow.xaml" "{8829d00f-11b8-4213-878b-770e8597ac16}" "51EA19BA08DF5FD93984DF5F7F37A5A634E09EE04B96BC246B5D73A87D459DD9"
+>>>>>>> parent of b77708a... We re-edited the solution so we follow the newest information we have...
 =======
 ﻿#pragma checksum "..\..\MainWindow.xaml" "{8829d00f-11b8-4213-878b-770e8597ac16}" "51EA19BA08DF5FD93984DF5F7F37A5A634E09EE04B96BC246B5D73A87D459DD9"
 >>>>>>> parent of b77708a... We re-edited the solution so we follow the newest information we have...
