@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{27E83154-15BF-4819-8528-C3586B14D2DC}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Database.sqlproj", "{2B798158-9435-4909-8038-EA8B100D480C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTApi", "RESTApi\RESTApi.csproj", "{B4D49084-AFF2-4C16-8217-2D5A0E84C9B8}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DatabaseHildur", "DatabaseHildur\DatabaseHildur.sqlproj", "{CBAEAA05-F259-487C-BB3E-6498CB4CAB36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,16 +43,16 @@ Global
 		{27E83154-15BF-4819-8528-C3586B14D2DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E83154-15BF-4819-8528-C3586B14D2DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E83154-15BF-4819-8528-C3586B14D2DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B798158-9435-4909-8038-EA8B100D480C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B798158-9435-4909-8038-EA8B100D480C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B798158-9435-4909-8038-EA8B100D480C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{2B798158-9435-4909-8038-EA8B100D480C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B798158-9435-4909-8038-EA8B100D480C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B798158-9435-4909-8038-EA8B100D480C}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{B4D49084-AFF2-4C16-8217-2D5A0E84C9B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4D49084-AFF2-4C16-8217-2D5A0E84C9B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4D49084-AFF2-4C16-8217-2D5A0E84C9B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4D49084-AFF2-4C16-8217-2D5A0E84C9B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBAEAA05-F259-487C-BB3E-6498CB4CAB36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBAEAA05-F259-487C-BB3E-6498CB4CAB36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBAEAA05-F259-487C-BB3E-6498CB4CAB36}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CBAEAA05-F259-487C-BB3E-6498CB4CAB36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBAEAA05-F259-487C-BB3E-6498CB4CAB36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBAEAA05-F259-487C-BB3E-6498CB4CAB36}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
