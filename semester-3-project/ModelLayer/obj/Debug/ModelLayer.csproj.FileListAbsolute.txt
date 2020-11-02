@@ -12,3 +12,17 @@ C:\Users\Lenovo\Documents\GitHub\semester-3-project\semester-3-project\ModelLaye
 C:\Users\Lenovo\Documents\GitHub\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.CopyComplete
 C:\Users\Lenovo\Documents\GitHub\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.dll
 C:\Users\Lenovo\Documents\GitHub\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\ModelLayer.dll.config
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\ModelLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\ModelLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\Json.Net.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Extensions.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Primitives.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Extensions.xml
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Primitives.xml
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.App.config
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csprojAssemblyReference.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.CoreCompileInputs.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.CopyComplete
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.pdb
