@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer;
 using DataAccessLayer.RepositoryLayer;
 using ModelLayer.User;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer.Users
@@ -16,6 +17,21 @@ namespace BusinessLayer.Users
         public int InsertUser(User user)
         {
             return dbUser.InsertUser(user);
+        }
+
+        public int UpdateUser(User user, int id)
+        {
+            return dbUser.UpdateUser(user, id);
+        }
+
+        public User GetUserById(int id)
+        {
+            return dbUser.GetUserById(id);
+        }
+
+        public int DeleteUser(int id)
+        {
+            return dbUser.DeleteUser(id);
         }
     }
 }
