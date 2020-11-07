@@ -1,0 +1,13 @@
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\bin\Debug\BusinessLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\bin\Debug\BusinessLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\bin\Debug\DatabaseLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\bin\Debug\ModelLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\bin\Debug\Dapper.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\bin\Debug\DatabaseLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\bin\Debug\ModelLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\bin\Debug\Dapper.xml
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\obj\Debug\BusinessLayer.csprojAssemblyReference.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\obj\Debug\BusinessLayer.csproj.CoreCompileInputs.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\obj\Debug\BusinessLayer.csproj.CopyComplete
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\obj\Debug\BusinessLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\BusinessLayer\obj\Debug\BusinessLayer.pdb
