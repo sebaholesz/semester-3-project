@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ModelLayer.User
+﻿namespace ModelLayer.User
 {
     public class User
     {
-        public int Age { get; set; }
-        public string Name { get; set; }
-        public string Id { get; set; }
+        public int UserId { get; set; }
+        public string Username { get; set; }
+        public string LastLogin { get; set; }
+        public string Password { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
 
-        public User(int age, string name)
-        {
-            Age = age;
-            Name = name;
-        }
+        //public User(string Username, string LastLogin, string Password, string FirstName, string LastName, string Email)
+        //{
+        //    Age = age;
+        //    Name = name;
+        //}
     }
 }

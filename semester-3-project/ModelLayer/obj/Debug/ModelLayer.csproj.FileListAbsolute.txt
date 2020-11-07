@@ -12,3 +12,31 @@ C:\Users\Lenovo\Documents\GitHub\semester-3-project\semester-3-project\ModelLaye
 C:\Users\Lenovo\Documents\GitHub\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.CopyComplete
 C:\Users\Lenovo\Documents\GitHub\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.dll
 C:\Users\Lenovo\Documents\GitHub\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\ModelLayer.dll.config
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\ModelLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\ModelLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\Json.Net.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Extensions.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Primitives.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Extensions.xml
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Primitives.xml
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.App.config
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csprojAssemblyReference.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.CoreCompileInputs.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.CopyComplete
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\ModelLayer\obj\Debug\ModelLayer.pdb
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\bin\Debug\ModelLayer.dll.config
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\bin\Debug\ModelLayer.dll
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\bin\Debug\ModelLayer.pdb
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\bin\Debug\Json.Net.dll
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Extensions.dll
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Primitives.dll
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Extensions.xml
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\bin\Debug\System.Net.Http.Primitives.xml
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.App.config
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csprojAssemblyReference.cache
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.CoreCompileInputs.cache
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.csproj.CopyComplete
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.dll
+D:\School\computer science\Semester 3\Project\semester-3-project\semester-3-project\ModelLayer\obj\Debug\ModelLayer.pdb

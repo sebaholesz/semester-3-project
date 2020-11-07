@@ -59,6 +59,10 @@
       <Project>{27E83154-15BF-4819-8528-C3586B14D2DC}</Project>
       <Name>DataAccessLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModelLayer\ModelLayer.csproj">
+      <Project>{BCC413E9-32F4-4A78-9A3E-98EE8B8FE72E}</Project>
+      <Name>ModelLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

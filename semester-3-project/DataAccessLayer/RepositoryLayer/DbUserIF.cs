@@ -1,13 +1,14 @@
-﻿using System;
+﻿using ModelLayer.User;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer.RepositoryLayer
 {
     public interface DbUserIF
     {
-        List<object> GetAllUsers();
+        List<User> GetAllUsers();
+        int InsertUser(User user);
+        int UpdateUser(User user, int id);
+        User GetUserById(int id);
+        int DeleteUser(int id);
     }
 }

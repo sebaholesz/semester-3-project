@@ -1,0 +1,6 @@
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\ModelLayer\bin\Debug\ModelLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\ModelLayer\bin\Debug\ModelLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.csprojAssemblyReference.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.csproj.CoreCompileInputs.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.pdb

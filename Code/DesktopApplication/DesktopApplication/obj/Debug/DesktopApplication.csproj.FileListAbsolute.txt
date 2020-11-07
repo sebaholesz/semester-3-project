@@ -1,0 +1,15 @@
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\bin\Debug\DesktopApplication.exe.config
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\bin\Debug\DesktopApplication.exe
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\bin\Debug\DesktopApplication.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication.csprojAssemblyReference.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\MainWindow.g.cs
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\App.g.cs
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication_MarkupCompile.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication_MarkupCompile.lref
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\MainWindow.baml
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication.g.resources
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication.Properties.Resources.resources
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication.csproj.GenerateResource.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication.csproj.CoreCompileInputs.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication.exe
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\DesktopApplication\DesktopApplication\obj\Debug\DesktopApplication.pdb

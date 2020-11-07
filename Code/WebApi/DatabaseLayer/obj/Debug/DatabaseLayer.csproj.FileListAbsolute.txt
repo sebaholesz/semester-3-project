@@ -1,0 +1,11 @@
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\bin\Debug\DatabaseLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\bin\Debug\DatabaseLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\bin\Debug\Dapper.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\bin\Debug\ModelLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\bin\Debug\ModelLayer.pdb
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\bin\Debug\Dapper.xml
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.csprojAssemblyReference.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.csproj.CoreCompileInputs.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.csproj.CopyComplete
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.dll
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.pdb
