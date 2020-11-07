@@ -10,7 +10,7 @@ namespace DesktopApplication.Communication
             HttpClient client = new HttpClient();
             //client.BaseAddress = new Uri("https://localhost:44383/");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync("http://localhost:44383/api/user").Result;
+            HttpResponseMessage response = client.GetAsync("https://localhost:44383/api/user").Result;
             if (response.IsSuccessStatusCode)
             {
                 var users = response.Content.ReadAsStringAsync().Result;
