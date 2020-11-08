@@ -11,9 +11,9 @@
     <Grid>
         <DataGrid x:Name="DataGridUsersAll" HorizontalAlignment="Left" Height="299" Margin="10,141,0,0" VerticalAlignment="Top" Width="780"/>
         <Button x:Name="Create" Content="Create" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Width="183" Height="97" Click="Create_Click"/>
-        <Button x:Name="Update" Content="Update" HorizontalAlignment="Left" Margin="419,39,0,0" VerticalAlignment="Top" Width="183" Height="97"/>
-        <Button x:Name="Delete" Content="Delete" HorizontalAlignment="Left" Margin="607,39,0,0" VerticalAlignment="Top" Width="183" Height="97"/>
-        <Button x:Name="Read" Content="Read" HorizontalAlignment="Left" Margin="214,39,0,0" VerticalAlignment="Top" Width="183" Height="97"/>
+        <Button x:Name="Update" Content="Update" HorizontalAlignment="Left" Margin="419,39,0,0" VerticalAlignment="Top" Width="183" Height="97" Click="Update_Click"/>
+        <Button x:Name="Delete" Content="Delete" HorizontalAlignment="Left" Margin="607,39,0,0" VerticalAlignment="Top" Width="183" Height="97" Click="Delete_Click"/>
+        <Button x:Name="Read" Content="Read" HorizontalAlignment="Left" Margin="214,39,0,0" VerticalAlignment="Top" Width="183" Height="97" Click="Read_Click"/>
 
     </Grid>
 </Page>
