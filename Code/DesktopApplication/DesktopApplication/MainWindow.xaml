@@ -8,7 +8,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button x:Name="ButtonRefresh" Content="Refresh" HorizontalAlignment="Left" Height="41" Margin="99,71,0,0" VerticalAlignment="Top" Width="157" Click="ButtonRefresh_Click"/>
-        <TextBox x:Name="TextBoxGetAll" HorizontalAlignment="Left" Height="219" Margin="99,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="580"/>
+        <DataGrid x:Name="DataGridUsers" HorizontalAlignment="Left" Height="237" Margin="99,142,0,0" VerticalAlignment="Top" Width="604"/>
 
     </Grid>
 </Window>

@@ -15,7 +15,7 @@ namespace DesktopApplication
 
         private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
         {
-            TextBoxGetAll.Text = UserApi.GetAllUsers();
+            DataGridUsers.ItemsSource = UserApi.GetAllUsers();
         }
     }
 }
