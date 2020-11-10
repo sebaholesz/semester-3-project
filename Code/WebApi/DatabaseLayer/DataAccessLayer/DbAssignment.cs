@@ -23,8 +23,8 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 //this._db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
-                this._db.Execute(@"Insert into [dbo].[Assignment](assignmentId, description, price, deadline, anonymous) values (@assignmentId, @description, @price, @deadline, @anonymous)",
-                    new { assignmentId = assignment.AssignmentId, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous });
+                this._db.Execute(@"Insert into [dbo].[Assignment](description, price, deadline, anonymous) values (@description, @price, @deadline, @anonymous)",
+                    new {description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous });
                 return true;
 
             }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BusinessLayer;
+using ModelLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,21 +12,31 @@ namespace WebApi.Controllers
     public class AssignmentController : ApiController
     {
 
-        //private assignmentInterface class
+        private AssignmentBusiness assignmentBusiness;
 
         public AssignmentController()
         {
-            //instantiate assignmentInterface class
+            assignmentBusiness = new AssignmentBusiness();
         }
 
         //[Route("Assignment")]
         [HttpGet]
         public HttpResponseMessage Get()
         {
-            //assignmentInterface getAll
-            //return in HttpResonseMessage body List<Assignment>
-            HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
-            return httpResponseMessage;
+            //Get the List<Assignments>
+            List<Assignment> assignments = assignmentBusiness.GetAllAssignments();
+
+            //Check if the List<Assignments> is not empty
+            if (assignments.Count() > 0)
+            {
+                //Return 200 + assignments
+                return Request.CreateResponse(HttpStatusCode.OK, assignments);
+            }
+            else
+            {
+                //Return 404 + string with message
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No Assigments Found");
+            }
         }
 
 
@@ -41,13 +53,22 @@ namespace WebApi.Controllers
 
         //[Route("Assignment")]
         [HttpPost]
-        public HttpResponseMessage Post()
+        public HttpResponseMessage Post([FromBody] Assignment assignment)
         {
-            //assignmentInterface create
-            //return in HttpResonseMessage body Assignment
-            HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
-            return httpResponseMessage;
+            //Attempt the creation of the assignment and save the bool value of the result
+            bool wasSuccesful = assignmentBusiness.CreateAssignment(assignment);
 
+            //Check if the creation was successful
+            if (wasSuccesful)
+            {
+                //Return 201 + string with message
+                return Request.CreateResponse(HttpStatusCode.Created, "Assignment Created Successfuly");
+            }
+            else
+            {
+                //Return 409 + string with message
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Assignment Creation Failed");
+            }
         }
 
 
@@ -55,19 +76,21 @@ namespace WebApi.Controllers
         [HttpPost]
         public HttpResponseMessage Post(int id)
         {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
-
+            //Invalid request which returns 400
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
         }
 
-        [Route("Assignment")]
+
+        //[Route("Assignment")]
         [HttpPut]
         public HttpResponseMessage Put()
         {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            //Invalid request which returns 400
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
         }
 
 
-        [Route("Assignment/{id}")]
+        //[Route("Assignment/{id}")]
         [HttpPut]
         public HttpResponseMessage Put(int id)
         {
@@ -77,15 +100,17 @@ namespace WebApi.Controllers
             return httpResponseMessage;
         }
 
-        [Route("Assignment")]
+
+        //[Route("Assignment")]
         [HttpDelete]
         public HttpResponseMessage Delete()
         {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            //Invalid request which returns 400
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
         }
 
 
-        [Route("Assignment/{id}")]
+        //[Route("Assignment/{id}")]
         [HttpDelete]
         public HttpResponseMessage Delete(int id)
         {
@@ -94,7 +119,5 @@ namespace WebApi.Controllers
             HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
             return httpResponseMessage;
         }
-
-
     }
 }
