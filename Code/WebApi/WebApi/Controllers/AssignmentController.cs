@@ -56,7 +56,7 @@ namespace WebApi.Controllers
         public HttpResponseMessage Post(int id)
         {
             return new HttpResponseMessage(HttpStatusCode.BadRequest);
-            
+
         }
 
         [Route("Assignment")]
