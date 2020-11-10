@@ -11,11 +11,8 @@ namespace DesktopApplication
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            TextBoxGetAll.Text = UserApi.GetAllUsers();
+            //FrameUser.Navigate( new HomePage());
+            FrameUser.Content = new HomePage();
         }
     }
 }
