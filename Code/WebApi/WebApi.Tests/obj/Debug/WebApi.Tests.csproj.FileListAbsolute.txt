@@ -1,0 +1,2 @@
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\Code\WebApi\WebApi.Tests\obj\Debug\WebApi.Tests.csprojAssemblyReference.cache
+C:\Users\maros\Documents\School\Projects\3rdSemesterProject\semester-3-project\Code\WebApi\WebApi.Tests\obj\Debug\WebApi.Tests.csproj.CoreCompileInputs.cache

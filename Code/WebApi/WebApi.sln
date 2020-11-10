@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseLayer", "DatabaseLa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{F6AC879E-3FC3-4CD5-842A-1E0695261D9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestWebApiSolution", "UnitTestWebApiSolution\UnitTestWebApiSolution.csproj", "{FC23CC8B-0405-4737-B299-F6B571F7CC43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F6AC879E-3FC3-4CD5-842A-1E0695261D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6AC879E-3FC3-4CD5-842A-1E0695261D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6AC879E-3FC3-4CD5-842A-1E0695261D9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC23CC8B-0405-4737-B299-F6B571F7CC43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC23CC8B-0405-4737-B299-F6B571F7CC43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC23CC8B-0405-4737-B299-F6B571F7CC43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC23CC8B-0405-4737-B299-F6B571F7CC43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

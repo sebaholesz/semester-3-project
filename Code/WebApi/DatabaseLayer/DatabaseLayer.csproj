@@ -45,9 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="DataAccessLayer\DbAssignment.cs" />
     <Compile Include="DataAccessLayer\DbUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryLayer\DbAssignmentIF.cs" />
     <Compile Include="RepositoryLayer\DbUserIF.cs" />
   </ItemGroup>
   <ItemGroup>
