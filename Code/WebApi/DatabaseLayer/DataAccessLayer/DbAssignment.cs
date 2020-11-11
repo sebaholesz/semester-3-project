@@ -15,7 +15,7 @@ namespace DatabaseLayer.DataAccessLayer
 
         public DbAssignment()
         {
-            this._db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            this._db = new SqlConnection("Data Source = hildur.ucn.dk; Initial Catalog = dmaj0919_1081479; User ID = dmaj0919_1081479; Password=Password1!;");
         }
 
         public bool CreateAssignment(Assignment assignment)
