@@ -77,7 +77,7 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestUpdate()
         {
-            int id = 12;
+            int id = 10;
 
             Assignment assignment = dba.GetByAssignmentId(id);
             Console.WriteLine(assignment.Description, assignment.Author, assignment.Price);
@@ -100,10 +100,11 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestDelete()
         {
-            int id = 12;
+            int id = 8;
+            int countBefore = dba.GetAllAssignments().Count;
             dba.DeleteAssignment(id);
-            Assignment nie = dba.GetByAssignmentId(id);
-            Assert.AreEqual(nie, null);
+            int countAfter = dba.GetAllAssignments().Count;
+            Assert.AreNotEqual(countBefore,countAfter);
         }
     }
 }
