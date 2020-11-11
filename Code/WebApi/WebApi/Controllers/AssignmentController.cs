@@ -56,10 +56,11 @@ namespace WebApi.Controllers
         public HttpResponseMessage Post([FromBody] Assignment assignment)
         {
             //Attempt the creation of the assignment and save the bool value of the result
-            bool wasSuccesful = assignmentBusiness.CreateAssignment(assignment);
+            //bool wasSuccesful = assignmentBusiness.CreateAssignment(assignment);
+            int rowsAffected = assignmentBusiness.CreateAssignment(assignment);
 
             //Check if the creation was successful
-            if (wasSuccesful)
+            if (rowsAffected > 0)
             {
                 //Return 201 + string with message
                 return Request.CreateResponse(HttpStatusCode.Created, "Assignment Created Successfuly");

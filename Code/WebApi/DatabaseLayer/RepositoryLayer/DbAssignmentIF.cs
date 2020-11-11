@@ -10,6 +10,10 @@ namespace DatabaseLayer.RepositoryLayer
     public interface DbAssignmentIF
     {
         List<Assignment> GetAllAssignments();
-        Boolean CreateAssignment(Assignment assignment);
+        int CreateAssignment(Assignment assignment);
+        Assignment GetByAssignmentId(int id);
+        int UpdateAssignment(Assignment assignment, int id);
+        int DeleteAssignment(int id);
+
     }
 }

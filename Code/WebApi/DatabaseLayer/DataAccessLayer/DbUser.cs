@@ -13,6 +13,8 @@ namespace DatabaseLayer.DataAccessLayer
     {
         private IDbConnection _db;
 
+        
+
         public List<User> GetAllUsers()
         {
             this._db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
