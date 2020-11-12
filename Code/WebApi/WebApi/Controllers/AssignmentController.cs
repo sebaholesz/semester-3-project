@@ -122,7 +122,6 @@ namespace WebApi.Controllers
 
             int noOfRows = assignmentBusiness.DeleteAssignment(id);
             return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
-
         }
     }
 }

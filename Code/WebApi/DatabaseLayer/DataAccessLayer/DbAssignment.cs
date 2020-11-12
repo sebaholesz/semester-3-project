@@ -23,8 +23,8 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                int numberOfRowsAffected = this._db.Execute(@"Insert into [dbo].[Assignment](description, price, deadline, anonymous) values (@description, @price, @deadline, @anonymous)",
-                    new { description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous });
+                int numberOfRowsAffected = this._db.Execute(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject)",
+                    new {title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
                 return numberOfRowsAffected;
 
             }
@@ -56,8 +56,8 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                int numberOfRowsAffected = this._db.Execute(@"Update [dbo].[Assignment] set description=@description, price=@price, deadline=@deadline, anonymous=@anonymous WHERE assignmentId = @assignmentId",
-                    new { assignmentId = id, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous });
+                int numberOfRowsAffected = this._db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
+                    new { title = assignment.Title, assignmentId = id, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
                 return numberOfRowsAffected;
             }
             catch (SqlException e)

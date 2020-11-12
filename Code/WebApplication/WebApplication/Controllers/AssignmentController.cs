@@ -31,13 +31,29 @@ namespace WebApplication.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
+                    string payloadAcademicLevel = "";
+                    if (Enum.TryParse(collection["assignmentAcademicLevel"], true, out AcademicLevel al))
+                    {
+                        //AcademicLevel academicLevel = (AcademicLevel)Enum.Parse(typeof(AcademicLevel), collection["assignmentAcademicLevel"]);
+                        payloadAcademicLevel = collection["assignmentAcademicLevel"];
+                    }
+
+                    string payloadSubject = "";
+                    if (Enum.TryParse(collection["assignmentAcademicLevel"], true, out Subject s))
+                    {
+                        payloadSubject = collection["assignmentSubject"];
+                    }
+
                     var payload = new Dictionary<string, string>
                     {
+                        {"Title", collection["assignmentTitle"] },
                         {"Description", collection["assignmentDescription"]},
                         {"Price", collection["assignmentCredits"]},
                         {"Deadline", collection["assignmentDeadline"]},
-                        {"Anonymous", collection["assignmentIsAnonymous"]}
-                        //missing some of the values both from model and from the view
+                        {"Anonymous", collection["assignmentIsAnonymous"]},
+                        {"AcademicLevel", collection["assignmentAcademicLevel"]},
+                        {"Subject", collection["assignmentSubject"]},
                     };
 
                     string strPayload = JsonConvert.SerializeObject(payload);

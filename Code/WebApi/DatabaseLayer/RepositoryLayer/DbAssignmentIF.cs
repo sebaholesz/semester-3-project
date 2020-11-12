@@ -14,6 +14,5 @@ namespace DatabaseLayer.RepositoryLayer
         Assignment GetByAssignmentId(int id);
         int UpdateAssignment(Assignment assignment, int id);
         int DeleteAssignment(int id);
-
     }
 }
