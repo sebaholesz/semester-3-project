@@ -184,6 +184,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Icons\logout.svg" />
+    <Content Include="Assets\Images\default-avatar.png" />
+    <Content Include="Assets\Icons\dollar.svg" />
+    <Content Include="Assets\Images\hunterek.png" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -239,8 +243,8 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Assignment\CreateAssignment.cshtml" />
+    <Content Include="Views\Shared\_LayoutWithUserSidebar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

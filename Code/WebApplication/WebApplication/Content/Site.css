@@ -44,3 +44,144 @@ button:focus {
 .boxed-column-left {
     margin-right: 20px
 }
+
+.user-sidebar {
+    background-color: #2E294E;
+    height: 100vh;
+    min-width: 250px;
+}
+
+a:hover {
+    text-decoration: none !important;
+}
+
+.user-sidebar-content {
+    margin-top: 70px;
+    padding: 40px 15px;
+}
+
+.user-sidebar-profile-image {
+    display: flex;
+}
+
+.user-sidebar-profile-image img, 
+.user-sidebar-profile-image object{
+    margin: 0 auto;
+    border-radius: 100%;
+    border: 4px solid rgb(194, 194, 194);
+    max-width: 60%;
+}
+
+.user-sidebar-username {
+    text-align: center;
+    font-size: 25px;
+    color: #FFFFFF;
+}
+
+.user-sidebar-bio {
+    margin-bottom: 40px;
+}
+
+.user-sidebar-meta {
+    display: grid;
+    grid-template-columns: 35% 65%;
+    grid-template-rows: 30px 30px 30px;
+    grid-template-areas: "name-rank value-rank" "name-score value-score" "name-credits value-credits";
+    color: #FFFFFF;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.user-sidebar-meta-name-rank {
+    grid-area: name-rank;
+}
+
+.user-sidebar-meta-value-rank {
+    grid-area: value-rank;
+    text-align: right;
+}
+
+.user-sidebar-meta-name-score {
+    grid-area: name-score
+}
+
+.user-sidebar-meta-value-score {
+    grid-area: value-score;
+    color: #F0544F;
+    font-weight: 600;
+    text-align: right;
+}
+
+.user-sidebar-meta-name-credits {
+    grid-area: name-credits
+}
+
+.user-sidebar-meta-value-credits {
+    grid-area: value-credits;
+    color: #db2552;
+    font-weight: 600;
+    text-align: right;
+}
+
+.user-sidebar-add-credit {
+    text-align: center;
+    display: flex;
+    margin-bottom: 40px;
+}
+
+.btn-add-credit {
+    width: 100%;
+    background-color: #C6D8D3;
+    border-radius: 25px;
+    padding: 5px 15px;
+    font-size: 20px;
+    line-height: 30px;
+    color: #2E294E;
+}
+
+.btn-add-credit:hover {
+    text-decoration: none;
+    color: #2E294E;
+}
+
+.btn-add-credit-icon {
+    width: 30px;
+    margin-right: 8px;
+}
+
+.user-sidebar-block {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.user-sidebar-block-title {
+    color: #FFFFFF;
+    font-size: 25px;
+}
+
+.user-sidebar-block-link {
+    width: 100%;
+    color: #FFFFFF;
+    font-size: 18px;
+}
+
+.user-sidebar-block-link:hover {
+    color: #bebebe;
+}
+
+.btn-log-out {
+    width: 100%;
+    font-size: 20px;
+    line-height: 30px;
+    color: #D81E5B;
+}
+
+.btn-log-out:hover {
+    text-decoration: none;
+    color: #BB154B;
+}
+
+.btn-log-out-icon {
+    width: 30px;
+    margin-right: 8px;
+}

@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("stylesheets", required: false)
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 user-sidebar">
+                <div class="user-sidebar-content">
+
+                    <div class="user-sidebar-bio">
+                        <div class="user-sidebar-profile-image">
+                            <object data="Assets/Images/default-avatar.png" type="image/png">
+                                <img alt="Bootstrap Image Preview" src="Assets/Images/hunterek.png" class="rounded-circle" />
+                            </object>
+                        </div>
+                        <div class="user-sidebar-username">
+                            <h3>
+                                Username
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="user-sidebar-meta">
+                        <div class="user-sidebar-meta-name-rank">Rank</div>
+                        <div class="user-sidebar-meta-value-rank"><svg xmlns="http://www.w3.org/2000/svg" width="24.142" height="24.142" viewBox="0 0 24.142 24.142"><path d="M15.059,3A12.071,12.071,0,1,0,27.142,15.071,12.065,12.065,0,0,0,15.059,3Zm5.118,19.314-5.106-3.078L9.965,22.314l1.352-5.806-4.5-3.9,5.939-.507,2.318-5.48,2.318,5.468,5.939.507-4.5,3.9,1.352,5.818Z" transform="translate(-3 -3)" fill="#fff700" /></svg></div>
+                        <div class="user-sidebar-meta-name-score">Score</div>
+                        <div class="user-sidebar-meta-value-score">15000</div>
+                        <div class="user-sidebar-meta-name-credits">Credits</div>
+                        <div class="user-sidebar-meta-value-credits">450</div>
+                    </div>
+
+                    <div class="user-sidebar-add-credit">
+                        <a class="btn-add-credit"
+                            href="#">
+                            <img class="btn-add-credit-icon"
+                                    src="Assets/Icons/dollar.svg">Add Credit
+                        </a>
+                    </div>
+
+                    <div class="user-sidebar-block">
+                        <h4 class="user-sidebar-block-title">Assignments</h4>
+                        <div>
+                            <a class="user-sidebar-block-link">
+                                Posted Assignments
+                            </a>
+                        </div>
+                        <div>
+                            <a class="user-sidebar-block-link">
+                                Solved Assignments
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="user-sidebar-block">
+                        <h4 class="user-sidebar-block-title">
+                            Forum
+                        </h4>
+                        <div>
+                            <a class="user-sidebar-block-link">
+                                Posted Topics
+                            </a>
+                        </div>
+                        <div>
+                            <a class="user-sidebar-block-link">My Comments</a>
+                        </div>
+                    </div>
+
+                    <div class="user-sidebar-block">
+                        <h4 class="user-sidebar-block-title">My Profile</h4>
+                        <div>
+                            <a class="user-sidebar-block-link">Change Info</a>
+                        </div>
+                        <div>
+                            <a class="user-sidebar-block-link">Settings</a>
+                        </div>
+                    </div>
+
+                    <div class="user-sidebar-log-out">
+                        <a class="btn-log-out"
+                            href="#">
+                            <img class="btn-log-out-icon"
+                                    src="Assets/Icons/logout.svg">Log Out
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-8">
+                @RenderBody()
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
