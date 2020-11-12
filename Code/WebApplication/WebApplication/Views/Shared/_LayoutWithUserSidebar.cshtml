@@ -37,9 +37,9 @@
 
                     <div class="user-sidebar-bio">
                         <div class="user-sidebar-profile-image">
-                            <object data="Assets/Images/default-avatar.png" type="image/png">
-                                <img alt="Bootstrap Image Preview" src="Assets/Images/hunterek.png" class="rounded-circle" />
-                            </object>
+                            @* Some conditional logic where if there is no image URL, we go to the fallback *@
+                            @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
+                            <img alt="Default user avatar" src="Assets/Images/default-avatar.png" />
                         </div>
                         <div class="user-sidebar-username">
                             <h3>

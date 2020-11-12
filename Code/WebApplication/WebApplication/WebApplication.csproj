@@ -187,7 +187,7 @@
     <Content Include="Assets\Icons\logout.svg" />
     <Content Include="Assets\Images\default-avatar.png" />
     <Content Include="Assets\Icons\dollar.svg" />
-    <Content Include="Assets\Images\hunterek.png" />
+    <Content Include="Assets\Icons\hunterek.png" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
