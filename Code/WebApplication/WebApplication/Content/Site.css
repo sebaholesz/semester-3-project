@@ -1,14 +1,146 @@
-﻿.nav-so {
+﻿.navbar {
+    margin: 0px;
+    padding: 0px;
+}
+
+.navbar-fluid {
+    padding: 0px;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
+    align-items: center;
+    display: flex;
+}
+
+.nav-so {
     font-size: 25px;
     display: flex;
+    margin: 0px;
+    font-weight: bold;
 }
 
 .solvr {
     color: #2E294E;
+    margin: 0px;
 }
 
 .online {
     color: #D81E5B;
+    margin: 0px;
+}
+
+.nav-menu {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+    .nav-menu > a {
+        margin-left: 20px;
+    }
+
+.nav-dashboard {
+    color: #2E294E;
+}
+
+    .nav-dashboard:hover, .nav-dashboard:focus {
+        border-top: solid 4px;
+        border-color: #2E294E;
+        color: #2E294E;
+    }
+
+.nav-assigments {
+    color: #CA1551;
+    border-top: solid 4px;
+    border-color: #CA1551;
+}
+
+    .nav-assigments:focus, .nav-assigments:hover {
+        border-top: solid 4px;
+        border-color: #CA1551;
+        color: #CA1551;
+    }
+
+.nav-solved {
+    color: #03CEA4;
+}
+
+    .nav-solved:focus, .nav-solved:hover {
+        border-top: solid 4px;
+        border-color: #03CEA4;
+        color: #03CEA4;
+    }
+
+
+.nav-forum {
+    color: #F0544F;
+}
+
+    .nav-forum:hover, .nav-forum:focus {
+        color: #F0544F;
+        border-top: solid 4px;
+        border-color: #F0544F;
+    }
+
+.nav-faq {
+    color: #058787;
+}
+
+    .nav-faq:hover, .nav-faq:focus {
+        color: #058787;
+        border-top: solid 4px;
+        border-color: #058787;
+    }
+
+.icon {
+    margin: 0.1em;
+    margin-right: 0.3em;
+}
+
+.btn-post-assigmnet {
+    background-color: #EAC435;
+    color: #515151;
+    border-radius: 8px;
+    padding: 0 10px;
+    font-size: 20px;
+    outline: none;
+    border: none;
+    display: flex;
+}
+
+.nav-search {
+    padding: 0px;
+}
+
+.search-bar {
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #345995;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+}
+
+
+.search-input,
+.search-input:focus {
+    padding-left: 20px;
+    width: 70%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    outline: none;
+}
+
+.search-bar-button {
+    color: #fff;
+    border: none;
+    background-color: transparent;
+}
+
+    .search-bar-button:hover {
+        color: #f2f2f2;
+    }
+
+.search-input::placeholder {
+    color: #ffffff;
 }
 
 main {
