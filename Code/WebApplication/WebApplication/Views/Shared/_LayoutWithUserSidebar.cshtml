@@ -4,63 +4,47 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("stylesheets", required: false)
 </head>
 <body>
-    @*<div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>
-                    @Html.Partial("_LoginPartial")
-                </div>
+    <header>
+        <div class="container-fluid navbar-fluid">
+            <div>
+                <a class="nav-so" href="#">
+                    <p class="solvr">solvr.</p><p class="online">online</p>
+                </a>
             </div>
-        </div>*@
-    <div class="container-fluid navbar-fluid">
-        <div class="col-md-2">
-            <a class="nav-so" href="#">
-                <p class="solvr">solvr.</p><p class="online">online</p>
-            </a>
-        </div>
-        <div class="col-md-8">
-            <div class="col-md-8 nav-menu">
-                <a class="nav-dashboard" href="#">Dashboard</a>
-                <a class="nav-assigments" href="#">Assignments</a>
-                <a class="nav-solved" href="#">Solved</a>
-                <a class="nav-forum" href="#">Forum</a>
-                <a class="nav-faq" href="#">FAQ</a>
-            </div>
-            <div class="col-md-4">
-                <!-- <img src="icon.svg" alt="plus"> -->
 
-                <button type="button" class="btn-post-assigmnet">
-                    <svg class="icon" id="Icon_ionic-ios-add-circle" data-name="Icon ionic-ios-add-circle" xmlns="http://www.w3.org/2000/svg" width="24.379" height="24.379" viewBox="0 0 24.379 24.379">
-                        <path id="Icon_ionic-ios-add-circle-2" data-name="Icon ionic-ios-add-circle" d="M15.565,3.375a12.19,12.19,0,1,0,12.19,12.19A12.188,12.188,0,0,0,15.565,3.375Zm5.3,13.127H16.5v4.366a.938.938,0,0,1-1.875,0V16.5H10.261a.938.938,0,0,1,0-1.875h4.366V10.261a.938.938,0,0,1,1.875,0v4.366h4.366a.938.938,0,1,1,0,1.875Z" transform="translate(-3.375 -3.375)" fill="#fff" />
-                    </svg>
-                    Post Assignment
-                </button>
+            <nav>
+                <ul class="nav navigation-list">
+                    <li class="navigation-list-item">@Html.ActionLink("Dashboard", "Index", "Home", new { @class = "nav-dashboard" })</li>
+                    <li class="navigation-list-item">@Html.ActionLink("Assignments", "Index", "Home", new { @class = "nav-assignments" })</li>
+                    <li class="navigation-list-item">@Html.ActionLink("Solved", "Index", "Home", new { @class = "nav-solved" })</li>
+                    <li class="navigation-list-item">@Html.ActionLink("Forum", "Index", "Home", new { @class = "nav-forum" })</li>
+                    <li class="navigation-list-item">@Html.ActionLink("FAQ", "Index", "Home", new { @class = "nav-faq" })</li>
+                </ul>
+            </nav>
+
+            <div class="navbar-button-search-block">
+                <div>
+                    <button type="button" class="btn-post-assignment">
+                        <img class="btn-post-assignment-icon" src="Assets/Icons/add.svg">
+                    Post Assignment</button>
+                </div>
+
+                <div>
+                    <forum class="form-inline search-bar">
+                        <input class="search-input" type="search" placeholder="search" aria-label="search" />
+                        <Button class="search-bar-button my-2 my-sm-0" type="submit">Go</Button>
+                    </forum>
+                </div>
             </div>
         </div>
-        <div class="col-md-2 nav-search">
-            <forum class="form-inline search-bar">
-                <input class="search-input" type="search" placeholder="search" aria-label="search" />
-                <Button class="btn search-bar-button my-2 my-sm-0" type="submit">Go</Button>
-            </forum>
-        </div>
-    </div>
+    </header>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2 user-sidebar">

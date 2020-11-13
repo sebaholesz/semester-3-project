@@ -1,13 +1,15 @@
-﻿.navbar {
-    margin: 0px;
-    padding: 0px;
-}
-
-.navbar-fluid {
-    padding: 0px;
+﻿.navbar-fluid {
+    padding: 0 10px;
+    height: 60px;
     box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
     align-items: center;
     display: flex;
+    justify-content: space-between;
+}
+
+nav {
+    display: flex;
+    height: 100%;
 }
 
 .nav-so {
@@ -32,28 +34,24 @@
     font-weight: bold;
 }
 
-    .nav-menu > a {
-        margin-left: 20px;
-    }
-
 .nav-dashboard {
     color: #2E294E;
 }
 
-    .nav-dashboard:hover, .nav-dashboard:focus {
-        border-top: solid 4px;
+    .nav-dashboard:hover,
+    .nav-dashboard:focus {
+        border-top: solid 5px;
         border-color: #2E294E;
         color: #2E294E;
     }
 
-.nav-assigments {
+.nav-assignments {
     color: #CA1551;
-    border-top: solid 4px;
-    border-color: #CA1551;
 }
 
-    .nav-assigments:focus, .nav-assigments:hover {
-        border-top: solid 4px;
+    .nav-assignments:focus,
+    .nav-assignments:hover {
+        border-top: solid 5px;
         border-color: #CA1551;
         color: #CA1551;
     }
@@ -62,8 +60,9 @@
     color: #03CEA4;
 }
 
-    .nav-solved:focus, .nav-solved:hover {
-        border-top: solid 4px;
+    .nav-solved:focus,
+    .nav-solved:hover {
+        border-top: solid 5px;
         border-color: #03CEA4;
         color: #03CEA4;
     }
@@ -73,56 +72,85 @@
     color: #F0544F;
 }
 
-    .nav-forum:hover, .nav-forum:focus {
-        color: #F0544F;
-        border-top: solid 4px;
+    .nav-forum:hover,
+    .nav-forum:focus {
+        border-top: solid 5px;
         border-color: #F0544F;
+        color: #F0544F;
     }
 
 .nav-faq {
     color: #058787;
 }
 
-    .nav-faq:hover, .nav-faq:focus {
-        color: #058787;
+    .nav-faq:hover,
+    .nav-faq:focus {
         border-top: solid 4px;
         border-color: #058787;
+        color: #058787;
     }
 
-.icon {
+.btn-post-assignment-icon {
     margin: 0.1em;
     margin-right: 0.3em;
 }
 
-.btn-post-assigmnet {
+.btn-post-assignment {
     background-color: #EAC435;
     color: #515151;
-    border-radius: 8px;
-    padding: 0 10px;
-    font-size: 20px;
+    border-radius: 15px;
+    padding: 6px 10px;
+    font-size: 1em;
     outline: none;
     border: none;
+    display: flex;
+    margin-right: 1em;
+}
+
+@media(min-width: 1500px) {
+    .btn-post-assignment {
+        margin-right: 5em;
+    }
+}
+
+.navbar-button-search-block {
     display: flex;
 }
 
 .nav-search {
-    padding: 0px;
+    padding: 5px 10px;
 }
 
 .search-bar {
-    font-size: 18px;
+    font-size: 1em;
     color: #ffffff;
     background-color: #345995;
+    padding: 5px 10px;
     outline: none;
     border: none;
     border-radius: 15px;
 }
 
+.navigation-list {
+    display: flex;
+    height: 100%;
+}
+
+.navigation-list-item {
+    margin: 0 1.4em;
+    height: 100%;
+}
+
+    .navigation-list-item a {
+        padding-top: 10px;
+        font-size: 1.2em;
+        line-height: 60px;
+    }
 
 .search-input,
 .search-input:focus {
     padding-left: 20px;
-    width: 70%;
+    width: 75%;
     background: transparent;
     border: none;
     color: #fff;
@@ -169,7 +197,7 @@ button:focus {
     padding: 15px;
     box-shadow: 0px 6px 15px rgba(0,0,0,0.16);
     margin-bottom: 20px;
-    min-height:75px;
+    min-height: 75px;
     background-color: #FFFFFF;
 }
 
@@ -196,13 +224,13 @@ a:hover {
     display: flex;
 }
 
-.user-sidebar-profile-image img, 
-.user-sidebar-profile-image object{
-    margin: 0 auto;
-    border-radius: 100%;
-    border: 4px solid rgb(194, 194, 194);
-    max-width: 60%;
-}
+    .user-sidebar-profile-image img,
+    .user-sidebar-profile-image object {
+        margin: 0 auto;
+        border-radius: 100%;
+        border: 4px solid rgb(194, 194, 194);
+        max-width: 60%;
+    }
 
 .user-sidebar-username {
     text-align: center;
@@ -271,10 +299,10 @@ a:hover {
     color: #2E294E;
 }
 
-.btn-add-credit:hover {
-    text-decoration: none;
-    color: #2E294E;
-}
+    .btn-add-credit:hover {
+        text-decoration: none;
+        color: #2E294E;
+    }
 
 .btn-add-credit-icon {
     width: 30px;
@@ -297,9 +325,9 @@ a:hover {
     font-size: 18px;
 }
 
-.user-sidebar-block-link:hover {
-    color: #bebebe;
-}
+    .user-sidebar-block-link:hover {
+        color: #bebebe;
+    }
 
 .btn-log-out {
     width: 100%;
@@ -308,10 +336,10 @@ a:hover {
     color: #D81E5B;
 }
 
-.btn-log-out:hover {
-    text-decoration: none;
-    color: #BB154B;
-}
+    .btn-log-out:hover {
+        text-decoration: none;
+        color: #BB154B;
+    }
 
 .btn-log-out-icon {
     width: 30px;

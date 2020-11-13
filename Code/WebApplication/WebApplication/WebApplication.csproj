@@ -184,14 +184,11 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Icons\add.svg" />
     <Content Include="Assets\Icons\logout.svg" />
     <Content Include="Assets\Images\default-avatar.png" />
     <Content Include="Assets\Icons\dollar.svg" />
-    <Content Include="Assets\Icons\hunterek.png" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Assets\Images\hunterek.png" />
     <Content Include="Content\create-assignment.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -250,10 +247,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
