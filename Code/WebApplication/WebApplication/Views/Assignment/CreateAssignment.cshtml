@@ -37,7 +37,7 @@
                         <div class="col-md-8">
                             <div class="boxed-row">
                                 <input placeholder="Assignment Title" class="assignment-title-text-field" name="assignmentTitle">
-                                <span class="@(ViewBag.StatusCode== HttpStatusCode.Created?"text-success":ViewBag.StatusCode==HttpStatusCode.NotFound?"text-danger":"")">@ViewBag.Message</span>
+                                <span class="@(ViewBag.StatusCode == HttpStatusCode.Created ? "text-success" : ViewBag.StatusCode == HttpStatusCode.NotFound ? "text-danger" : "")">@ViewBag.Message</span>
                                 @* missing assignment title *@
                             </div>
                         </div>
@@ -82,10 +82,12 @@
                                         Academic Level
                                     </label>
                                     <br>
-                                    <select class="form-control">
-                                        <option>Primary School</option>
-                                        <option>High School</option>
-                                        <option>University</option>
+                                    <select class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
+                                         @foreach (var option in WebApplication.Models.AssignmentModels.AcademicLevels.Values)
+                                            {
+                                            <option value="@option" >@option</option>
+                                                
+                                            }
                                     </select>
                                     @* missing assignment academic level *@
                                 </div>

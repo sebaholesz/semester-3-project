@@ -42,3 +42,14 @@ C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\DatabaseLayer
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.csproj.CopyComplete
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.dll
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.pdb
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.csprojAssemblyReference.cache
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.csproj.CoreCompileInputs.cache
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.dll
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.pdb
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\bin\Debug\DatabaseLayer.dll
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\bin\Debug\DatabaseLayer.pdb
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\bin\Debug\Dapper.dll
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\bin\Debug\ModelLayer.dll
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\bin\Debug\ModelLayer.pdb
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\bin\Debug\Dapper.xml
+C:\Users\Painful\semester-3-project\Code\WebApi\DatabaseLayer\obj\Debug\DatabaseLayer.csproj.CopyComplete

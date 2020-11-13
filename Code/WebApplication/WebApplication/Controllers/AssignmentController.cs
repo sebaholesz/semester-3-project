@@ -26,7 +26,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAssignmentAsync(FormCollection collection)
-            {
+        {
             try
             {
                 if (ModelState.IsValid)
@@ -36,13 +36,13 @@ namespace WebApplication.Controllers
                     if (Enum.TryParse(collection["assignmentAcademicLevel"], true, out AcademicLevel al))
                     {
                         //AcademicLevel academicLevel = (AcademicLevel)Enum.Parse(typeof(AcademicLevel), collection["assignmentAcademicLevel"]);
-                        payloadAcademicLevel = collection["assignmentAcademicLevel"];
+                        payloadAcademicLevel = al.ToString();
                     }
 
                     string payloadSubject = "";
                     if (Enum.TryParse(collection["assignmentAcademicLevel"], true, out Subject s))
                     {
-                        payloadSubject = collection["assignmentSubject"];
+                        payloadSubject = s.ToString();
                     }
 
                     var payload = new Dictionary<string, string>

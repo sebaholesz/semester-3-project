@@ -18,6 +18,25 @@ namespace ModelLayer
         public Boolean Anonymous { get; set; }
         public AcademicLevel AcademicLevel { get; set; }
         public Subject Subject { get; set; }
+
+
+        public Dictionary<AcademicLevel, string> AcademicLevels = new Dictionary<AcademicLevel, string>()
+        {
+            { AcademicLevel.Primary1, "Primary School First Grade"},
+            { AcademicLevel.Primary2, "Primary School Second Grade"},
+            { AcademicLevel.Primary3, "Primary School Third Grade"},
+            { AcademicLevel.Primary4, "Primary School Fourth Grade"},
+            { AcademicLevel.Primary5, "Primary School Fifth Grade"},
+            { AcademicLevel.Primary6, "Primary School Sixth Grade"},
+            { AcademicLevel.Primary7, "Primary School Seventh Grade"},
+            { AcademicLevel.Primary8, "Primary School Eighth Grade"},
+            { AcademicLevel.Primary9, "Primary School Ninth Grade"},
+            { AcademicLevel.HighSchool1, "High School First Grade"},
+            { AcademicLevel.HighSchool2, "High School Second Grade"},
+            { AcademicLevel.HighSchool3, "High School Third Grade"},
+            { AcademicLevel.HighSchool4, "High School Fourth Grade"},
+            { AcademicLevel.University, "UNIVERSITY BABYYYYY"},
+        }; 
     }
 
     public enum AcademicLevel

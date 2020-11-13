@@ -22,3 +22,9 @@ C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\ModelLayer\ob
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.csproj.CoreCompileInputs.cache
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.dll
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.pdb
+C:\Users\Painful\semester-3-project\Code\WebApi\ModelLayer\bin\Debug\ModelLayer.dll
+C:\Users\Painful\semester-3-project\Code\WebApi\ModelLayer\bin\Debug\ModelLayer.pdb
+C:\Users\Painful\semester-3-project\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.csprojAssemblyReference.cache
+C:\Users\Painful\semester-3-project\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.csproj.CoreCompileInputs.cache
+C:\Users\Painful\semester-3-project\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.dll
+C:\Users\Painful\semester-3-project\Code\WebApi\ModelLayer\obj\Debug\ModelLayer.pdb
