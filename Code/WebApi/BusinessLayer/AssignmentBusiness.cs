@@ -1,14 +1,18 @@
 ﻿using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
-using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
 {
     public class AssignmentBusiness
     {
-        DbAssignmentIF dbAssignment = new DbAssignment();
+        private readonly DbAssignmentIF dbAssignment;
+
+        public AssignmentBusiness()
+        {
+            dbAssignment = new DbAssignment();
+        }
 
         public List<Assignment> GetAllAssignments()
         {
