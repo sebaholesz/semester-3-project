@@ -1,0 +1,95 @@
+﻿
+.create-assignment-page-title {
+    font-size: 29px;
+    color: #2E294E;
+    margin: 0px;
+}
+
+.btn-publish-assignment {
+    background-color: #03CEA4;
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 0 30px;
+    font-size: 27px;
+    outline: none;
+    border: none;
+}
+
+.btn-publish-assignment:hover {
+    background-color: #00C895;
+}
+
+.btn-attach-files {
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    color: #000000;
+    border: none;
+    font-size: 29px;
+    padding: 0;
+}
+
+.btn-attach-files:hover {
+    background-color: #FFFFFF;
+    color: #000000;
+    border: none;
+}
+
+.assignment-title-text-field {
+    font-size: 29px;
+    color: #2E294E;
+    outline: none;
+    border: none;
+}
+
+.assignment-description {
+    height: 100%;
+    padding: 15px;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.16);
+    margin-bottom: 20px;
+    background-color: #FFFFFF;
+}
+
+.assignment-description-detail-container {
+    height: 60vh;
+}
+
+.textarea-assignment-description {
+    width: 100%;
+    height: 100%;
+    border: none;
+    margin-bottom: 20px;
+    outline: none;
+    resize: none;
+}
+
+.assignment-details-panel {
+    height: 100%;
+    padding: 15px;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.16);
+    margin-bottom: 20px;
+    background-color: #FFFFFF;
+}
+
+.checkbox-make-anonymous {
+    -webkit-appearance: none;
+    width: 38px;
+    height: 38px;
+    background: white;
+    border-radius: 5px;
+    border: 2px solid #555;
+    outline: none !important;
+}
+
+.checkbox-make-anonymous:checked {
+    background: #03CEA4;
+    outline: none;
+    border: 2px solid #555;
+    outline: none !important;
+}
+
+.checkbox-make-anonymous:focus {
+    outline: none;
+    border: 2px solid #555;
+    outline: none !important;
+}

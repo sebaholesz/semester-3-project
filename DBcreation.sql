@@ -2,7 +2,7 @@ CREATE TABLE [dbo].[User]
  (
      [userId] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
      [username] VARCHAR(50) NOT NULL, 
-     [lastLogin] VARCHAR(50) NOT NULL, 
+     [lastLogin] DATETIME(50) NOT NULL, 
      [password] VARCHAR(50) NOT NULL, 
      [firstName] VARCHAR(50) NOT NULL, 
      [lastName] VARCHAR(50) NOT NULL, 
@@ -53,8 +53,8 @@ CREATE TABLE [dbo].[Customer]
      [assignmentId] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
      [userId] INT NOT NULL, 
      [description] VARCHAR(50) NOT NULL, 
-     [price] FLOAT NOT NULL, 
-     [deadline] VARCHAR(50) NOT NULL, 
+     [price] INT NOT NULL, 
+     [deadline] DATETIME NOT NULL, 
      [anonymous] BIT NOT NULL, 
      constraint fkAuserId foreign key(userId) references [User](userId),
  )
@@ -77,9 +77,9 @@ CREATE TABLE [dbo].[Customer]
      [assignmentId] INT NOT NULL,
      [userId] INT NOT NULL,
      [description] VARCHAR(50) NOT NULL,
-     [timestamp] TIMESTAMP NOT NULL,
+     [timestamp] DATETIME NOT NULL,
 
-	 [solutionRating] FLOAT NOT NULL,
+	 [solutionRating] DECIMAL(2,1) NOT NULL,
 
 	 [anonymous] BIT NOT NULL,
 

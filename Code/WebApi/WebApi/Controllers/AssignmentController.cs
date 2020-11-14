@@ -1,6 +1,5 @@
 ﻿using BusinessLayer;
 using ModelLayer;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -35,7 +34,7 @@ namespace WebApi.Controllers
             else
             {
                 //Return 404 + string with message
-                return Request.CreateResponse(HttpStatusCode.NotFound, "No Assigments Found");
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No Assigments Found!");
             }
         }
 
@@ -46,8 +45,9 @@ namespace WebApi.Controllers
         {
             //assignmentInterface get
             //return in HttpResonseMessage body Assignment
-            HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
-            return httpResponseMessage;
+
+            Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
+            return assignment != null ? Request.CreateResponse(HttpStatusCode.OK, assignment) : Request.CreateResponse(HttpStatusCode.NotFound);
         }
 
 
@@ -63,7 +63,7 @@ namespace WebApi.Controllers
             if (rowsAffected > 0)
             {
                 //Return 201 + string with message
-                return Request.CreateResponse(HttpStatusCode.Created, "Assignment Created Successfuly");
+                return Request.CreateResponse(HttpStatusCode.Created, "Assignment Created Successfuly!");
             }
             else
             {
@@ -93,12 +93,13 @@ namespace WebApi.Controllers
 
         //[Route("Assignment/{id}")]
         [HttpPut]
-        public HttpResponseMessage Put(int id)
+        public HttpResponseMessage Put([FromBody] Assignment assignment, int id)
         {
             //assignmentInterface update
             //return in HttpResonseMessage body Assignment
-            HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
-            return httpResponseMessage;
+
+            int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
+            return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
         }
 
 
@@ -117,8 +118,9 @@ namespace WebApi.Controllers
         {
             //assignmentInterface delete
             //return if operation was successful
-            HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
-            return httpResponseMessage;
+
+            int noOfRows = assignmentBusiness.DeleteAssignment(id);
+            return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
         }
     }
 }
