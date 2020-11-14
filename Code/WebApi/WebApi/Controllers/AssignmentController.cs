@@ -1,6 +1,5 @@
 ﻿using BusinessLayer;
 using ModelLayer;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -35,7 +34,7 @@ namespace WebApi.Controllers
             else
             {
                 //Return 404 + string with message
-                return Request.CreateResponse(HttpStatusCode.NotFound, "No Assigments Found");
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No Assigments Found!");
             }
         }
 
@@ -47,8 +46,8 @@ namespace WebApi.Controllers
             //assignmentInterface get
             //return in HttpResonseMessage body Assignment
 
-            Assignment assignment =  assignmentBusiness.GetByAssignmentId(id);
-            return  assignment != null ? Request.CreateResponse(HttpStatusCode.OK, assignment) : Request.CreateResponse(HttpStatusCode.NotFound);
+            Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
+            return assignment != null ? Request.CreateResponse(HttpStatusCode.OK, assignment) : Request.CreateResponse(HttpStatusCode.NotFound);
         }
 
 
@@ -64,7 +63,7 @@ namespace WebApi.Controllers
             if (rowsAffected > 0)
             {
                 //Return 201 + string with message
-                return Request.CreateResponse(HttpStatusCode.Created, "Assignment Created Successfuly");
+                return Request.CreateResponse(HttpStatusCode.Created, "Assignment Created Successfuly!");
             }
             else
             {

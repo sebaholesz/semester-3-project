@@ -2,10 +2,8 @@
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO.Pipes;
 using System.Linq;
 
 namespace DatabaseLayer.DataAccessLayer
@@ -24,7 +22,7 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 int numberOfRowsAffected = this._db.Execute(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject)",
-                    new {title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
+                    new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
                 return numberOfRowsAffected;
 
             }

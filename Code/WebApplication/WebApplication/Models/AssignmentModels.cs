@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -8,6 +9,7 @@ namespace WebApplication.Models
     public class AssignmentModels
     {
         public int AssignmentId { get; set; }
+        [Required]
         public string Title { get; set; }
         public string Description { get; set; }
         public string Author { get; set; }
