@@ -11,7 +11,7 @@ namespace WebApi.Controllers
     public class AssignmentController : ApiController
     {
 
-        private AssignmentBusiness assignmentBusiness;
+        private readonly AssignmentBusiness assignmentBusiness;
 
         public AssignmentController()
         {

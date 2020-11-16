@@ -121,4 +121,13 @@ CREATE TABLE [dbo].[Comment]
 	 constraint fkCforumId foreign key(forumId) references [Forum](forumId),	 constraint fkCuserId foreign key(userId) references [User](userId),
  )
 
- 
+CREATE TABLE [dbo].[AcademicLevel]
+ (
+	academicLevelName VARCHAR(50) NOT NULL PRIMARY KEY
+ )
+
+CREATE TABLE [dbo].[Subjects]
+ (
+	subjectName VARCHAR(50) NOT NULL PRIMARY KEY
+ )
+ 

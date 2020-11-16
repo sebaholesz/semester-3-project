@@ -12,17 +12,18 @@ namespace DatabaseLayer.DataAccessLayer
 {
     public class DbSolution : DbSolutionIF
     {
-        private IDbConnection _db;
+        private readonly IDbConnection db;
 
         public DbSolution()
         {
-            this._db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
         }
+
         public int CreateSolution(Solution solution)
         {
             try
             {
-                return this._db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
+                return db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
                     new { assignmentId = solution.AssignmentId, userId = solution.UserId, description = solution.Description, timestamp = solution.Timestamp, solutionRating = solution.SolutionRating, anonymous = solution.Anonymous });
             }
             catch (SqlException e)
@@ -35,14 +36,14 @@ namespace DatabaseLayer.DataAccessLayer
 
         public List<Solution> GetAllSolutions()
         {
-            return this._db.Query<Solution>("SELECT * FROM [dbo].[Solution]").ToList();
+            return db.Query<Solution>("SELECT * FROM [dbo].[Solution]").ToList();
         }
 
         public Solution GetBySolutionId(int id)
         {
             try
             {
-                return this._db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
+                return db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
             }
             catch (Exception ex)
             {
@@ -58,7 +59,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                int numberOfRowsAffected = this._db.Execute(@"UPDATE [dbo].[Solution] SET assignmentId = @assignmentId, userId = @userId, description = @description, timestamp = @timestamp, solutionRating = @solutionRating, anonymous = @anonymous WHERE solutionId = @solutionId",
+                int numberOfRowsAffected = db.Execute(@"UPDATE [dbo].[Solution] SET assignmentId = @assignmentId, userId = @userId, description = @description, timestamp = @timestamp, solutionRating = @solutionRating, anonymous = @anonymous WHERE solutionId = @solutionId",
                     new { assignmentId = solution.AssignmentId, userId = solution.UserId, description = solution.Description, timestamp = solution.Timestamp, solutionRating = solution.SolutionRating, anonymous = solution.Anonymous, solutionId = id });
                 return numberOfRowsAffected;
             }
@@ -73,7 +74,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return this._db.Execute("DELETE FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
+                return db.Execute("DELETE FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
             }
             catch (SqlException e)
             {
