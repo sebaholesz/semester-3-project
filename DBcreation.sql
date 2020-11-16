@@ -51,12 +51,21 @@ CREATE TABLE [dbo].[Customer]
  CREATE TABLE [dbo].[Assignment]
  (
      [assignmentId] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
-     [userId] INT NOT NULL, 
-     [description] VARCHAR(50) NOT NULL, 
-     [price] INT NOT NULL, 
-     [deadline] DATETIME NOT NULL, 
-     [anonymous] BIT NOT NULL, 
-     constraint fkAuserId foreign key(userId) references [User](userId),
+
+     [title] VARCHAR(50) NOT NULL, 
+
+     [description] VARCHAR(50) NOT NULL, 
+
+     [price] INT NOT NULL, 
+
+     [deadline] DATETIME NOT NULL, 
+
+     [anonymous] BIT NOT NULL, 
+	 [academicLevel] VARCHAR(50) NOT NULL DEFAULT 'None',
+	 [subject] VARCHAR(50) NOT NULL DEFAULT 'None' ,
+
+     constraint fkAcademicLevel foreign key(academicLevel) references [AcademicLevel](academicLevelName)  ON DELETE SET DEFAULT ON UPDATE CASCADE,
+	 constraint fkSubject foreign key([subject]) references [Subject](subjectName)  ON DELETE SET DEFAULT ON UPDATE CASCADE,
  )
 
    CREATE TABLE [dbo].[StickyNote]

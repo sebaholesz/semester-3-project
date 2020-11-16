@@ -80,21 +80,32 @@
                                     <label for="AcademicLevel">
                                         Academic Level
                                     </label>
-                                    <br>
+                                    <br />
                                     <select asp-for="AcademicLevel" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
-                                        @foreach (var option in WebApplicationCore.Models.AssignmentModels.AcademicLevelValues)
+                                        <option value="" selected>Choose academical level</option>
+                                        @foreach (var option in AssignmentModels.AcademicLevels())
                                         {
                                             <option value="@option">@option</option>
 
                                         }
                                     </select>
+                                    <span asp-validation-for="AcademicLevel" class="text-danger"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="Subject">
                                         Subject
                                     </label>
-                                    <input type="text" class="form-control" id="assignmentSubject" asp-for="Subject" />
+                                    <br />
+                                    <select asp-for="Subject" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
+                                        <option value="" selected>Choose subject</option>
+                                        @foreach (var option in AssignmentModels.Subjects())
+                                        {
+                                            <option value="@option">@option</option>
+
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Subject" class="text-danger"></span>
                                 </div>
 
                                 <div class="form-group">
@@ -102,7 +113,7 @@
                                         Make Anonymous
                                     </label>
                                     <br />
-                                    <input type="checkbox" class="checkbox-make-anonymous" asp-for="Anonymous" />
+                                    <input asp-for="@Model.Anonymous" type="checkbox" class="checkbox-make-anonymous" />
                                 </div>
                             </div>
                         </div>

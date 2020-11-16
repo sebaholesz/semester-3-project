@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\source\\repos\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj": {}
+    "C:\\Users\\maros\\Documents\\School\\Projects\\3rdSemesterProject\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\source\\repos\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj": {
+    "C:\\Users\\maros\\Documents\\School\\Projects\\3rdSemesterProject\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\source\\repos\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
+        "projectUniqueName": "C:\\Users\\maros\\Documents\\School\\Projects\\3rdSemesterProject\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
         "projectName": "WebApplicationCore",
-        "projectPath": "C:\\Users\\Lenovo\\source\\repos\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
-        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\source\\repos\\WebApplicationCore\\WebApplicationCore\\obj\\",
+        "projectPath": "C:\\Users\\maros\\Documents\\School\\Projects\\3rdSemesterProject\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
+        "packagesPath": "C:\\Users\\maros\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\maros\\Documents\\School\\Projects\\3rdSemesterProject\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\maros\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -38,6 +38,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "Microsoft.AspNet.WebApi.Client": {
+              "target": "Package",
+              "version": "[5.2.7, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.3, )"

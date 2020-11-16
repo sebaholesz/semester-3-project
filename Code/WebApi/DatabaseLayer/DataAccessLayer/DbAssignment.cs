@@ -24,7 +24,6 @@ namespace DatabaseLayer.DataAccessLayer
                 int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject)",
                     new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
                 return numberOfRowsAffected;
-
             }
             catch (SqlException e)
             {
@@ -75,6 +74,16 @@ namespace DatabaseLayer.DataAccessLayer
                 System.Console.WriteLine(e.Message);
                 return 0;
             }
+        }
+
+        public List<string> GetAllAcademicLevels()
+        {
+            return db.Query<string>("select * from [dbo].[AcademicLevel]").ToList();
+        }
+
+        public List<string> GetAllSubjects()
+        {
+            return db.Query<string>("SELECT * FROM [dbo].[Subject]").ToList();
         }
     }
 }

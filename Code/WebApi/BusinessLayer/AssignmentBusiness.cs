@@ -1,6 +1,7 @@
 ﻿using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
@@ -36,6 +37,16 @@ namespace BusinessLayer
         public int DeleteAssignment(int id)
         {
             return dbAssignment.DeleteAssignment(id);
+        }
+
+        public List<string> GetAllAcademicLevels()
+        {
+            return dbAssignment.GetAllAcademicLevels();
+        }
+
+        public List<string> GetAllSubjects()
+        {
+            return dbAssignment.GetAllSubjects();
         }
     }
 }

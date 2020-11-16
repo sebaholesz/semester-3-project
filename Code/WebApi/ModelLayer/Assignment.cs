@@ -12,8 +12,7 @@ namespace ModelLayer
         // public List<Solution> Queue { get; set; }
         public DateTime Deadline { get; set; }
         public Boolean Anonymous { get; set; }
-        public AcademicLevel AcademicLevel { get; set; }
-        public Subject Subject { get; set; }
-
+        public string AcademicLevel { get; set; }
+        public string Subject { get; set; }
     }
 }

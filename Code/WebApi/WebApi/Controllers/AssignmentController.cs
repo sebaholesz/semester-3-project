@@ -122,5 +122,45 @@ namespace WebApi.Controllers
             int noOfRows = assignmentBusiness.DeleteAssignment(id);
             return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
         }
+
+        [Route("api/academiclevel")]
+        [HttpGet]
+        public HttpResponseMessage GetAllAcademicLevels()
+        {
+            //Get the List<AcademicLevel>
+            List<string> levels = assignmentBusiness.GetAllAcademicLevels();
+
+            //Check if the List<AcademicLevel> is not empty
+            if (levels.Count() > 0)
+            {
+                //Return 200 + levels
+                return Request.CreateResponse(HttpStatusCode.OK, levels);
+            }
+            else
+            {
+                //Return 404 + string with message
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No Academic levels Found!");
+            }
+        }
+
+        [Route("api/subject")]
+        [HttpGet]
+        public HttpResponseMessage GetAllSubjects()
+        {
+            //Get the List<Subject>
+            List<string> subjects = assignmentBusiness.GetAllSubjects();
+
+            //Check if the List<Subject> is not empty
+            if (subjects.Count() > 0)
+            {
+                //Return 200 + subjects
+                return Request.CreateResponse(HttpStatusCode.OK, subjects);
+            }
+            else
+            {
+                //Return 404 + string with message
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No Subjects Found!");
+            }
+        }
     }
 }

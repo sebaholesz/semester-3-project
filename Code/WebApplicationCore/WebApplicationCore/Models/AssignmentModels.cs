@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace WebApplicationCore.Models
 {
@@ -24,7 +23,9 @@ namespace WebApplicationCore.Models
         [Required]
         public DateTime Deadline { get; set; }
         public Boolean Anonymous { get; set; }
+        [Required]
         public string AcademicLevel { get; set; }
+        [Required]
         public string Subject { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -34,6 +35,40 @@ namespace WebApplicationCore.Models
                 yield return new ValidationResult(
                     $"Deadline has to be in future.",
                     new[] { nameof(Deadline) });
+            }
+        }
+
+        public static List<string> AcademicLevels()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.GetAsync("https://localhost:44383/api/academiclevel").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    return response.Content.ReadAsAsync<List<string>>().Result;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static List<string> Subjects()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.GetAsync("https://localhost:44383/api/subject").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    return response.Content.ReadAsAsync<List<string>>().Result;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 

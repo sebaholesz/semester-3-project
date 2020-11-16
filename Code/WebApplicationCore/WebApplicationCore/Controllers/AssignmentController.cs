@@ -1,33 +1,42 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using WebApplicationCore.Models;
 
 namespace WebApplicationCore.Controllers
 {
     public class AssignmentController : Controller
     {
-
         [Route("assignment/create-assignment")]
         [HttpGet]
         public ActionResult CreateAssignment()
         {
-            //modify the URL so it gets the list off academic levels and subjects
-            string u = "https://localhost:44383/api/";
-
+            string urlAl = "https://localhost:44383/api/academiclevel";
+            string urlS = "https://localhost:44383/api/subject";
             using (HttpClient client = new HttpClient())
             {
-                //get the list off academic levels and subjects
-                HttpResponseMessage message = client.GetAsync(u).Result;
+                try
+                {
+                    HttpResponseMessage message = client.GetAsync(urlAl).Result;
+                    string responseContent = message.Content.ReadAsStringAsync().Result;
+                    List<string> academicLevel = JsonConvert.DeserializeObject<List<string>>(responseContent);
+                    ViewBag.AcademicLevel = academicLevel;
+                    HttpResponseMessage messageSubject = client.GetAsync(urlS).Result;
+                    string responseContentSubject = messageSubject.Content.ReadAsStringAsync().Result;
+                    List<string> subject = JsonConvert.DeserializeObject<List<string>>(responseContentSubject);
+                    ViewBag.Subject = subject;
+                }
+                catch (Exception)
+                {
+                    //TODO: Handle Error
+                }
             }
-
             return View();
         }
 
@@ -41,19 +50,19 @@ namespace WebApplicationCore.Controllers
                 if (ModelState.IsValid)
                 {
                     //it doesn't compile because we need to get the list from the API so we can check it
-                    string payloadAcademicLevel = "";
-                    if (AssignmentModels.AcademicLevelValues.Contains(collection["AcademicLevel"]))
-                    {
-                        var i = AssignmentModels.AcademicLevelValues.IndexOf(collection["AcademicLevel"]);
-                        payloadAcademicLevel = AssignmentModels.AcademicLevelValues[i];
-                    }
+                    //string payloadAcademicLevel = "";
+                    //if (AssignmentModels.AcademicLevelValues.Contains(collection["AcademicLevel"]))
+                    //{
+                    //    var i = AssignmentModels.AcademicLevelValues.IndexOf(collection["AcademicLevel"]);
+                    //    payloadAcademicLevel = AssignmentModels.AcademicLevelValues[i];
+                    //}
 
-                    string payloadSubject = "";
-                    if (AssignmentModels.SubjectValues.Contains(collection["Subject"]))
-                    {
-                        var i = AssignmentModels.SubjectValues.IndexOf(collection["payloadSubject"]);
-                        payloadSubject = AssignmentModels.SubjectValues[i];
-                    }
+                    //string payloadSubject = "";
+                    //if (AssignmentModels.SubjectValues.Contains(collection["Subject"]))
+                    //{
+                    //    var i = AssignmentModels.SubjectValues.IndexOf(collection["payloadSubject"]);
+                    //    payloadSubject = AssignmentModels.SubjectValues[i];
+                    //}
 
                     var payload = new Dictionary<string, string>
                     {
@@ -62,8 +71,8 @@ namespace WebApplicationCore.Controllers
                         {"Price", collection["Price"]},
                         {"Deadline", collection["Deadline"]},
                         {"Anonymous", collection["Anonymous"]},
-                        {"AcademicLevel", payloadAcademicLevel},
-                        {"Subject", payloadSubject},
+                        {"AcademicLevel", collection["AcademicLevel"]},
+                        {"Subject", collection["Subject"]},
                     };
 
                     string strPayload = JsonConvert.SerializeObject(payload);
@@ -76,13 +85,19 @@ namespace WebApplicationCore.Controllers
                         HttpResponseMessage message = client.PostAsync(u, c).Result;
                         var responseContent = await message.Content.ReadAsStringAsync();
                         var responseContentTrimmed = responseContent.Trim('\"');
+                        ViewBag.AcademicLevel = AssignmentModels.AcademicLevels();
+                        ViewBag.Subject = AssignmentModels.Subjects();
                         ViewBag.Message = responseContentTrimmed;
                         ViewBag.ResponseStyleClass = message.StatusCode == HttpStatusCode.Created ? "text-success" : message.StatusCode == HttpStatusCode.NotFound ? "text-danger" : "";
                     }
                 }
-                ViewBag.Message = "Insert correct data";
-                ViewBag.ResponseStyleClass = "text-danger";
+                else
+                {
+                    ViewBag.Message = "Insert correct data";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                }
                 return View("CreateAssignment");
+
             }
             catch (Exception e)
             {

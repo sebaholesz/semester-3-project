@@ -41,10 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcademicLevelBusiness.cs" />
     <Compile Include="AssignmentBusiness.cs" />
     <Compile Include="SolutionBusiness.cs" />
-    <Compile Include="SubjectBusiness.cs" />
     <Compile Include="UserBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
