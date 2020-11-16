@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "qdMKX0s8VwxPcs1vYCWqbOiTOID2uqq+WxaOYZBWPl1cdLSF8F6FXmqDJb1j+oK8aXM1mfNS0I4sunnxLfWP0w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Lenovo\\source\\repos\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Lenovo\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
