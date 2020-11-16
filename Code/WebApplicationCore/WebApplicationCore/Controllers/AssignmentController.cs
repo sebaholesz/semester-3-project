@@ -70,7 +70,7 @@ namespace WebApplicationCore.Controllers
                         {"Description", collection["Description"]},
                         {"Price", collection["Price"]},
                         {"Deadline", collection["Deadline"]},
-                        {"Anonymous", collection["Anonymous"]},
+                        {"Anonymous", collection["Anonymous"][0]},
                         {"AcademicLevel", collection["AcademicLevel"]},
                         {"Subject", collection["Subject"]},
                     };
