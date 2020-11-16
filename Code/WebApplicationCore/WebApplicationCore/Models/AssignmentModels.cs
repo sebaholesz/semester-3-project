@@ -37,32 +37,32 @@ namespace WebApplicationCore.Models
             }
         }
 
-        public static List<string> AcademicLevelValues = new List<string>() {
-            "Primary School First Grade",
-            "Primary School Second Grade",
-            "Primary School Third Grade",
-            "Primary School Fourth Grade",
-            "Primary School Fifth Grade",
-            "Primary School Sixth Grade",
-            "Primary School Seventh Grade",
-            "Primary School Eighth Grade",
-            "Primary School Ninth Grade",
-            "High School First Grade",
-            "High School Second Grade",
-            "High School Third Grade",
-            "High School Fourth Grade",
-            "UNIVERSITY BABYYYYY"
-        };
+        //public static List<string> AcademicLevelValues = new List<string>() {
+        //    "Primary School First Grade",
+        //    "Primary School Second Grade",
+        //    "Primary School Third Grade",
+        //    "Primary School Fourth Grade",
+        //    "Primary School Fifth Grade",
+        //    "Primary School Sixth Grade",
+        //    "Primary School Seventh Grade",
+        //    "Primary School Eighth Grade",
+        //    "Primary School Ninth Grade",
+        //    "High School First Grade",
+        //    "High School Second Grade",
+        //    "High School Third Grade",
+        //    "High School Fourth Grade",
+        //    "UNIVERSITY BABYYYYY"
+        //};
 
-        public static List<string> SubjectValues = new List<string>() {
-            "Mathematics",
-            "English",
-            "History",
-            "Geography",
-            "Spanish",
-            "Physics",
-            "Biology",
-            "Chemistry"
-        };
+        //public static List<string> SubjectValues = new List<string>() {
+        //    "Mathematics",
+        //    "English",
+        //    "History",
+        //    "Geography",
+        //    "Spanish",
+        //    "Physics",
+        //    "Biology",
+        //    "Chemistry"
+        //};
     }
 }

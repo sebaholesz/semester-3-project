@@ -19,6 +19,15 @@ namespace WebApplicationCore.Controllers
         [HttpGet]
         public ActionResult CreateAssignment()
         {
+            //modify the URL so it gets the list off academic levels and subjects
+            string u = "https://localhost:44383/api/";
+
+            using (HttpClient client = new HttpClient())
+            {
+                //get the list off academic levels and subjects
+                HttpResponseMessage message = client.GetAsync(u).Result;
+            }
+
             return View();
         }
 
@@ -31,7 +40,7 @@ namespace WebApplicationCore.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
+                    //it doesn't compile because we need to get the list from the API so we can check it
                     string payloadAcademicLevel = "";
                     if (AssignmentModels.AcademicLevelValues.Contains(collection["AcademicLevel"]))
                     {
@@ -75,7 +84,7 @@ namespace WebApplicationCore.Controllers
                 ViewBag.ResponseStyleClass = "text-danger";
                 return View("CreateAssignment");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ViewBag.Message = e.Message;
                 ViewBag.ResponseStyleClass = "text-danger";
