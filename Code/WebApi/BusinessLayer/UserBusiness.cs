@@ -7,7 +7,13 @@ namespace BusinessLayer
 {
     public class UserBusiness
     {
-        DbUserIF dbUser = new DbUser();
+        private readonly DbUserIF dbUser;
+
+        public UserBusiness()
+        {
+            dbUser = new DbUser();
+        }
+
         public List<User> GetAllUsers()
         {
             return dbUser.GetAllUsers();

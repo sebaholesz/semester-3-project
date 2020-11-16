@@ -9,7 +9,12 @@ namespace WebApi.Controllers
 {
     public class SolutionController : ApiController
     {
-        SolutionBusiness solutionBusiness = new SolutionBusiness();
+        private readonly SolutionBusiness solutionBusiness;
+
+        public SolutionController()
+        {
+            solutionBusiness = new SolutionBusiness();
+        }
 
         [HttpGet]
         public HttpResponseMessage Get()
