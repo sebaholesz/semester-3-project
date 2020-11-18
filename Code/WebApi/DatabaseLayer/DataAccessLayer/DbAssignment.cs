@@ -21,8 +21,8 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject)",
-                    new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
+                int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive)",
+                    new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true});
                 return numberOfRowsAffected;
             }
             catch (SqlException e)
@@ -34,6 +34,7 @@ namespace DatabaseLayer.DataAccessLayer
 
         public List<Assignment> GetAllAssignments()
         {
+            //TODO NEED TO ADD GETALLACTIVEASSIGNMENTS/GETALLNOTACTIVEASSIGNMENTS
             return db.Query<Assignment>("Select * from [dbo].[Assignment]").ToList();
         }
 

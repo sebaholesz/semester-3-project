@@ -10,5 +10,6 @@ namespace DatabaseLayer.RepositoryLayer
         Solution GetBySolutionId(int id);
         int UpdateSolution(Solution solution, int id);
         int DeleteSolution(int id);
+        List<Solution> GetSolutionsByAssignmentId(int id);
     }
 }

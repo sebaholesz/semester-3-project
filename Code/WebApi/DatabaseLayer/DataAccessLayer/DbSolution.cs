@@ -23,13 +23,37 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
-                    new { assignmentId = solution.AssignmentId, userId = solution.UserId, description = solution.Description, timestamp = solution.Timestamp, solutionRating = solution.SolutionRating, anonymous = solution.Anonymous });
+
+                List<Solution> solutionsBefore = GetSolutionsByAssignmentId(solution.AssignmentId);
+                int queueLengthBefore = solutionsBefore.Count;
+                
+                if (queueLengthBefore > 0) {
+                    
+                    if ( DateTime.Compare(solution.Timestamp, solutionsBefore[queueLengthBefore - 1].Timestamp) < 0)
+                    {
+                        return -1;
+                    }
+                }
+
+                List<Solution> solutionsAfter = GetSolutionsByAssignmentId(solution.AssignmentId);
+                int queueLengthAfter = solutionsAfter.Count;
+
+                if (queueLengthBefore == queueLengthAfter)
+                {
+                    db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
+                   new { assignmentId = solution.AssignmentId, userId = solution.UserId, description = solution.Description, timestamp = solution.Timestamp, solutionRating = solution.SolutionRating, anonymous = solution.Anonymous });
+                    return queueLengthAfter + 1; 
+                }
+                else 
+                {
+                    return -1;
+                }
+
             }
             catch (SqlException e)
             {
                 Console.WriteLine(e.Message);
-                return 0;
+                return -1;
             }
         }
 
@@ -37,6 +61,12 @@ namespace DatabaseLayer.DataAccessLayer
         public List<Solution> GetAllSolutions()
         {
             return db.Query<Solution>("SELECT * FROM [dbo].[Solution]").ToList();
+        }
+
+
+        public List<Solution> GetSolutionsByAssignmentId(int id)
+        {
+            return db.Query<Solution>("SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId", new { assignmentId = id}).ToList();
         }
 
         public Solution GetBySolutionId(int id)
@@ -82,5 +112,10 @@ namespace DatabaseLayer.DataAccessLayer
                 return 0;
             }
         }
+
+
+
+
+
     }
 }
