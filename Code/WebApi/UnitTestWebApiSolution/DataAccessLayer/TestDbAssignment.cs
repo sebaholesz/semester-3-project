@@ -13,14 +13,14 @@ using System.Linq;
 namespace UnitTestWebApiSolution
 {
     [TestClass]
-    public class UnitTest1
+    public class TestDbAssignment
     {
         private readonly IDbConnection _db;
         private DbAssignmentIF dba;
 
-        public UnitTest1()
+        public TestDbAssignment()
         {
-            _db = new SqlConnection("Data Source = hildur.ucn.dk; Initial Catalog = dmaj0919_1081479; User ID = dmaj0919_1081479; Password=Password1!;");
+            _db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
             dba = new DbAssignment();
         }
 

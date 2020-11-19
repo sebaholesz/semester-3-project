@@ -58,3 +58,4 @@ C:\Users\Painful\semester-3-project\Code\WebApi\UnitTestWebApiSolution\obj\Debug
 C:\Users\Painful\semester-3-project\Code\WebApi\UnitTestWebApiSolution\obj\Debug\UnitTestWebApiSolution.csproj.CopyComplete
 C:\Users\Painful\semester-3-project\Code\WebApi\UnitTestWebApiSolution\obj\Debug\UnitTestWebApiSolution.dll
 C:\Users\Painful\semester-3-project\Code\WebApi\UnitTestWebApiSolution\obj\Debug\UnitTestWebApiSolution.pdb
+C:\Users\Painful\semester-3-project\Code\WebApi\UnitTestWebApiSolution\bin\Debug\UnitTestWebApiSolution.dll.config

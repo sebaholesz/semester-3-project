@@ -2,6 +2,7 @@
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace DatabaseLayer.DataAccessLayer
 
         public DbAssignment()
         {
-            db = new SqlConnection("Data Source = hildur.ucn.dk; Initial Catalog = dmaj0919_1081479; User ID = dmaj0919_1081479; Password=Password1!;");
+            db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
         }
 
         public int CreateAssignment(Assignment assignment)
