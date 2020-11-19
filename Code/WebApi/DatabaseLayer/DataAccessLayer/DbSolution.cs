@@ -29,7 +29,7 @@ namespace DatabaseLayer.DataAccessLayer
                 
                 if (queueLengthBefore > 0) {
                     
-                    if ( DateTime.Compare(solution.Timestamp, solutionsBefore[queueLengthBefore - 1].Timestamp) < 0)
+                    if (DateTime.Compare(solution.Timestamp, solutionsBefore[queueLengthBefore - 1].Timestamp) < 0)
                     {
                         return -1;
                     }

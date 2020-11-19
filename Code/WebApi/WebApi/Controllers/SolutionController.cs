@@ -45,7 +45,7 @@ namespace WebApi.Controllers
             int queuePosition = solutionBusiness.CreateSolution(solution);
             //Check if the creation was successful and return 201 + string message or 409 with string message if false
             //return rowsAffected > 0 ? Request.CreateResponse(HttpStatusCode.Created, "Solution Created Successfuly!") : Request.CreateResponse(HttpStatusCode.NotFound, "Solution Creation Failed");
-            return queuePosition >= 0 ? Request.CreateResponse(HttpStatusCode.Created, queuePosition) : Request.CreateResponse(HttpStatusCode.NotFound, "Solution Creation Failed");
+            return queuePosition >= 0 ? Request.CreateResponse(HttpStatusCode.Created, queuePosition) : Request.CreateResponse(HttpStatusCode.NotFound, queuePosition);
         }
 
         [HttpPost]
