@@ -54,6 +54,43 @@ namespace UnitTestWebApiSolution
            
         }
 
+        [TestMethod]
+        public void TestCreateSolutionFailWhenDayTimeWrong()
+        {
+
+            DateTime whateverNazviSiToJakChces = DateTime.Now;
+
+            DateTime whateverNazviSiToJakChcesNAZVY = DateTime.Now;
+
+            Solution solution = new Solution();
+            solution.AssignmentId = 5;
+            solution.UserId = 12;
+            solution.Description = "Test description 1";
+            solution.Timestamp = whateverNazviSiToJakChcesNAZVY;
+            solution.SolutionRating = 3.6M;
+            solution.Anonymous = true;
+
+            Solution solutionSameDateTime = new Solution();
+            solutionSameDateTime.AssignmentId = 5;
+            solutionSameDateTime.UserId = 12;
+            solutionSameDateTime.Description = "Test description 2";
+            solutionSameDateTime.Timestamp = whateverNazviSiToJakChcesNAZVY;
+            solutionSameDateTime.SolutionRating = 3.6M;
+            solutionSameDateTime.Anonymous = true;
+
+            Solution solutionEarlyDateTime = new Solution();
+            solutionEarlyDateTime.AssignmentId = 5;
+            solutionEarlyDateTime.UserId = 12;
+            solutionEarlyDateTime.Description = "Test description 3";
+            solutionEarlyDateTime.Timestamp = whateverNazviSiToJakChces;
+            solutionEarlyDateTime.SolutionRating = 3.6M;
+            solutionEarlyDateTime.Anonymous = true;
+
+            Assert.IsTrue(dbS.CreateSolution(solution) > 0);
+            Assert.AreEqual(dbS.CreateSolution(solutionSameDateTime), -1);
+            Assert.AreEqual(dbS.CreateSolution(solutionEarlyDateTime), -1);
+        }
+
 
 
         [TestMethod]
