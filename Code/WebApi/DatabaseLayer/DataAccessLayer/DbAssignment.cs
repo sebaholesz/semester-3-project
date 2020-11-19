@@ -35,8 +35,17 @@ namespace DatabaseLayer.DataAccessLayer
 
         public List<Assignment> GetAllAssignments()
         {
-            //TODO NEED TO ADD GETALLACTIVEASSIGNMENTS/GETALLNOTACTIVEASSIGNMENTS
             return db.Query<Assignment>("Select * from [dbo].[Assignment]").ToList();
+        }
+
+        public List<Assignment> GetAllActiveAssignments()
+        {
+            return db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1").ToList();
+        }
+
+        public List<Assignment> GetAllInactiveAssignments()
+        {
+            return db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0").ToList();
         }
 
         public Assignment GetByAssignmentId(int id)

@@ -19,6 +19,14 @@ namespace BusinessLayer
         {
             return dbAssignment.GetAllAssignments();
         }
+        public List<Assignment> GetAllActiveAssignments()
+        {
+            return dbAssignment.GetAllActiveAssignments();
+        }
+        public List<Assignment> GetAllInactiveAssignments()
+        {
+            return dbAssignment.GetAllInactiveAssignments();
+        }
         public int CreateAssignment(Assignment assignment)
         {
             return dbAssignment.CreateAssignment(assignment);
