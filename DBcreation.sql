@@ -228,13 +228,6 @@ CREATE TABLE [dbo].[Subjects]
 	subjectName VARCHAR(50) NOT NULL PRIMARY KEY
  )
 
- CREATE TABLE [dbo].[Queue]
- (
-	queueId int not null PRIMARY KEY IDENTITY(1,1),
-	assignmentId int not null
-
-	constraint fkQAssignmentId foreign key(assignmentId) references [Assignment](assignmentId)
- )
 
 
 
