@@ -40,12 +40,10 @@ namespace WebApi.Controllers
         public HttpResponseMessage Post([FromBody] Solution solution)
         {
             //Attempt the creation of the solutioin and save the int value of the rows affected
-            //int rowsAffected = solutionBusiness.CreateSolution(solution);
-
             int queuePosition = solutionBusiness.CreateSolution(solution);
-            //Check if the creation was successful and return 201 + string message or 409 with string message if false
-            //return rowsAffected > 0 ? Request.CreateResponse(HttpStatusCode.Created, "Solution Created Successfuly!") : Request.CreateResponse(HttpStatusCode.NotFound, "Solution Creation Failed");
-            return queuePosition >= 0 ? Request.CreateResponse(HttpStatusCode.Created, queuePosition) : Request.CreateResponse(HttpStatusCode.NotFound, queuePosition);
+
+            //Check if the creation was successful and return 201 + queue position or 409 + -1 as a fail message
+            return queuePosition >= 0 ? Request.CreateResponse(HttpStatusCode.Created, queuePosition) : Request.CreateResponse(HttpStatusCode.Conflict, queuePosition);
         }
 
         [HttpPost]
