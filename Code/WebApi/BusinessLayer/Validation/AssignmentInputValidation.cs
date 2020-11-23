@@ -35,22 +35,27 @@ namespace BusinessLayer.Validation
             {
                 switch (item.Name)
                 {
+                    #region Assignment.Title
                     case "Title":
                         value = assignment.Title.Length > _titleMinLength && assignment.Title.Length < _titleMaxLength;
-                        break;
-
+                        break; 
+                    #endregion
+                    #region Assignment.Description
                     case "Description":
                         value = assignment.Description.Length > _descriptionMinLength && assignment.Description.Length < _descriptionMaxLength;
-                        break;
-
+                        break; 
+                    #endregion
+                    #region Assignment.Price
                     case "Price":
                         value = assignment.Price > _priceMinValue && assignment.Price < _priceMaxValue;
                         break;
-
+                    #endregion
+                    #region Assignment.Deadline
                     case "Deadline":
                         value = DateTime.Compare(assignment.Deadline, DateTime.Now) > 0;
                         break;
-
+                    #endregion
+                    #region Assignment.AcademicLevel
                     case "AcademicLevel":
                         var academicLevels = dbA.GetAllAcademicLevels();
 
@@ -63,8 +68,9 @@ namespace BusinessLayer.Validation
                             }
                             value = false;
                         }
-                        break;
-
+                        break; 
+                    #endregion
+                    #region Assignment.Subject
                     case "Subject":
                         var subjects = dbA.GetAllSubjects();
 
@@ -77,8 +83,8 @@ namespace BusinessLayer.Validation
                             }
                             value = false;
                         }
-                        break;
-
+                        break; 
+                    #endregion
                     default:
                         break;
                 }

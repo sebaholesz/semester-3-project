@@ -1,11 +1,11 @@
 ﻿main {
     padding: 20px;
-    margin-top: 50px;
+    margin-top: 0px;
 }
 
 body {
     font-family: Poppins;
-    background-color: #F3F8F6;
+    background-color: rgba(3, 206, 164, 0.24);
 }
 
 button,
@@ -24,10 +24,12 @@ button:focus {
     align-items: center;
     display: flex;
     justify-content: space-between;
+    background-color: white;
 }
 
 .navbar {
     width: 100%;
+
 }
 
 .navbar-collapse {

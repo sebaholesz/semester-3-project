@@ -106,5 +106,60 @@ namespace WebApplicationCore.Controllers
                 return View("CreateAssignment");
             }
         }
+
+        [Route("assignment/display-assignment")]
+        [HttpGet]
+        public ActionResult DisplayAssignment()
+        {
+            string url = "https://localhost:44383/api/assignment/7";
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage message = client.GetAsync(url).Result;
+                    string responseContent = message.Content.ReadAsStringAsync().Result;
+                    AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
+                    ViewBag.AssignmentTitle = assignment.Title;
+                    ViewBag.Description = assignment.Description;
+                    ViewBag.Deadline = assignment.Deadline;
+                    ViewBag.Price = assignment.Price;
+                    ViewBag.AcademicLevel = assignment.AcademicLevel;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+
+            return View("DisplayAssignment");
+        }
+
+        public ActionResult AssignmentPartial()
+        {
+            string url = "https://localhost:44383/api/assignment/7";
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage message = client.GetAsync(url).Result;
+                    string responseContent = message.Content.ReadAsStringAsync().Result;
+                    AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
+                    ViewBag.AssignmentTitle = assignment.Title;
+                    ViewBag.Description = assignment.Description;
+                    ViewBag.Deadline = assignment.Deadline;
+                    ViewBag.Price = assignment.Price;
+                    ViewBag.AcademicLevel = assignment.AcademicLevel;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+
+            return PartialView("AssignmentPartial");
+        }
+
     }
 }

@@ -2,10 +2,10 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using BusinessLayer.Validation;
 using DatabaseLayer.RepositoryLayer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ModelLayer;
+using BusinessLayer.Validation;
 
 namespace UnitTestWebApiSolution
 {
@@ -86,7 +86,7 @@ namespace UnitTestWebApiSolution
             Assignment assignment = new Assignment();
 
             #region tooLongDescription
-            string tooLongDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque quis eros scelerisque, posuere orci eu, gravida libero. Aliquam placerat nulla a iaculis suscipit. Mauris accumsan pharetra nisi, posuere semper massa venenatis eu. Sed hendrerit auctor diam, vel vestibulum enim mollis vitae. Aenean luctus, dolor ut suscipit venenatis, sem augue ultricies turpis, non tempus lorem lorem sed felis. Suspendisse interdum tincidunt arcu ut lacinia. Maecenas nisi nisi, ultrices non cursus non, fringilla efficitur orci. Fusce lobortis nisl ultrices dui bibendum, quis ultrices nisl rhoncus. Nullam et "
+            string tooLongDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque quis eros scelerisque, posuere orci eu, gravida libero. Aliquam placerat nulla a iaculis suscipit. Mauris accumsan pharetra nisi, posuere semper massa venenatis eu. Sed hendrerit auctor diam, vel vestibulum enim mollis vitae. Aenean luctus, dolor ut suscipit venenatis, sem augue ultricies turpis, non tempus lorem lorem sed felis. Suspendisse interdum tincidunt arcu ut lacinia. Maecenas nisi nisi, ultrices non cursus non, fringilla efficitur orci. Fusce lobortis nisl ultrices dui bibendum, quis ultrices nisl rhoncus. Nullam et ";
             #endregion
 
             assignment.Title = "just some title";

@@ -39,8 +39,10 @@ namespace DatabaseLayer.DataAccessLayer
 
                 if (queueLengthBefore == queueLengthAfter)
                 {
-                    db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
-                   new { assignmentId = solution.AssignmentId, userId = solution.UserId, description = solution.Description, timestamp = solution.Timestamp, solutionRating = solution.SolutionRating, anonymous = solution.Anonymous });
+                    db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) "+
+                        "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
+                   new { assignmentId = solution.AssignmentId, userId = solution.UserId, description = solution.Description, timestamp = solution.Timestamp, 
+                       solutionRating = solution.SolutionRating, anonymous = solution.Anonymous });
                     return queueLengthAfter + 1; 
                 }
                 else 

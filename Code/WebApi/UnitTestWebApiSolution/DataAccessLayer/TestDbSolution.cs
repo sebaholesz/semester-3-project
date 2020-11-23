@@ -39,7 +39,8 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestCreateSolution()
         {
-            
+            int lengthBefore = dbS.GetAllSolutions().Count;
+
             Solution solution = new Solution();
             solution.AssignmentId = 5;
             solution.UserId = 12;
@@ -50,7 +51,9 @@ namespace UnitTestWebApiSolution
 
             dbS.CreateSolution(solution);
 
-            Assert.IsTrue(dbS.GetAllSolutions().Count > 0);
+            int lengthAfter = dbS.GetAllSolutions().Count;
+
+            Assert.IsTrue(lengthAfter > lengthBefore);
            
         }
 
@@ -104,7 +107,11 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestGetBySolutionId()
         {
-            int id = 7;
+
+            List<Solution> listOfItems = dbS.GetAllSolutions();
+
+            
+            int id = listOfItems[0].SolutionId;
 
             Solution solution = dbS.GetBySolutionId(id);
             Assert.AreEqual(solution.SolutionId, id);
@@ -113,7 +120,10 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestGetByAssignmentId()
         {
-            int id = 2;
+
+            List<Solution> listOfItems = dbS.GetAllSolutions();
+
+            int id = listOfItems[0].AssignmentId;
 
             List<Solution> solutions = dbS.GetSolutionsByAssignmentId(id);
 
@@ -130,7 +140,11 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestDelete()
         {
-            int id = 8;
+            List<Solution> listOfItems = dbS.GetAllSolutions();
+            int length = listOfItems.Count;
+
+            int id = listOfItems[length-1].AssignmentId;
+
             int countBefore = dbS.GetAllSolutions().Count;
             dbS.DeleteSolution(id);
             int countAfter = dbS.GetAllSolutions().Count;

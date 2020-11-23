@@ -55,6 +55,7 @@
     <Compile Include="DataAccessLayer\TestDbAssignment.cs" />
     <Compile Include="DataAccessLayer\TestDbSolution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\TestAssignmentInputValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -62,6 +63,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj">
+      <Project>{f6ac879e-3fc3-4cd5-842a-1e0695261d9c}</Project>
+      <Name>BusinessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DatabaseLayer\DatabaseLayer.csproj">
       <Project>{6443A4AC-61D8-4FEF-89D1-C35C12FE7339}</Project>
       <Name>DatabaseLayer</Name>

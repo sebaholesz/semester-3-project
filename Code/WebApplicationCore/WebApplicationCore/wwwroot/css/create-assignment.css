@@ -1,6 +1,6 @@
 ﻿
 .create-assignment-page-title {
-    font-size: 35px;
+    font-size: 25px;
     color: #2E294E;
     margin: 0px;
 }
@@ -15,7 +15,7 @@
     color: #FFFFFF;
     border-radius: 8px;
     padding: 0 30px;
-    font-size: 27px;
+    font-size: 20px;
     outline: none;
     border: none;
 }

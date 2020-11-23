@@ -40,17 +40,26 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestCreateAssignment()
         {
+            int length1 = dba.GetAllAssignments().Count;
+
+
             Assignment assignment = new Assignment();
 
-            //assignment.Description = "Assignment description";
-            //assignment.Price = 10;
-            //assignment.Deadline = DateTime.Now;
-            //assignment.Anonymous = true;
+            assignment.Description = "Assignment description";
+            assignment.Price = 10;
+            assignment.Title = "kokot";
+            assignment.Subject = "History";
+            assignment.AcademicLevel = "University";
+            assignment.Deadline = DateTime.Now;
+            assignment.Anonymous = true;
 
-            //dba.CreateAssignment(assignment);
+
+            dba.CreateAssignment(assignment);
 
 
-            Assert.IsTrue(dba.GetAllAssignments().Count > 0);
+            int length2 = dba.GetAllAssignments().Count;
+
+            Assert.IsTrue(length2 > length1);
         }
 
 
@@ -66,7 +75,10 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestGetById()
         {
-            int id = 7;
+            List<Assignment> listOfItems = dba.GetAllAssignments();
+            int length = listOfItems.Count;
+
+            int id = listOfItems[length-1].AssignmentId;
 
             Assignment assignment = dba.GetByAssignmentId(id);
             Console.WriteLine(""+assignment.AssignmentId, assignment.Description);
@@ -75,9 +87,11 @@ namespace UnitTestWebApiSolution
         }
 
         [TestMethod]
+        //TODO: REDO
         public void TestUpdate()
         {
-            int id = 10;
+            List<Assignment> listOfItems = dba.GetAllAssignments();
+            int id = listOfItems[0].AssignmentId;
 
             Assignment assignment = dba.GetByAssignmentId(id);
             Console.WriteLine(assignment.Description, assignment.Author, assignment.Price);
@@ -100,7 +114,9 @@ namespace UnitTestWebApiSolution
         [TestMethod]
         public void TestDelete()
         {
-            int id = 8;
+            List<Assignment> listOfItems = dba.GetAllAssignments();
+            int id = listOfItems[0].AssignmentId;
+
             int countBefore = dba.GetAllAssignments().Count;
             dba.DeleteAssignment(id);
             int countAfter = dba.GetAllAssignments().Count;
