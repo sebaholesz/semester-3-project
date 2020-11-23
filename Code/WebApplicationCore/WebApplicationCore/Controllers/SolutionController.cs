@@ -11,11 +11,13 @@ using WebApplicationCore.Models;
 
 namespace WebApplicationCore.Controllers
 {
-    public class AssignmentController : Controller
+    public class SolutionController : Controller
     {
-        [Route("assignment/create-assignment")]
+
+
+        [Route("solution/create-solution")]
         [HttpGet]
-        public ActionResult CreateAssignment()
+        public ActionResult CreateSolution()
         {
             string urlAl = "https://localhost:44383/api/academiclevel";
             string urlS = "https://localhost:44383/api/subject";
@@ -40,10 +42,10 @@ namespace WebApplicationCore.Controllers
             return View();
         }
 
-        [Route("assignment/create-assignment")]
+        [Route("solution/create-solution")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAssignmentAsync(IFormCollection collection)
+        public async Task<ActionResult> CreateSolutionAsync(IFormCollection collection)
         {
             try
             {
@@ -96,69 +98,15 @@ namespace WebApplicationCore.Controllers
                     ViewBag.Message = "Insert correct data";
                     ViewBag.ResponseStyleClass = "text-danger";
                 }
-                return View("CreateAssignment");
+                return View("CreateSolution");
 
             }
             catch (Exception e)
             {
                 ViewBag.Message = e.Message;
                 ViewBag.ResponseStyleClass = "text-danger";
-                return View("CreateAssignment");
+                return View("CreateSolution");
             }
-        }
-
-        [Route("assignment/display-assignment")]
-        [HttpGet]
-        public ActionResult DisplayAssignment()
-        {
-            string url = "https://localhost:44383/api/assignment/7";
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    HttpResponseMessage message = client.GetAsync(url).Result;
-                    string responseContent = message.Content.ReadAsStringAsync().Result;
-                    AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
-                    ViewBag.AssignmentTitle = assignment.Title;
-                    ViewBag.Description = assignment.Description;
-                    ViewBag.Deadline = assignment.Deadline;
-                    ViewBag.Price = assignment.Price;
-                    ViewBag.AcademicLevel = assignment.AcademicLevel;
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
-
-            return View("DisplayAssignment");
-        }
-
-        public ActionResult AssignmentPartial()
-        {
-            string url = "https://localhost:44383/api/assignment/7";
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    HttpResponseMessage message = client.GetAsync(url).Result;
-                    string responseContent = message.Content.ReadAsStringAsync().Result;
-                    AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
-                    ViewBag.AssignmentTitle = assignment.Title;
-                    ViewBag.Description = assignment.Description;
-                    ViewBag.Deadline = assignment.Deadline;
-                    ViewBag.Price = assignment.Price;
-                    ViewBag.AcademicLevel = assignment.AcademicLevel;
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
-
-            return PartialView("AssignmentPartial");
         }
 
     }

@@ -1,0 +1,49 @@
+﻿@model WebApplicationCore.Models.AssignmentModels
+
+@{
+    ViewData["Title"] = "Display Assignment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="/css/display-assignment.css" />
+}
+
+<main>
+    <div class="container-fluid">
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-md-2 screen-1300-invisible">
+            </div>
+            <div class="col-md-8 screen-1300-full">
+                <div class="boxed-row">
+                    <div class="row display-assignment-title-block">
+                        <div class="col-md-8">
+                            <h3 class="display-assignment-page-title">
+                                @ViewBag.AssignmentTitle
+                            </h3>
+                            <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center justify-content-end">
+                            <button type="button" class="btn-solve-assignment ">
+                                Solve Assignment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 screen-1300-invisible">
+            </div>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
+     @*@Html.Action("AssignmentPartial")*@
+    
+
+
+
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
