@@ -122,27 +122,92 @@ namespace WebApplicationCore.Controllers
             return View("DisplayAssignment");
         }
 
-        [Route("assignment/solving-assignment/{id}")]
+        
+
+       [Route("assignment/solving-assignment/{id}")]
         [HttpGet]
         public ActionResult DisplaySolvingAssignment(int id)
         {
-            string url = "https://localhost:44383/api/assignment/" + id;
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    HttpResponseMessage message = client.GetAsync(url).Result;
-                    string responseContent = message.Content.ReadAsStringAsync().Result;
-                    AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
-                    ViewBag.Assignment = assignment;
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-            }
+            DisplayAssignment(id);
             return View("SolvingAssignment");
         }
+
+        [Route("assignment/solving-assignment/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DisplaySolvingAssignmentAsync(IFormCollection collection, int id)
+        {
+            DisplayAssignment(id);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    //it doesn't compile because we need to get the list from the API so we can check it
+                    //string payloadAcademicLevel = "";
+                    //if (AssignmentModels.AcademicLevelValues.Contains(collection["AcademicLevel"]))
+                    //{
+                    //    var i = AssignmentModels.AcademicLevelValues.IndexOf(collection["AcademicLevel"]);
+                    //    payloadAcademicLevel = AssignmentModels.AcademicLevelValues[i];
+                    //}
+
+                    //string payloadSubject = "";
+                    //if (AssignmentModels.SubjectValues.Contains(collection["Subject"]))
+                    //{
+                    //    var i = AssignmentModels.SubjectValues.IndexOf(collection["payloadSubject"]);
+                    //    payloadSubject = AssignmentModels.SubjectValues[i];
+                    //}
+
+                    
+                    var payload = new Dictionary<string, string>
+                    {
+                        //{"AssignmentId", "5" },
+                        //{"UserId", "420"},
+                        //{"Description", "DUMMY DATA"},
+                        //{"Timestamp", "2021-11-20 15:09:44.993"},
+                        //{"SolutionRating", "3.6"},
+                        //{"Anonymous", "true"},
+
+                        
+
+                        {"AssignmentId", id.ToString()},
+                        { "UserId", "12"},
+                        {"Description", collection["Description"]},
+                        {"Timestamp", DateTime.Now.ToString()},
+                        {"SolutionRating", "3.6M"},
+                        {"Anonymous", collection["Anonymous"][0]},
+                    };
+
+                    string strPayload = JsonConvert.SerializeObject(payload);
+                    HttpContent httpContent = new StringContent(strPayload, Encoding.UTF8, "application/json");
+
+                    string apiUrl = "https://localhost:44383/api/solution";
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        HttpResponseMessage message = client.PostAsync(apiUrl, httpContent).Result;
+                        var responseContent = await message.Content.ReadAsStringAsync();
+                        var responseContentTrimmed = responseContent.Trim('\"');
+                        ViewBag.Message = responseContentTrimmed;
+                        ViewBag.ResponseStyleClass = message.StatusCode == HttpStatusCode.Created ? "text-success" : message.StatusCode == HttpStatusCode.NotFound ? "text-danger" : "";
+                    }
+                }
+                else
+                {
+                    ViewBag.Message = "Insert correct data";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                }
+                return View("SolvingAssignment");
+
+            }
+            catch (Exception e)
+            {
+                ViewBag.Message = e.Message;
+                ViewBag.ResponseStyleClass = "text-danger";
+                return View("SolvingAssignment");
+            }
+        }
+
+
 
         //public ActionResult AssignmentPartial()
         //{
@@ -154,7 +219,8 @@ namespace WebApplicationCore.Controllers
         //            HttpResponseMessage message = client.GetAsync(url).Result;
         //            string responseContent = message.Content.ReadAsStringAsync().Result;
         //            AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
-        //            ViewBag.Assignment = assignment;
+        //           
+
         //        }
         //        catch (Exception e)
         //        { 

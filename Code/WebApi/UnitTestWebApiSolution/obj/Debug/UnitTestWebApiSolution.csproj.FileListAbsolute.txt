@@ -62,3 +62,5 @@ C:\Users\Painful\semester-3-project\Code\WebApi\UnitTestWebApiSolution\bin\Debug
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\UnitTestWebApiSolution\bin\Debug\UnitTestWebApiSolution.dll.config
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\UnitTestWebApiSolution\bin\Debug\BusinessLayer.dll
 C:\Users\samla\Desktop\solvr.online\semester-3-project\Code\WebApi\UnitTestWebApiSolution\bin\Debug\BusinessLayer.pdb
+C:\Users\Painful\semester-3-project\Code\WebApi\UnitTestWebApiSolution\bin\Debug\BusinessLayer.dll
+C:\Users\Painful\semester-3-project\Code\WebApi\UnitTestWebApiSolution\bin\Debug\BusinessLayer.pdb
