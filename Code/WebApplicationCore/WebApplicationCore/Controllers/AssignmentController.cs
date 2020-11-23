@@ -17,24 +17,16 @@ namespace WebApplicationCore.Controllers
         [HttpGet]
         public ActionResult CreateAssignment()
         {
-            string urlAl = "https://localhost:44383/api/academiclevel";
-            string urlS = "https://localhost:44383/api/subject";
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    HttpResponseMessage message = client.GetAsync(urlAl).Result;
-                    string responseContent = message.Content.ReadAsStringAsync().Result;
-                    List<string> academicLevel = JsonConvert.DeserializeObject<List<string>>(responseContent);
-                    ViewBag.AcademicLevel = academicLevel;
-                    HttpResponseMessage messageSubject = client.GetAsync(urlS).Result;
-                    string responseContentSubject = messageSubject.Content.ReadAsStringAsync().Result;
-                    List<string> subject = JsonConvert.DeserializeObject<List<string>>(responseContentSubject);
-                    ViewBag.Subject = subject;
+                    ViewBag.AcademicLevels = AssignmentModels.AcademicLevels();
+                    ViewBag.Subjects = AssignmentModels.Subjects();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    //TODO: Handle Error
+                    throw e;
                 }
             }
             return View();
@@ -85,8 +77,8 @@ namespace WebApplicationCore.Controllers
                         HttpResponseMessage message = client.PostAsync(u, c).Result;
                         var responseContent = await message.Content.ReadAsStringAsync();
                         var responseContentTrimmed = responseContent.Trim('\"');
-                        ViewBag.AcademicLevel = AssignmentModels.AcademicLevels();
-                        ViewBag.Subject = AssignmentModels.Subjects();
+                        ViewBag.AcademicLevels = AssignmentModels.AcademicLevels();
+                        ViewBag.Subjects = AssignmentModels.Subjects();
                         ViewBag.Message = responseContentTrimmed;
                         ViewBag.ResponseStyleClass = message.StatusCode == HttpStatusCode.Created ? "text-success" : message.StatusCode == HttpStatusCode.NotFound ? "text-danger" : "";
                     }
@@ -107,11 +99,11 @@ namespace WebApplicationCore.Controllers
             }
         }
 
-        [Route("assignment/display-assignment")]
+        [Route("assignment/display-assignment/{id}")]
         [HttpGet]
-        public ActionResult DisplayAssignment()
+        public ActionResult DisplayAssignment(int id)
         {
-            string url = "https://localhost:44383/api/assignment/7";
+            string url = "https://localhost:44383/api/assignment/" + id;
             using (HttpClient client = new HttpClient())
             {
                 try
@@ -119,25 +111,22 @@ namespace WebApplicationCore.Controllers
                     HttpResponseMessage message = client.GetAsync(url).Result;
                     string responseContent = message.Content.ReadAsStringAsync().Result;
                     AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
-                    ViewBag.AssignmentTitle = assignment.Title;
-                    ViewBag.Description = assignment.Description;
-                    ViewBag.Deadline = assignment.Deadline;
-                    ViewBag.Price = assignment.Price;
-                    ViewBag.AcademicLevel = assignment.AcademicLevel;
+                    ViewBag.Assignment = assignment;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
-                    throw;
+                    throw e;
                 }
             }
 
             return View("DisplayAssignment");
         }
 
-        public ActionResult AssignmentPartial()
+        [Route("assignment/solving-assignment/{id}")]
+        [HttpGet]
+        public ActionResult DisplaySolvingAssignment(int id)
         {
-            string url = "https://localhost:44383/api/assignment/7";
+            string url = "https://localhost:44383/api/assignment/" + id;
             using (HttpClient client = new HttpClient())
             {
                 try
@@ -145,21 +134,35 @@ namespace WebApplicationCore.Controllers
                     HttpResponseMessage message = client.GetAsync(url).Result;
                     string responseContent = message.Content.ReadAsStringAsync().Result;
                     AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
-                    ViewBag.AssignmentTitle = assignment.Title;
-                    ViewBag.Description = assignment.Description;
-                    ViewBag.Deadline = assignment.Deadline;
-                    ViewBag.Price = assignment.Price;
-                    ViewBag.AcademicLevel = assignment.AcademicLevel;
+                    ViewBag.Assignment = assignment;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
-                    throw;
+                    throw e;
                 }
             }
-
-            return PartialView("AssignmentPartial");
+            return View("SolvingAssignment");
         }
 
+        //public ActionResult AssignmentPartial()
+        //{
+        //    string url = "https://localhost:44383/api/assignment/7";
+        //    using (HttpClient client = new HttpClient())
+        //    {
+        //        try
+        //        {
+        //            HttpResponseMessage message = client.GetAsync(url).Result;
+        //            string responseContent = message.Content.ReadAsStringAsync().Result;
+        //            AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
+        //            ViewBag.Assignment = assignment;
+        //        }
+        //        catch (Exception e)
+        //        { 
+        //            throw e;
+        //        }
+        //    }
+
+        //    return PartialView("AssignmentPartial");
+        //}
     }
 }

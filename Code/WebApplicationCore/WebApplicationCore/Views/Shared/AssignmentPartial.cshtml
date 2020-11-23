@@ -4,81 +4,68 @@
     <link rel="stylesheet" href="/css/display-assignment.css" />
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-2 screen-1300-invisible">
-        </div>
-        <div class="col-md-8 screen-1300-full">
-            <div class="row d-flex align-items-stretch">
-                <div class="col-md-8 d-inline-block align-items-stretch">
-                    <div class="boxed-row display-assignment-details">
-                        <div class="row container-fluid">
-                            <div class="col-md-12">
-                                <h5>Details:</h5>
-                            </div>
-                        </div>
-                        <div class="row container-fluid ">
-                            <div class="col-md-4">
-                                <div class="d-inline-flex">
-                                    <p class="details-text-format">Post Date: </p>
-                                    &nbsp;
-                                    <p></p>
-                                </div>
-                                <div class="d-inline-flex">
-                                    <p class="details-text-format">Deadline: </p>
-                                    &nbsp;
-                                    <p>@ViewBag.Deadline</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="d-inline-flex">
-                                    <p class="details-text-format">Credits: </p>
-                                    &nbsp;
-                                    <p>@ViewBag.Price</p>
-                                </div>
-                                <div class="d-inline-flex">
-                                    <p class="details-text-format">Answers: </p>
-                                    &nbsp;
-                                    <p></p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="details-text-format">Academic Level:</p>
-                                <p>@ViewBag.AcademicLevel</p>
-                            </div>
-                        </div>
+@{
+    var assignment = ViewBag.Assignment;
+}
+
+<div class="row d-flex align-items-stretch">
+    <div class="col-md-8 d-inline-block align-items-stretch">
+        <div class="boxed-row display-assignment-details">
+            <div class="row container-fluid">
+                <div class="col-md-12">
+                    <h5>Details:</h5>
+                </div>
+            </div>
+            <div class="row container-fluid ">
+                <div class="col-md-4">
+                    <div class="d-inline-flex">
+                        <p class="details-text-format">Post Date: </p>
+                        <p></p>
+                    </div>
+                    <div class="d-inline-flex">
+                        <p class="details-text-format">Deadline: </p>
+                        <p>@assignment.Deadline</p>
                     </div>
                 </div>
-                <div class="col-md-4 assignment-profile d-inline-block align-items-stretch">
-                    <div class="boxed-row">
-                        <div class="col-md-5 assignment-profile-image">
-                            @* Some conditional logic where if there is no image URL, we go to the fallback *@
-                            @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
-                            <img alt="Default user avatar" src="/assets/images/default-avatar.png" />
-                        </div>
-                        <div class="col-md-7">
-                            <p>UserName</p>
-                            <p>score 163428</p>
-                        </div>
+                <div class="col-md-4">
+                    <div class="d-inline-flex">
+                        <p class="details-text-format">Credits: </p>
+                        <p>@assignment.Price</p>
+                    </div>
+                    <div class="d-inline-flex">
+                        <p class="details-text-format">Answers: </p>
+                        <p></p>
                     </div>
                 </div>
-
-            </div>
-
-            <div class="row assignment-description-detail-container">
-                <div class="col-md-12 height-max">
-                    <div class="assignment-description">
-                        <p>
-                            @ViewBag.Description
-                        </p>
-                    </div>
+                <div class="col-md-4">
+                    <p class="details-text-format">Academic Level:</p>
+                    <p>@assignment.AcademicLevel</p>
                 </div>
-
-
             </div>
         </div>
-            <div class="col-md-2 screen-1300-invisible">
-            </div>
-        </div>
-
     </div>
+    <div class="col-md-4 assignment-profile d-inline-block align-items-stretch">
+        <div class="boxed-row">
+            <div class="col-md-5 assignment-profile-image">
+                @* Some conditional logic where if there is no image URL, we go to the fallback *@
+                @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
+                <img alt="Default user avatar" src="/assets/images/default-avatar.png" />
+            </div>
+            <div class="col-md-7">
+                <p>UserName</p>
+                <p>score 163428</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row assignment-description-detail-container">
+    <div class="col-md-12 height-max">
+        <div class="assignment-description">
+            <p>
+                @assignment.Description
+            </p>
+        </div>
+    </div>
+</div>

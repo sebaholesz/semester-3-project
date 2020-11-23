@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
@@ -40,64 +41,54 @@ namespace WebApplicationCore.Models
 
         public static List<string> AcademicLevels()
         {
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = client.GetAsync("https://localhost:44383/api/academiclevel").Result;
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    return response.Content.ReadAsAsync<List<string>>().Result;
+                    HttpResponseMessage message = client.GetAsync("https://localhost:44383/api/academiclevel").Result;
+                    string responseContent = message.Content.ReadAsStringAsync().Result;
+                    List<string> academicLevels = JsonConvert.DeserializeObject<List<string>>(responseContent);
+
+                    if (academicLevels is List<string>)
+                    {
+                        return academicLevels;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                else
-                {
-                    return null;
-                }
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
 
         public static List<string> Subjects()
         {
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = client.GetAsync("https://localhost:44383/api/subject").Result;
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    return response.Content.ReadAsAsync<List<string>>().Result;
-                }
-                else
-                {
-                    return null;
+                    HttpResponseMessage messageSubject = client.GetAsync("https://localhost:44383/api/subject").Result;
+                    string responseContentSubject = messageSubject.Content.ReadAsStringAsync().Result;
+                    List<string> subjects = JsonConvert.DeserializeObject<List<string>>(responseContentSubject);
+
+                    if (subjects is List<string>)
+                    {
+                        return subjects;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
-
-        //public static List<string> AcademicLevelValues = new List<string>() {
-        //    "Primary School First Grade",
-        //    "Primary School Second Grade",
-        //    "Primary School Third Grade",
-        //    "Primary School Fourth Grade",
-        //    "Primary School Fifth Grade",
-        //    "Primary School Sixth Grade",
-        //    "Primary School Seventh Grade",
-        //    "Primary School Eighth Grade",
-        //    "Primary School Ninth Grade",
-        //    "High School First Grade",
-        //    "High School Second Grade",
-        //    "High School Third Grade",
-        //    "High School Fourth Grade",
-        //    "UNIVERSITY BABYYYYY"
-        //};
-
-        //public static List<string> SubjectValues = new List<string>() {
-        //    "Mathematics",
-        //    "English",
-        //    "History",
-        //    "Geography",
-        //    "Spanish",
-        //    "Physics",
-        //    "Biology",
-        //    "Chemistry"
-        //};
     }
 }

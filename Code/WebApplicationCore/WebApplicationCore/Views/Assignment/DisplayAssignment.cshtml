@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Display Assignment";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var assignment = ViewBag.Assignment;
 }
 
 @section Stylesheets {
@@ -11,7 +12,6 @@
 
 <main>
     <div class="container-fluid">
-        @Html.AntiForgeryToken()
         <div class="row">
             <div class="col-md-2 screen-1300-invisible">
             </div>
@@ -20,28 +20,23 @@
                     <div class="row display-assignment-title-block">
                         <div class="col-md-8">
                             <h3 class="display-assignment-page-title">
-                                @ViewBag.AssignmentTitle
+                                @assignment.Title
                             </h3>
                             <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
                         </div>
                         <div class="col-md-4 d-flex align-items-center justify-content-end">
-                            <button type="button" class="btn-solve-assignment ">
+                            <a class="btn-solve-assignment" href="/assignment/solving-assignment/@assignment.AssignmentId/">
                                 Solve Assignment
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
+                @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
             </div>
             <div class="col-md-2 screen-1300-invisible">
             </div>
         </div>
     </div>
-    @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
-     @*@Html.Action("AssignmentPartial")*@
-    
-
-
-
 </main>
 
 @section Scripts {

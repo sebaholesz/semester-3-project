@@ -83,10 +83,9 @@
                                     <br />
                                     <select asp-for="AcademicLevel" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
                                         <option value="" selected>Choose academical level</option>
-                                        @foreach (var option in AssignmentModels.AcademicLevels())
+                                        @foreach (var option in ViewBag.AcademicLevels)
                                         {
                                             <option value="@option">@option</option>
-
                                         }
                                     </select>
                                     <span asp-validation-for="AcademicLevel" class="text-danger"></span>
@@ -99,10 +98,9 @@
                                     <br />
                                     <select asp-for="Subject" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
                                         <option value="" selected>Choose subject</option>
-                                        @foreach (var option in AssignmentModels.Subjects())
+                                        @foreach (var option in ViewBag.Subjects)
                                         {
                                             <option value="@option">@option</option>
-
                                         }
                                     </select>
                                     <span asp-validation-for="Subject" class="text-danger"></span>
