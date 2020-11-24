@@ -11,7 +11,7 @@
 
 <main>
     <div class="container-fluid">
-        <form class="create-assignment-form" asp-controller="Assignment" asp-action="CreateAssignment" method="post">
+        <form asp-controller="Assignment" asp-action="CreateAssignment" method="post">
             @Html.AntiForgeryToken()
             <div class="row">
                 <div class="col-md-2 screen-1300-invisible">

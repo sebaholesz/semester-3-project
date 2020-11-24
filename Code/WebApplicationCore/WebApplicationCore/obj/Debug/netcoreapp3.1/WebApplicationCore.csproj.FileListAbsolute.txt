@@ -311,7 +311,6 @@ C:\Users\Lenovo\Desktop\git-repo-semester-3-project\semester-3-project\Code\WebA
 C:\Users\Lenovo\Desktop\git-repo-semester-3-project\semester-3-project\Code\WebApplicationCore\WebApplicationCore\obj\Debug\netcoreapp3.1\Razor\Views\Assignment\DisplayAssignment.cshtml.g.cs
 C:\Users\Lenovo\Desktop\git-repo-semester-3-project\semester-3-project\Code\WebApplicationCore\WebApplicationCore\obj\Debug\netcoreapp3.1\Razor\Views\Shared\AssignmentPartial.cshtml.g.cs
 C:\Users\Lenovo\Desktop\git-repo-semester-3-project\semester-3-project\Code\WebApplicationCore\WebApplicationCore\obj\Debug\netcoreapp3.1\Razor\Views\Solution\CreateSolution.cshtml.g.cs
-C:\Users\Lenovo\Desktop\git-repo-semester-3-project\semester-3-project\Code\WebApplicationCore\WebApplicationCore\obj\Debug\netcoreapp3.1\Razor\Views\Assignment\SolvingAssignment.cshtml.g.cs
 C:\Users\Painful\semester-3-project\Code\WebApplicationCore\WebApplicationCore\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\Painful\semester-3-project\Code\WebApplicationCore\WebApplicationCore\bin\Debug\netcoreapp3.1\appsettings.json
 C:\Users\Painful\semester-3-project\Code\WebApplicationCore\WebApplicationCore\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
