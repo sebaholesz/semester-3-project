@@ -1,7 +1,7 @@
-﻿using DatabaseLayer.DataAccessLayer;
+﻿using BusinessLayer.Validation;
+using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
-using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
@@ -9,10 +9,13 @@ namespace BusinessLayer
     public class AssignmentBusiness
     {
         private readonly DbAssignmentIF dbAssignment;
+        private AssignmentInputValidation assignmentValidation;
 
         public AssignmentBusiness()
         {
             dbAssignment = new DbAssignment();
+            assignmentValidation = new AssignmentInputValidation();
+
         }
 
         public List<Assignment> GetAllAssignments()
@@ -29,7 +32,12 @@ namespace BusinessLayer
         }
         public int CreateAssignment(Assignment assignment)
         {
-            return dbAssignment.CreateAssignment(assignment);
+            if (assignmentValidation.CheckInput(assignment))
+            {
+                return dbAssignment.CreateAssignment(assignment);
+            }
+            return -1;
+
         }
 
         public Assignment GetByAssignmentId(int id)
@@ -39,6 +47,7 @@ namespace BusinessLayer
 
         public int UpdateAssignment(Assignment assignment, int id)
         {
+            //TODO validators 
             return dbAssignment.UpdateAssignment(assignment, id);
         }
 

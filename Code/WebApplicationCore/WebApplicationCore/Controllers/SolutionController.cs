@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using WebApplicationCore.Models;
 
 namespace WebApplicationCore.Controllers
@@ -46,7 +44,7 @@ namespace WebApplicationCore.Controllers
             {
                 if (ModelState.IsValid)
                 {
-             
+
                     var payload = new Dictionary<string, string>
                     {
                         {"AssignmentId", collection["AssignmentId"]},
@@ -76,13 +74,15 @@ namespace WebApplicationCore.Controllers
                     ViewBag.Message = "Insert correct data";
                     ViewBag.ResponseStyleClass = "text-danger";
                 }
-                return View("CreateSolution");
+                //return View("CreateSolution");
+                return View();
             }
             catch (Exception e)
             {
                 ViewBag.Message = e.Message;
                 ViewBag.ResponseStyleClass = "text-danger";
-                return View("CreateSolution");
+                //return View("CreateSolution");
+                return View();
             }
         }
     }

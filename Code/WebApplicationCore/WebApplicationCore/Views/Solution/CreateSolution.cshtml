@@ -17,45 +17,46 @@
             <div class="col-md-2 screen-1300-invisible">
             </div>
             <div class="col-md-8 screen-1300-full">
-                @*<form asp-controller="Solution" asp-action="CreateSolution" method="post">
-                        @Html.AntiForgeryToken()
-                        <div class="row">
-                            <div class="boxed-row">
-                                <div class="row create-solution-title-block">
-                                    <div class="col-md-9">
-                                        <h3 class="create-solution-page-title">
-                                            Create solution
-                                        </h3>
-                                        <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
-                                    </div>
-                                    <div class="col-md-3 d-flex align-items-center justify-content-end">
-                                        <button type="submit" class="btn-publish-solution">
-                                            Post The Solution
-                                        </button>
-                                    </div>
+                <form asp-controller="Solution" asp-action="CreateSolution" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="boxed-row">
+                            <div class="row create-solution-title-block">
+                                <div class="col-md-9">
+                                    <h3 class="create-solution-page-title">
+                                        Create solution
+                                    </h3>
+                                    <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-center justify-content-end">
+                                    <button type="submit" class="btn-publish-solution">
+                                        Post The Solution
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="row solution-description-detail-container">
-                                <div class="col-md-12 height-max">
-                                    <input asp-for="AssignmentId" type="hidden" value="@assignment.AssignmentId" />
-                                    <div class="solution-description">
-                                        <div class="form-group">
-                                            <label for="Anonymous">
-                                                Make Anonymous
-                                            </label>
-                                            <br />
-                                            <input asp-for="Anonymous" type="checkbox" class="checkbox-make-anonymous" value="true" checked />
-                                        </div>
-                                        <span asp-validation-for="Description" class="text-danger"></span>
-                                        <textarea asp-for="Description" placeholder="Write the description of your solution here..." class="textarea-solution-description"></textarea>
+                    <div class="row">
+                        <div class="row solution-description-detail-container">
+                            <div class="col-md-12 height-max">
+
+                                <input asp-for="AssignmentId" type="hidden" value="@assignment.AssignmentId" />
+                                <div class="solution-description">
+                                    <div class="form-group">
+                                        <label for="Anonymous">
+                                            Make Anonymous
+                                        </label>
+                                        <br />
+                                        <input asp-for="Anonymous" type="checkbox" class="checkbox-make-anonymous" value="true" checked />
                                     </div>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                    <textarea asp-for="Description" placeholder="Write the description of your solution here..." class="textarea-solution-description"></textarea>
                                 </div>
                             </div>
                         </div>
-                    </form>*@
+                    </div>
+                </form>
                 @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
             </div>
             <div class="col-md-2 screen-1300-invisible">

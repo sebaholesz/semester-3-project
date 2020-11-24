@@ -1,4 +1,5 @@
-﻿using DatabaseLayer.DataAccessLayer;
+﻿using BusinessLayer.Validation;
+using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System.Collections.Generic;
@@ -8,10 +9,13 @@ namespace BusinessLayer
     public class SolutionBusiness
     {
         private readonly DbSolutionIF dbSolution;
+        private SolutionInputValidation validateSolution;
 
         public SolutionBusiness()
         {
             dbSolution = new DbSolution();
+            validateSolution = new SolutionInputValidation();
+
         }
 
         public List<Solution> GetAllSolutions()
@@ -20,7 +24,12 @@ namespace BusinessLayer
         }
         public int CreateSolution(Solution solution)
         {
-            return dbSolution.CreateSolution(solution);
+            if (validateSolution.CheckInput(solution))
+            {
+                return dbSolution.CreateSolution(solution);
+            }
+            return -1;
+
         }
         public Solution GetBySolutionId(int id)
         {
