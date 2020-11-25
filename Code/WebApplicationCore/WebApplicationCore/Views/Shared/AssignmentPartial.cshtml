@@ -1,9 +1,5 @@
 ﻿@model WebApplicationCore.Models.AssignmentModels
 
-@section Stylesheets {
-    <link rel="stylesheet" href="/css/display-assignment.css" />
-}
-
 @{
     var assignment = ViewBag.Assignment;
 }
@@ -11,36 +7,13 @@
 <div class="row d-flex align-items-stretch">
     <div class="col-md-8 d-inline-block align-items-stretch">
         <div class="boxed-row display-assignment-details">
-            <div class="row container-fluid">
-                <div class="col-md-12">
-                    <h5>Details:</h5>
-                </div>
-            </div>
-            <div class="row container-fluid ">
-                <div class="col-md-4">
-                    <div class="d-inline-flex">
-                        <p class="details-text-format">Post Date: </p>
-                        <p></p>
-                    </div>
-                    <div class="d-inline-flex">
-                        <p class="details-text-format">Deadline: </p>
-                        <p>@assignment.Deadline</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="d-inline-flex">
-                        <p class="details-text-format">Credits: </p>
-                        <p>@assignment.Price</p>
-                    </div>
-                    <div class="d-inline-flex">
-                        <p class="details-text-format">Answers: </p>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <p class="details-text-format">Academic Level:</p>
-                    <p>@assignment.AcademicLevel</p>
-                </div>
+            <div class="just-grid">
+                <span class="details-text-format grid-area-post-date">Post Date: GETPOSTDATE</span>
+                <span class="details-text-format grid-area-price">Credits: @assignment.Price</span>
+                <span class="details-text-format grid-area-academic-level">Academic Level: @assignment.AcademicLevel</span>
+                <span class="details-text-format grid-area-deadline">Deadline: @assignment.Deadline</span>
+                <span class="details-text-format grid-area-answers">Answers: GETANSWERS</span>
+                <span class="details-text-format grid-area-subject">Subject: @assignment.Subject</span>
             </div>
         </div>
     </div>
@@ -57,7 +30,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <div class="row assignment-description-detail-container">

@@ -1,46 +1,68 @@
 ﻿@model WebApplicationCore.Models.AssignmentModels
 
 @{
-    ViewData["Title"] = "Create Solution";
+    ViewData["Title"] = "Display Assignment";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var assignment = ViewBag.Assignment;
 }
 
 @section Stylesheets {
-    <link rel="stylesheet" href="/css/create-solution.css" />
+    <link href="/css/create-solution.css" rel="stylesheet" />
+    <link href="/css/display-assignment.css" rel="stylesheet" />
 }
 
 <main>
     <div class="container-fluid">
-        @Html.AntiForgeryToken()
         <div class="row">
             <div class="col-md-2 screen-1300-invisible">
             </div>
             <div class="col-md-8 screen-1300-full">
-                <div class="boxed-row">
-                    <div class="row display-assignment-title-block">
-                        <div class="col-md-8">
-                            <h3 class="display-assignment-page-title">
-                                @*@ViewBag.AssignmentTitle*@
-                                Assignment Title
-                            </h3>
-                            <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
-                        </div>
-                        <div class="col-md-4 d-flex align-items-center justify-content-end">
-                            <button type="button" class="btn-solve-assignment ">
-                                Submit
-                            </button>
+                <form asp-controller="Solution" asp-action="CreateSolution" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="boxed-row">
+                            <div class="row create-solution-title-block">
+                                <div class="col-md-9">
+                                    <h3 class="create-solution-page-title">
+                                        Create solution
+                                    </h3>
+                                    <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-center justify-content-end">
+                                    <button type="submit" class="btn-publish-solution">
+                                        Post The Solution
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="row">
+                        <div class="row solution-description-detail-container">
+                            <div class="col-md-12 height-max">
+
+                                <input asp-for="AssignmentId" type="hidden" value="@assignment.AssignmentId" />
+                                <div class="solution-description">
+                                    <div class="form-group">
+                                        <label for="Anonymous">
+                                            Make Anonymous
+                                        </label>
+                                        <br />
+                                        <input asp-for="Anonymous" type="checkbox" class="checkbox-make-anonymous" value="true" checked />
+                                    </div>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                    <textarea asp-for="Description" placeholder="Write the description of your solution here..." class="textarea-solution-description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
             </div>
             <div class="col-md-2 screen-1300-invisible">
             </div>
         </div>
     </div>
-    @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
-
-
-
 </main>
 
 @section Scripts {

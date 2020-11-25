@@ -33,7 +33,7 @@ namespace DatabaseLayer.DataAccessLayer
                         return -1;
                     }
                 }
-
+                
                 List<Solution> solutionsAfter = GetSolutionsByAssignmentId(solution.AssignmentId);
                 int queueLengthAfter = solutionsAfter.Count;
 

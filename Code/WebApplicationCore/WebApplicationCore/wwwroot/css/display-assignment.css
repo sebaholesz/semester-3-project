@@ -1,5 +1,4 @@
-﻿
-.display-assignment-page-title {
+﻿.display-assignment-page-title {
     font-size: 25px;
     color: #2E294E;
     margin: 0px;
@@ -45,6 +44,41 @@
     display: block;
     font-size: 14px;
 }
+
+.just-grid {
+    color:pink;
+    display: grid;
+    grid-template-columns: 33.3% 33.3% 33.3%;
+    grid-template-rows: 50% 50%;
+    grid-template-areas: 
+        "post-date credits academic-level"
+        "deadline answers subject";
+}
+
+.grid-area-post-date{
+    grid-area: post-date;
+}
+
+.grid-area-price{
+    grid-area: price;
+}
+
+.grid-area-academic-level{
+    grid-area: academic-level
+}
+
+.grid-area-deadline{
+    grid-area: deadline;
+}
+
+.grid-area-answers{
+    grid-area: answers
+}
+
+.grid-area-subject {
+    grid-area: subject;
+}
+
 
 .details-text-format {
     color: #919493;

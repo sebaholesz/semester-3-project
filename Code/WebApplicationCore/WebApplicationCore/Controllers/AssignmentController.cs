@@ -35,27 +35,12 @@ namespace WebApplicationCore.Controllers
         [Route("assignment/create-assignment")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAssignmentAsync(IFormCollection collection)
+        public ActionResult CreateAssignment(IFormCollection collection)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    //it doesn't compile because we need to get the list from the API so we can check it
-                    //string payloadAcademicLevel = "";
-                    //if (AssignmentModels.AcademicLevelValues.Contains(collection["AcademicLevel"]))
-                    //{
-                    //    var i = AssignmentModels.AcademicLevelValues.IndexOf(collection["AcademicLevel"]);
-                    //    payloadAcademicLevel = AssignmentModels.AcademicLevelValues[i];
-                    //}
-
-                    //string payloadSubject = "";
-                    //if (AssignmentModels.SubjectValues.Contains(collection["Subject"]))
-                    //{
-                    //    var i = AssignmentModels.SubjectValues.IndexOf(collection["payloadSubject"]);
-                    //    payloadSubject = AssignmentModels.SubjectValues[i];
-                    //}
-
                     var payload = new Dictionary<string, string>
                     {
                         {"Title", collection["Title"] },
@@ -75,7 +60,7 @@ namespace WebApplicationCore.Controllers
                     using (HttpClient client = new HttpClient())
                     {
                         HttpResponseMessage message = client.PostAsync(u, c).Result;
-                        var responseContent = await message.Content.ReadAsStringAsync();
+                        var responseContent = message.Content.ReadAsStringAsync().Result;
                         var responseContentTrimmed = responseContent.Trim('\"');
                         ViewBag.AcademicLevels = AssignmentModels.AcademicLevels();
                         ViewBag.Subjects = AssignmentModels.Subjects();
@@ -118,51 +103,7 @@ namespace WebApplicationCore.Controllers
                     throw e;
                 }
             }
-
             return View("DisplayAssignment");
         }
-
-        [Route("assignment/solving-assignment/{id}")]
-        [HttpGet]
-        public ActionResult DisplaySolvingAssignment(int id)
-        {
-            string url = "https://localhost:44383/api/assignment/" + id;
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    HttpResponseMessage message = client.GetAsync(url).Result;
-                    string responseContent = message.Content.ReadAsStringAsync().Result;
-                    AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
-                    ViewBag.Assignment = assignment;
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-            }
-            return View("SolvingAssignment");
-        }
-
-        //public ActionResult AssignmentPartial()
-        //{
-        //    string url = "https://localhost:44383/api/assignment/7";
-        //    using (HttpClient client = new HttpClient())
-        //    {
-        //        try
-        //        {
-        //            HttpResponseMessage message = client.GetAsync(url).Result;
-        //            string responseContent = message.Content.ReadAsStringAsync().Result;
-        //            AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
-        //            ViewBag.Assignment = assignment;
-        //        }
-        //        catch (Exception e)
-        //        { 
-        //            throw e;
-        //        }
-        //    }
-
-        //    return PartialView("AssignmentPartial");
-        //}
     }
 }

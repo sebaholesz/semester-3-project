@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using WebApplicationCore.Models;
 
 namespace WebApplicationCore.Controllers
@@ -14,81 +13,58 @@ namespace WebApplicationCore.Controllers
     public class SolutionController : Controller
     {
 
-
-        [Route("solution/create-solution")]
+        [Route("solution/assignment/{id}")]
         [HttpGet]
-        public ActionResult CreateSolution()
+        public ActionResult CreateSolution(int id)
         {
-            string urlAl = "https://localhost:44383/api/academiclevel";
-            string urlS = "https://localhost:44383/api/subject";
+            string url = "https://localhost:44383/api/assignment/" + id;
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    HttpResponseMessage message = client.GetAsync(urlAl).Result;
+                    HttpResponseMessage message = client.GetAsync(url).Result;
                     string responseContent = message.Content.ReadAsStringAsync().Result;
-                    List<string> academicLevel = JsonConvert.DeserializeObject<List<string>>(responseContent);
-                    ViewBag.AcademicLevel = academicLevel;
-                    HttpResponseMessage messageSubject = client.GetAsync(urlS).Result;
-                    string responseContentSubject = messageSubject.Content.ReadAsStringAsync().Result;
-                    List<string> subject = JsonConvert.DeserializeObject<List<string>>(responseContentSubject);
-                    ViewBag.Subject = subject;
+                    AssignmentModels assignment = JsonConvert.DeserializeObject<AssignmentModels>(responseContent);
+                    ViewBag.Assignment = assignment;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    //TODO: Handle Error
+                    throw e;
                 }
             }
-            return View();
+            return View("CreateSolution");
         }
 
-        [Route("solution/create-solution")]
+        [Route("solution/assignment/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateSolutionAsync(IFormCollection collection)
+        public ActionResult CreateSolution(IFormCollection collection)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    //it doesn't compile because we need to get the list from the API so we can check it
-                    //string payloadAcademicLevel = "";
-                    //if (AssignmentModels.AcademicLevelValues.Contains(collection["AcademicLevel"]))
-                    //{
-                    //    var i = AssignmentModels.AcademicLevelValues.IndexOf(collection["AcademicLevel"]);
-                    //    payloadAcademicLevel = AssignmentModels.AcademicLevelValues[i];
-                    //}
-
-                    //string payloadSubject = "";
-                    //if (AssignmentModels.SubjectValues.Contains(collection["Subject"]))
-                    //{
-                    //    var i = AssignmentModels.SubjectValues.IndexOf(collection["payloadSubject"]);
-                    //    payloadSubject = AssignmentModels.SubjectValues[i];
-                    //}
 
                     var payload = new Dictionary<string, string>
                     {
-                        {"Title", collection["Title"] },
+                        {"AssignmentId", collection["AssignmentId"]},
+                        { "UserId", "12"},
                         {"Description", collection["Description"]},
-                        {"Price", collection["Price"]},
-                        {"Deadline", collection["Deadline"]},
+                        {"Timestamp", DateTime.Now.ToString()},
+                        {"SolutionRating", "3.6M"},
                         {"Anonymous", collection["Anonymous"][0]},
-                        {"AcademicLevel", collection["AcademicLevel"]},
-                        {"Subject", collection["Subject"]},
                     };
 
                     string strPayload = JsonConvert.SerializeObject(payload);
-                    HttpContent c = new StringContent(strPayload, Encoding.UTF8, "application/json");
+                    HttpContent httpContent = new StringContent(strPayload, Encoding.UTF8, "application/json");
 
-                    string u = "https://localhost:44383/api/assignment";
+                    string apiUrl = "https://localhost:44383/api/solution";
 
                     using (HttpClient client = new HttpClient())
                     {
-                        HttpResponseMessage message = client.PostAsync(u, c).Result;
-                        var responseContent = await message.Content.ReadAsStringAsync();
+                        HttpResponseMessage message = client.PostAsync(apiUrl, httpContent).Result;
+                        var responseContent = message.Content.ReadAsStringAsync().Result;
                         var responseContentTrimmed = responseContent.Trim('\"');
-                        ViewBag.AcademicLevel = AssignmentModels.AcademicLevels();
-                        ViewBag.Subject = AssignmentModels.Subjects();
                         ViewBag.Message = responseContentTrimmed;
                         ViewBag.ResponseStyleClass = message.StatusCode == HttpStatusCode.Created ? "text-success" : message.StatusCode == HttpStatusCode.NotFound ? "text-danger" : "";
                     }
@@ -98,16 +74,16 @@ namespace WebApplicationCore.Controllers
                     ViewBag.Message = "Insert correct data";
                     ViewBag.ResponseStyleClass = "text-danger";
                 }
-                return View("CreateSolution");
-
+                //return View("CreateSolution");
+                return View();
             }
             catch (Exception e)
             {
                 ViewBag.Message = e.Message;
                 ViewBag.ResponseStyleClass = "text-danger";
-                return View("CreateSolution");
+                //return View("CreateSolution");
+                return View();
             }
         }
-
     }
 }

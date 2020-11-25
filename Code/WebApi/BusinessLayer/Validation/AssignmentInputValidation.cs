@@ -2,10 +2,6 @@
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.Validation
 {
@@ -27,7 +23,7 @@ namespace BusinessLayer.Validation
         private const int _priceMinValue = 0;
         private const int _priceMaxValue = 10000;
 
-        public bool CheckInput(Assignment assignment) 
+        public bool CheckInput(Assignment assignment)
         {
             //default return is true
             bool value = true;
@@ -38,12 +34,12 @@ namespace BusinessLayer.Validation
                     #region Assignment.Title
                     case "Title":
                         value = assignment.Title.Length > _titleMinLength && assignment.Title.Length < _titleMaxLength;
-                        break; 
+                        break;
                     #endregion
                     #region Assignment.Description
                     case "Description":
                         value = assignment.Description.Length > _descriptionMinLength && assignment.Description.Length < _descriptionMaxLength;
-                        break; 
+                        break;
                     #endregion
                     #region Assignment.Price
                     case "Price":
@@ -68,7 +64,7 @@ namespace BusinessLayer.Validation
                             }
                             value = false;
                         }
-                        break; 
+                        break;
                     #endregion
                     #region Assignment.Subject
                     case "Subject":
@@ -83,7 +79,7 @@ namespace BusinessLayer.Validation
                             }
                             value = false;
                         }
-                        break; 
+                        break;
                     #endregion
                     default:
                         break;

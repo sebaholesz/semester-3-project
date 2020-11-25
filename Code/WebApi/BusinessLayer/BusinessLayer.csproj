@@ -46,6 +46,7 @@
     <Compile Include="UserBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\AssignmentInputValidation.cs" />
+    <Compile Include="Validation\SolutionInputValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DatabaseLayer\DatabaseLayer.csproj">
