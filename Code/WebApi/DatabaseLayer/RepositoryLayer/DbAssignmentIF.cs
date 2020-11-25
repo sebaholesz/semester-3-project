@@ -1,9 +1,5 @@
 ﻿using ModelLayer;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseLayer.RepositoryLayer
 {
@@ -18,5 +14,8 @@ namespace DatabaseLayer.RepositoryLayer
         int DeleteAssignment(int id);
         List<string> GetAllAcademicLevels();
         List<string> GetAllSubjects();
+
+        int CreateAssignmentWithFile(Assignment assignment, string pathToFile);
+        void GetFileFromDB(int id);
     }
 }

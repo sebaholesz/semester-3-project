@@ -47,12 +47,12 @@ namespace WebApplicationCore.Controllers
 
                     var payload = new Dictionary<string, string>
                     {
-                        {"AssignmentId", collection["AssignmentId"]},
+                        {"AssignmentId", collection["SolutionModels.AssignmentId"]},
                         { "UserId", "12"},
-                        {"Description", collection["Description"]},
+                        {"Description", collection["SolutionModels.Description"]},
                         {"Timestamp", DateTime.Now.ToString()},
                         {"SolutionRating", "3.6M"},
-                        {"Anonymous", collection["Anonymous"][0]},
+                        {"Anonymous", collection["SolutionModels.Anonymous"][0]},
                     };
 
                     string strPayload = JsonConvert.SerializeObject(payload);
@@ -65,24 +65,19 @@ namespace WebApplicationCore.Controllers
                         HttpResponseMessage message = client.PostAsync(apiUrl, httpContent).Result;
                         var responseContent = message.Content.ReadAsStringAsync().Result;
                         var responseContentTrimmed = responseContent.Trim('\"');
-                        ViewBag.Message = responseContentTrimmed;
-                        ViewBag.ResponseStyleClass = message.StatusCode == HttpStatusCode.Created ? "text-success" : message.StatusCode == HttpStatusCode.NotFound ? "text-danger" : "";
+                        ViewBag.QueueOrder = responseContentTrimmed;
+                        ViewBag.Message = message.StatusCode == HttpStatusCode.Created ? "Solution created successfully" : message.StatusCode == HttpStatusCode.Conflict ? "Ups. Solution creation failed!" : "";
+                        ViewBag.ResponseStyleClass = message.StatusCode == HttpStatusCode.Created ? "text-success" : message.StatusCode == HttpStatusCode.Conflict ? "text-danger" : "";
                     }
                 }
                 else
                 {
                     ViewBag.Message = "Insert correct data";
+                    ViewBag.QueueOrder = -1;
                     ViewBag.ResponseStyleClass = "text-danger";
                 }
-                //return View("CreateSolution");
                 return View();
-            }
-            catch (Exception e)
-            {
-                ViewBag.Message = e.Message;
-                ViewBag.ResponseStyleClass = "text-danger";
-                //return View("CreateSolution");
-                return View();
+                return View("AfterPostingSolution");
             }
         }
     }

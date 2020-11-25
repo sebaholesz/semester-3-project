@@ -36,6 +36,17 @@ namespace WebApi.Controllers
             return solution != null ? Request.CreateResponse(HttpStatusCode.OK, solution) : Request.CreateResponse(HttpStatusCode.NotFound, "Solution with that ID not found!");
         }
 
+
+        [Route("api/solution/byAssignmentId/{assignmentId}")]
+        [HttpGet]
+        public HttpResponseMessage GetAllSolutionByAssignmentId(int assignmentId)
+        {
+            //the list is oredered by timestamp
+
+            List<Solution> solutions = solutionBusiness.GetSolutionsTimestampOrderedByAssignmentId(assignmentId);
+            return solutions.Count > 0 ? Request.CreateResponse(HttpStatusCode.OK, solutions) : Request.CreateResponse(HttpStatusCode.NotFound, "Solutions with that AssignmentID not found!");
+        }
+
         [HttpPost]
         public HttpResponseMessage Post([FromBody] Solution solution)
         {

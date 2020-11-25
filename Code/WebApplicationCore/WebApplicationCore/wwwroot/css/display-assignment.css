@@ -46,7 +46,6 @@
 }
 
 .just-grid {
-    color:pink;
     display: grid;
     grid-template-columns: 33.3% 33.3% 33.3%;
     grid-template-rows: 50% 50%;
@@ -60,7 +59,7 @@
 }
 
 .grid-area-price{
-    grid-area: price;
+    grid-area: credits;
 }
 
 .grid-area-academic-level{

@@ -65,5 +65,10 @@ namespace BusinessLayer
         {
             return dbAssignment.GetAllSubjects();
         }
+
+        public int CreateAssignmentWithFile(Assignment assignment, string pathToFile)
+        {
+            return dbAssignment.CreateAssignmentWithFile(assignment, pathToFile);
+        }
     }
 }

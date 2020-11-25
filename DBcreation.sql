@@ -228,7 +228,11 @@ CREATE TABLE [dbo].[Subjects]
 	subjectName VARCHAR(50) NOT NULL PRIMARY KEY
  )
 
-
+create table [dbo].[AssignmentFile] (
+	assignmentId int NOT NULL,
+	assignmentFile varbinary(max),
+	constraint fkFileAssignmentId foreign key(assignmentId) references [Assignment](assignmentId),
+)
 
 
 
