@@ -28,6 +28,7 @@ namespace webApi.Controllers
             {
                 ViewBag.AcademicLevels = assignmentBusiness.GetAllAcademicLevels();
                 ViewBag.Subjects = assignmentBusiness.GetAllSubjects();
+                //throw new Exception("The lkdncalkndc failed");
                 return View("CreateAssignment");
             }
             catch (Exception e)
@@ -44,6 +45,7 @@ namespace webApi.Controllers
         {
             try
             {
+                string s = collection["AssignmentFile"];
                 if (ModelState.IsValid)
                 {
                     Assignment assignment = new Assignment(
@@ -53,39 +55,50 @@ namespace webApi.Controllers
                         Convert.ToDateTime(collection["Deadline"]),
                         Convert.ToBoolean(collection["Anonymous"][0]),
                         collection["AcademicLevel"],
-                        collection["Subject"]
+                        collection["Subject"],
+                        Encoding.ASCII.GetBytes(collection["AssignmentFile"])
                     );
 
-                    int rowsAffected = assignmentBusiness.CreateAssignment(assignment);
+                    //we will get the id once using the CreateAssignmentWithFile method
+                    int assignmentId = assignmentBusiness.CreateAssignmentWithFile(assignment);
 
-                    if (rowsAffected > 0)
+                    if (assignmentId >= 0)
                     {
-                        ViewBag.AcademicLevels = assignmentBusiness.GetAllAcademicLevels();
-                        ViewBag.Subjects = assignmentBusiness.GetAllSubjects();
                         ViewBag.Message = "Assignment created successfully";
                         ViewBag.ResponseStyleClass = "text-success";
+                        ViewBag.ButtonText = "Display your assignment";
+                        ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
+                        ViewBag.PageTitle = "Assignment created!";
+                        ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
+                        ViewBag.Image = "/assets/icons/success.svg";
                     }
                     else
                     {
-                        ViewBag.AcademicLevels = assignmentBusiness.GetAllAcademicLevels();
-                        ViewBag.Subjects = assignmentBusiness.GetAllSubjects();
                         ViewBag.Message = "Assignment creation failed";
                         ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to the assignment form";
+                        ViewBag.ButtonLink = "/assignment/create-assignment/";
+                        ViewBag.PageTitle = "Assignment creation failed!";
+                        ViewBag.SubMessage = "There was a server error \ntry again later";
+                        ViewBag.Image = "/assets/icons/error.svg";
                     }
-                    return View("CreateAssignment");
                 }
                 else
                 {
-                    ViewBag.Message = "Insert correct data";
+                    ViewBag.Message = "Assignment creation failed";
                     ViewBag.ResponseStyleClass = "text-danger";
-                    return View("CreateAssignment");
+                    ViewBag.ButtonText = "Go back to the assignment form";
+                    ViewBag.ButtonLink = "/assignment/create-assignment/";
+                    ViewBag.PageTitle = "Assignment creation failed!";
+                    ViewBag.SubMessage = "Invalid data inserted";
+                    ViewBag.Image = "/assets/icons/error.svg";
                 }
+                return View("UserFeedback");
             }
             catch (Exception e)
             {
-                ViewBag.Message = e.Message;
-                ViewBag.ResponseStyleClass = "text-danger";
-                return View("CreateAssignment");
+                ViewBag.ErrorMessage = e.Message;
+                return View("Error");
             }
         }
 
@@ -96,13 +109,13 @@ namespace webApi.Controllers
             try
             {
                 ViewBag.Assignment = assignmentBusiness.GetByAssignmentId(id);
+                return View("DisplayAssignment");
             }
             catch (Exception e)
             {
-                throw e;
+                ViewBag.ErrorMessage = e.Message;
+                return View("Error");
             }
-            
-            return View("DisplayAssignment");
         }
     }
 }

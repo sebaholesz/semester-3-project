@@ -367,6 +367,17 @@ a:hover {
     margin-right: 8px;
 }
 
+.feedback-view-image {
+    max-height: 40vh;
+    max-width: 70vw;
+    margin: 5vh 0;
+}
+
+.feedback-back-to-home-btn {
+    padding: 8px 15px;
+    border-radius: 10px;
+}
+
 /*above 1500px styling*/
 @media(min-width: 1500px) {
     .btn-post-assignment {

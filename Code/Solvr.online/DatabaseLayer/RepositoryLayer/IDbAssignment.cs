@@ -14,7 +14,7 @@ namespace DatabaseLayer.RepositoryLayer
         int DeleteAssignment(int id);
         List<string> GetAllAcademicLevels();
         List<string> GetAllSubjects();
-        int CreateAssignmentWithFile(Assignment assignment, string pathToFile);
+        int CreateAssignmentWithFile(Assignment assignment);
         void GetFileFromDB(int id);
     }
 }

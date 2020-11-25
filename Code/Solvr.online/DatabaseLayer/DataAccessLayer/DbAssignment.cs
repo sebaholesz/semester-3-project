@@ -35,29 +35,27 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public int CreateAssignmentWithFile(Assignment assignment, string pathToFile)
+        public int CreateAssignmentWithFile(Assignment assignment)
         {
-            using (var transaction = db.BeginTransaction())
-            {
+            //using (var transaction = db.BeginTransaction())
+            //{
                 try
-                {
-                    byte[] fileData = File.ReadAllBytes(pathToFile);
-                    
+                {                    
                     int lastUsedId = db.ExecuteScalar<int>(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
                     new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true });
-                    int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[AssignmentFile](assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)", new { assignmentId = lastUsedId, assignmentFile = fileData });
+                    int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[AssignmentFile](assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)", new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile});
 
-                    transaction.Commit();
+                    //transaction.Commit();
 
                     return lastUsedId;
                 }
                 catch (SqlException e)
                 {
-                    transaction.Rollback();
+                    //transaction.Rollback();
                     System.Console.WriteLine(e.Message);
-                    return 0;
+                    return -1;
                 }
-            }
+            //}
         }
 
 
@@ -70,7 +68,7 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 try
                 {
-                    FileStream file = new FileStream(@"C:\Users\samla\Downloads\file.txt", FileMode.Create, FileAccess.Write);
+                    FileStream file = new FileStream(@"C:\Users\Lenovo\Desktop\plswork.png", FileMode.Create, FileAccess.Write);
                     ms.WriteTo(file);
                     file.Close();
                 }
@@ -101,6 +99,7 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 // TODO handle getting "empty" ids
+                GetFileFromDB(34);
                 return db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)

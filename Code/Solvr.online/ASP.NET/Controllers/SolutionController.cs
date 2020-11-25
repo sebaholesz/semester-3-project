@@ -29,12 +29,13 @@ namespace webApi.Controllers
             try
             {
                 ViewBag.Assignment = assignmentBusiness.GetByAssignmentId(id);
+                return View("CreateSolution");
             }
             catch (Exception e)
             {
-                throw e;
+                ViewBag.ErrorMessage = e.Message;
+                return View("Error");
             }
-            return View("CreateSolution");
         }
 
         [Route("solution/assignment/{id}")]
@@ -58,23 +59,36 @@ namespace webApi.Controllers
                     
                     if (queueOrder > 0)
                     {
-                        ViewBag.QueueOrder = queueOrder;
                         ViewBag.Message = "Solution created successfully";
                         ViewBag.ResponseStyleClass ="text-success";
+                        ViewBag.ButtonText = "Go back to homepage";
+                        ViewBag.ButtonLink = "/";
+                        ViewBag.PageTitle = "Solution created!";
+                        ViewBag.SubMessage = "You are number " + queueOrder + " in the queue";
+                        ViewBag.Image = "/assets/icons/success.svg";
                     }
                     else
                     {
-                        ViewBag.Message = "Ups. Solution creation failed!";
+                        ViewBag.Message = "Solution creation failed";
                         ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to the solution form";
+                        ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
+                        ViewBag.PageTitle = "Solution creation failed!";
+                        ViewBag.SubMessage = "You are not in the queue";
+                        ViewBag.Image = "/assets/icons/error.svg";
                     }
                 }
                 else
                 {
-                    ViewBag.Message = "Insert correct data";
-                    ViewBag.QueueOrder = -1;
+                    ViewBag.Message = "Solution creation failed";
                     ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to the solution form";
+                    ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
+                    ViewBag.PageTitle = "Solution creation failed!";
+                    ViewBag.SubMessage = "Invalid data inserted \nyou are not in the queue";
+                    ViewBag.Image = "/assets/icons/error.svg";
                 }
-                return View("AfterPostingSolution");
+                return View("UserFeedback");
             }
             catch (Exception e)
             {

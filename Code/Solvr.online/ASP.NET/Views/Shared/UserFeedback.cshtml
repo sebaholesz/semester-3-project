@@ -1,6 +1,6 @@
-﻿@model ModelLayer.ErrorViewModel
+﻿
 @{
-    ViewData["Title"] = "Error - " + ViewBag.ErrorMessage ;
+    ViewData["Title"] = @ViewBag.PageTitle;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,14 +12,14 @@
             <div class="col-md-8 screen-1300-full">
                 <div class="d-block boxed-row h-100 w-100">
                     <div class="w-100 text-center">
-                        <h2>Ups... something went wrong</h2>
-                        <h3 class="text-danger">@ViewBag.ErrorMessage</h3>
+                        <h2>@ViewBag.Message</h2>
+                        <h3 class="@ViewBag.ResponseStyleClass">@ViewBag.SubMessage</h3>
                     </div>
                     <div class="w-100 text-center">
-                        <img class="feedback-view-image" src="~/assets/icons/error.svg" />
+                        <img class="feedback-view-image" src="@ViewBag.Image" />
                     </div>
                     <div class="w-100 text-center">
-                        <a class="btn-lrg btn-info feedback-back-to-home-btn" href="/">Go back to homepage</a>
+                        <a class="btn-lrg btn-info feedback-back-to-home-btn" href="@ViewBag.ButtonLink">@ViewBag.ButtonText</a>
                     </div>
                 </div>
             </div>

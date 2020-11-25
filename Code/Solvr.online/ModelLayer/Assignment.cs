@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace ModelLayer
 {
     public class Assignment
     {
-        public Assignment(string title, string description, int price, DateTime deadline, bool anonymous, string academicLevel, string subject)
+        public Assignment(string title, string description, int price, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] assignmentFile)
         {
             this.Title = title;
             this.Description = description;
@@ -15,6 +16,7 @@ namespace ModelLayer
             this.Anonymous = anonymous;
             this.AcademicLevel = academicLevel;
             this.Subject = subject;
+            this.AssignmentFile = assignmentFile;
         }
 
         public Assignment()
@@ -40,6 +42,7 @@ namespace ModelLayer
         public string AcademicLevel { get; set; }
         [Required]
         public string Subject { get; set; }
+        public byte[] AssignmentFile ;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
