@@ -1,7 +1,6 @@
 ﻿using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
-using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
@@ -55,6 +54,11 @@ namespace BusinessLayer
         public List<string> GetAllSubjects()
         {
             return dbAssignment.GetAllSubjects();
+        }
+
+        public int CreateAssignmentWithFile(Assignment assignment, string pathToFile)
+        {
+            return dbAssignment.CreateAssignmentWithFile(assignment, pathToFile);
         }
     }
 }

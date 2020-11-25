@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Linq;
 
 namespace UnitTestWebApiSolution
 {
@@ -78,10 +76,10 @@ namespace UnitTestWebApiSolution
             List<Assignment> listOfItems = dba.GetAllAssignments();
             int length = listOfItems.Count;
 
-            int id = listOfItems[length-1].AssignmentId;
+            int id = listOfItems[length - 1].AssignmentId;
 
             Assignment assignment = dba.GetByAssignmentId(id);
-            Console.WriteLine(""+assignment.AssignmentId, assignment.Description);
+            Console.WriteLine("" + assignment.AssignmentId, assignment.Description);
 
             Assert.AreEqual(assignment.AssignmentId, id);
         }
@@ -120,7 +118,36 @@ namespace UnitTestWebApiSolution
             int countBefore = dba.GetAllAssignments().Count;
             dba.DeleteAssignment(id);
             int countAfter = dba.GetAllAssignments().Count;
-            Assert.AreNotEqual(countBefore,countAfter);
+            Assert.AreNotEqual(countBefore, countAfter);
+        }
+
+
+        [TestMethod]
+
+        public void TestInsertFile()
+        {
+            Assignment assignment = new Assignment();
+
+            assignment.Description = "Assignment description";
+            assignment.Price = 10;
+            assignment.Title = "tokok";
+            assignment.Subject = "History";
+            assignment.AcademicLevel = "University";
+            assignment.Deadline = DateTime.Now;
+            assignment.Anonymous = true;
+
+            int result = dba.CreateAssignmentWithFile(assignment, @"C:\Users\samla\Downloads\kmfdm_99-img1200x1200-1601775397hdvx3m20963.jpg");
+            Console.WriteLine(result);
+
+            Assert.IsTrue(result > 0);
+
+        }
+
+        [TestMethod]
+
+        public void TestReadFile()
+        {
+            dba.GetFileFromDB(31);
         }
     }
 }

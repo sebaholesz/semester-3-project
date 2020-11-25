@@ -18,6 +18,12 @@ namespace BusinessLayer
         {
             return dbSolution.GetAllSolutions();
         }
+
+        public List<Solution> GetSolutionsTimestampOrderedByAssignmentId(int id)
+        {
+            return dbSolution.GetSolutionsTimestampOrderedByAssignmentId(id);
+        }
+
         public int CreateSolution(Solution solution)
         {
             return dbSolution.CreateSolution(solution);
@@ -26,6 +32,7 @@ namespace BusinessLayer
         {
             return dbSolution.GetBySolutionId(id);
         }
+
         public int UpdateSolution(Solution solution, int id)
         {
             return dbSolution.UpdateSolution(solution, id);

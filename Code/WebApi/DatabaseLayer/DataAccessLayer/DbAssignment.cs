@@ -1,11 +1,14 @@
 ﻿using Dapper;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+
 
 namespace DatabaseLayer.DataAccessLayer
 {
@@ -23,7 +26,7 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive)",
-                    new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true});
+                    new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true });
                 return numberOfRowsAffected;
             }
             catch (SqlException e)
@@ -31,6 +34,49 @@ namespace DatabaseLayer.DataAccessLayer
                 System.Console.WriteLine(e.Message);
                 return 0;
             }
+        }
+
+        public int CreateAssignmentWithFile(Assignment assignment, string pathToFile)
+        {
+            try
+            {
+                byte[] fileData = File.ReadAllBytes(pathToFile);
+                //TODO transaction
+                int lastUsedId = db.ExecuteScalar<int>(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
+                    new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true });
+                int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[AssignmentFile](assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)", new { assignmentId = lastUsedId, assignmentFile = fileData });
+                return lastUsedId;
+            }
+            catch (SqlException e)
+            {
+                System.Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+
+        //https://stackoverflow.com/questions/57353719/pdf-file-download-from-byte
+        public void GetFileFromDB(int id)
+        {
+            byte[] fileData = db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = id });
+
+            using (MemoryStream ms = new MemoryStream(fileData))
+            {
+                try
+                {
+                    FileStream file = new FileStream(@"C:\Users\samla\Downloads\file.txt", FileMode.Create, FileAccess.Write);
+                    ms.WriteTo(file);
+                    file.Close();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+
+
+
+
         }
 
         public List<Assignment> GetAllAssignments()
