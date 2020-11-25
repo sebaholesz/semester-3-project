@@ -11,5 +11,6 @@ namespace DatabaseLayer.RepositoryLayer
         int UpdateSolution(Solution solution, int id);
         int DeleteSolution(int id);
         List<Solution> GetSolutionsByAssignmentId(int id);
+        List<Solution> GetSolutionsTimestampOrderedByAssignmentId(int id);
     }
 }

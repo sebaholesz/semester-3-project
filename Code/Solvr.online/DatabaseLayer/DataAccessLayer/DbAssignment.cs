@@ -1,35 +1,30 @@
 ﻿using Dapper;
 using DatabaseLayer.RepositoryLayer;
-using Microsoft.Extensions.Configuration;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 
 namespace DatabaseLayer.DataAccessLayer
 {
     public class DbAssignment : IDbAssignment
     {
-        private readonly string db;
-        private IDbConnection Connection
+        private readonly IDbConnection db;
+
+        public DbAssignment()
         {
-            get
-            {
-                return new SqlConnection(db);
-            }
-        }
-        public DbAssignment(IConfiguration configuration)
-        {
-            db = configuration.GetConnectionString("DefaultConnection");
+            db = new SqlConnection(HildurConnectionString.ConnectionString);
         }
 
         public int CreateAssignment(Assignment assignment)
         {
-            using IDbConnection conn = Connection;
             try
             {
-                int numberOfRowsAffected = conn.Execute(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive)",
+                int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive)",
                     new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true });
                 return numberOfRowsAffected;
             }
@@ -40,45 +35,85 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
+        public int CreateAssignmentWithFile(Assignment assignment, string pathToFile)
+        {
+            using (var transaction = db.BeginTransaction())
+            {
+                try
+                {
+                    byte[] fileData = File.ReadAllBytes(pathToFile);
+                    
+                    int lastUsedId = db.ExecuteScalar<int>(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
+                    new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true });
+                    int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[AssignmentFile](assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)", new { assignmentId = lastUsedId, assignmentFile = fileData });
+
+                    transaction.Commit();
+
+                    return lastUsedId;
+                }
+                catch (SqlException e)
+                {
+                    transaction.Rollback();
+                    System.Console.WriteLine(e.Message);
+                    return 0;
+                }
+            }
+        }
+
+
+        //https://stackoverflow.com/questions/57353719/pdf-file-download-from-byte
+        public void GetFileFromDB(int id)
+        {
+            byte[] fileData = db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = id });
+
+            using (MemoryStream ms = new MemoryStream(fileData))
+            {
+                try
+                {
+                    FileStream file = new FileStream(@"C:\Users\samla\Downloads\file.txt", FileMode.Create, FileAccess.Write);
+                    ms.WriteTo(file);
+                    file.Close();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+        }
+
         public List<Assignment> GetAllAssignments()
         {
-            using IDbConnection conn = Connection;
-            return conn.Query<Assignment>("Select * from [dbo].[Assignment]").ToList();
+            return db.Query<Assignment>("Select * from [dbo].[Assignment]").ToList();
         }
 
         public List<Assignment> GetAllActiveAssignments()
         {
-            using IDbConnection conn = Connection;
-            return conn.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1").AsList();
+            return db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1").ToList();
         }
 
         public List<Assignment> GetAllInactiveAssignments()
         {
-            using IDbConnection conn = Connection;
-            return conn.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0").AsList();
+            return db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0").ToList();
         }
 
         public Assignment GetByAssignmentId(int id)
         {
-            using IDbConnection conn = Connection;
             try
             {
                 // TODO handle getting "empty" ids
-                return conn.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
             {
                 System.Console.WriteLine(e.Message);
                 return null;
             }
-
         }
         public int UpdateAssignment(Assignment assignment, int id)
         {
-            using IDbConnection conn = Connection;
             try
             {
-                int numberOfRowsAffected = conn.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
+                int numberOfRowsAffected = db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
                     new { title = assignment.Title, assignmentId = id, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
                 return numberOfRowsAffected;
             }
@@ -90,10 +125,9 @@ namespace DatabaseLayer.DataAccessLayer
         }
         public int DeleteAssignment(int id)
         {
-            using IDbConnection conn = Connection;
             try
             {
-                return conn.Execute("Delete from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return db.Execute("Delete from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
             {
@@ -104,14 +138,12 @@ namespace DatabaseLayer.DataAccessLayer
 
         public List<string> GetAllAcademicLevels()
         {
-            using IDbConnection conn = Connection;
-            return conn.Query<string>("select * from [dbo].[AcademicLevel]").AsList();
+            return db.Query<string>("select * from [dbo].[AcademicLevel]").ToList();
         }
 
         public List<string> GetAllSubjects()
         {
-            using IDbConnection conn = Connection;
-            return conn.Query<string>("SELECT * FROM [dbo].[Subject]").AsList();
+            return db.Query<string>("SELECT * FROM [dbo].[Subject]").ToList();
         }
     }
 }

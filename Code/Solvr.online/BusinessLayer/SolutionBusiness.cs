@@ -1,4 +1,6 @@
-﻿using DatabaseLayer.RepositoryLayer;
+﻿using BusinessLayer.Validation;
+using DatabaseLayer.DataAccessLayer;
+using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System.Collections.Generic;
 
@@ -7,24 +9,39 @@ namespace BusinessLayer
     public class SolutionBusiness
     {
         private readonly IDbSolution dbSolution;
+        private SolutionInputValidation validateSolution;
 
-        public SolutionBusiness(IDbSolution dbSolution)
+        public SolutionBusiness()
         {
-            this.dbSolution = dbSolution;
+            dbSolution = new DbSolution();
+            validateSolution = new SolutionInputValidation();
+
         }
 
         public List<Solution> GetAllSolutions()
         {
             return dbSolution.GetAllSolutions();
         }
+
+        public List<Solution> GetSolutionsTimestampOrderedByAssignmentId(int id)
+        {
+            return dbSolution.GetSolutionsTimestampOrderedByAssignmentId(id);
+        }
+
         public int CreateSolution(Solution solution)
         {
-            return dbSolution.CreateSolution(solution);
+            if (validateSolution.CheckInput(solution))
+            {
+                return dbSolution.CreateSolution(solution);
+            }
+            return -1;
+
         }
         public Solution GetBySolutionId(int id)
         {
             return dbSolution.GetBySolutionId(id);
         }
+
         public int UpdateSolution(Solution solution, int id)
         {
             return dbSolution.UpdateSolution(solution, id);

@@ -1,4 +1,6 @@
-﻿using DatabaseLayer.RepositoryLayer;
+﻿using BusinessLayer.Validation;
+using DatabaseLayer.DataAccessLayer;
+using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System.Collections.Generic;
 
@@ -7,10 +9,12 @@ namespace BusinessLayer
     public class AssignmentBusiness
     {
         private readonly IDbAssignment dbAssignment;
+        private AssignmentInputValidation assignmentValidation;
 
-        public AssignmentBusiness(IDbAssignment dbAssignment)
+        public AssignmentBusiness()
         {
-            this.dbAssignment = dbAssignment;
+            dbAssignment = new DbAssignment();
+            assignmentValidation = new AssignmentInputValidation();
         }
 
         public List<Assignment> GetAllAssignments()
@@ -27,7 +31,12 @@ namespace BusinessLayer
         }
         public int CreateAssignment(Assignment assignment)
         {
-            return dbAssignment.CreateAssignment(assignment);
+            if (assignmentValidation.CheckInput(assignment))
+            {
+                return dbAssignment.CreateAssignment(assignment);
+            }
+            return -1;
+
         }
 
         public Assignment GetByAssignmentId(int id)
@@ -37,6 +46,7 @@ namespace BusinessLayer
 
         public int UpdateAssignment(Assignment assignment, int id)
         {
+            //TODO validators 
             return dbAssignment.UpdateAssignment(assignment, id);
         }
 
@@ -53,6 +63,11 @@ namespace BusinessLayer
         public List<string> GetAllSubjects()
         {
             return dbAssignment.GetAllSubjects();
+        }
+
+        public int CreateAssignmentWithFile(Assignment assignment, string pathToFile)
+        {
+            return dbAssignment.CreateAssignmentWithFile(assignment, pathToFile);
         }
     }
 }

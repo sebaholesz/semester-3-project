@@ -1,9 +1,9 @@
 ﻿using Dapper;
 using DatabaseLayer.RepositoryLayer;
-using Microsoft.Extensions.Configuration;
 using ModelLayer;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -14,9 +14,9 @@ namespace DatabaseLayer.DataAccessLayer
     {
         private readonly IDbConnection db;
 
-        public DbSolution(IConfiguration configuration)
+        public DbSolution()
         {
-            db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+            db = new SqlConnection(HildurConnectionString.ConnectionString);
         }
 
         public int CreateSolution(Solution solution)
@@ -42,8 +42,15 @@ namespace DatabaseLayer.DataAccessLayer
                 {
                     db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) " +
                         "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
-                   new { assignmentId = solution.AssignmentId, userId = solution.UserId, description = solution.Description, timestamp = solution.Timestamp,
-                       solutionRating = solution.SolutionRating, anonymous = solution.Anonymous });
+                   new
+                   {
+                       assignmentId = solution.AssignmentId,
+                       userId = solution.UserId,
+                       description = solution.Description,
+                       timestamp = solution.Timestamp,
+                       solutionRating = solution.SolutionRating,
+                       anonymous = solution.Anonymous
+                   });
                     return queueLengthAfter + 1;
                 }
                 else
@@ -64,6 +71,12 @@ namespace DatabaseLayer.DataAccessLayer
         {
             return db.Query<Solution>("SELECT * FROM [dbo].[Solution]").ToList();
         }
+
+        public List<Solution> GetSolutionsTimestampOrderedByAssignmentId(int id)
+        {
+            return db.Query<Solution>("SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId order by timestamp DESC", new { assignmentId = id }).ToList();
+        }
+
 
         public List<Solution> GetSolutionsByAssignmentId(int id)
         {
