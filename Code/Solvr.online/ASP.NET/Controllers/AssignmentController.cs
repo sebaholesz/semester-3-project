@@ -34,8 +34,8 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
 
@@ -98,8 +98,8 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
 
@@ -114,8 +114,8 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
 
@@ -132,8 +132,8 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
 
@@ -196,8 +196,8 @@ namespace webApi.Controllers
                 }
                 catch (Exception e)
                 {
-                    ViewBag.ErrorMessage = e.Message;
-                    return View("Error");
+                    TempData["ErrorMessage"] = e.Message;
+                    return Redirect("/error");
                 }
             }
         }
@@ -208,7 +208,8 @@ namespace webApi.Controllers
         {
             try
             {
-                int noOfRowsAffected = assignmentBusiness.DeleteAssignment(id);
+                //the assignment is not deleted per se, it is just marked inactive so it is not visible in the FE
+                int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(id);
 
                 if (noOfRowsAffected > 0)
                 {
@@ -234,8 +235,8 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
     }

@@ -99,7 +99,7 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 // TODO handle getting "empty" ids
-                GetFileFromDB(34);
+                // GetFileFromDB(34);
                 return db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
@@ -127,6 +127,19 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 return db.Execute("Delete from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+            }
+            catch (SqlException e)
+            {
+                System.Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
+        public int MakeAssignmentInactive(int id)
+        {
+            try
+            {
+                return db.Execute("Update [dbo].[Assignment] set isActive='false' where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
             {
