@@ -3,7 +3,6 @@ using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -39,22 +38,26 @@ namespace DatabaseLayer.DataAccessLayer
         {
             //using (var transaction = db.BeginTransaction())
             //{
-                try
-                {                    
-                    int lastUsedId = db.ExecuteScalar<int>(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
-                    new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true });
-                    int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[AssignmentFile](assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)", new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile});
-
-                    //transaction.Commit();
-
-                    return lastUsedId;
-                }
-                catch (SqlException e)
+            try
+            {
+                int lastUsedId = db.ExecuteScalar<int>(@"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
+                new { title = assignment.Title, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true });
+                if (assignment.AssignmentFile != null)
                 {
-                    //transaction.Rollback();
-                    System.Console.WriteLine(e.Message);
-                    return -1;
+                    int numberOfRowsAffected = db.Execute(@"Insert into [dbo].[AssignmentFile](assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)", new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile });
                 }
+
+
+                //transaction.Commit();
+
+                return lastUsedId;
+            }
+            catch (SqlException e)
+            {
+                //transaction.Rollback();
+                System.Console.WriteLine(e.Message);
+                return -1;
+            }
             //}
         }
 

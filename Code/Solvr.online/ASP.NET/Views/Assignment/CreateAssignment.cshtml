@@ -10,7 +10,7 @@
 
 <main>
     <div class="container-fluid">
-        <form asp-controller="Assignment" asp-action="CreateAssignment" method="post">
+        <form asp-controller="Assignment" enctype="multipart/form-data" asp-action="CreateAssignment" method="post">
             @Html.AntiForgeryToken()
             <div class="row">
                 <div class="col-md-2 screen-1300-invisible">
@@ -41,8 +41,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="boxed-row">
-                                <input asp-for="AssignmentFile" type="file"
-                                       id="avatar" 
+                                <input asp-for="AssignmentFile" name="files" type="file"
+                                       id="avatar"
                                        accept="image/png, image/jpeg">
                             </div>
                         </div>

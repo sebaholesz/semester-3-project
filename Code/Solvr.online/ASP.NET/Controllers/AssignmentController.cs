@@ -2,12 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
+using System.IO;
 
 namespace webApi.Controllers
 {
@@ -15,7 +11,7 @@ namespace webApi.Controllers
     {
         private readonly AssignmentBusiness assignmentBusiness;
 
-        public AssignmentController() 
+        public AssignmentController()
         {
             assignmentBusiness = new AssignmentBusiness();
         }
@@ -41,14 +37,20 @@ namespace webApi.Controllers
         [Route("assignment/create-assignment")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateAssignment(IFormCollection collection)
+        public async System.Threading.Tasks.Task<ActionResult> CreateAssignmentAsync(IFormCollection collection, IFormFile files)
         {
             try
             {
-                string s = collection["AssignmentFile"];
+
                 if (ModelState.IsValid)
                 {
-                    Assignment assignment = new Assignment(
+                    Assignment assignment;
+                    if (files != null)
+                    {
+                        var dataStream = new MemoryStream();
+                        await files.CopyToAsync(dataStream);
+
+                        assignment = new Assignment(
                         collection["Title"],
                         collection["Description"],
                         Convert.ToInt32(collection["Price"]),
@@ -56,8 +58,25 @@ namespace webApi.Controllers
                         Convert.ToBoolean(collection["Anonymous"][0]),
                         collection["AcademicLevel"],
                         collection["Subject"],
-                        Encoding.ASCII.GetBytes(collection["AssignmentFile"])
-                    );
+                        dataStream.ToArray()
+                        );
+
+                        dataStream.Close();
+                    }
+                    else
+                    {
+                        assignment = new Assignment(
+                           collection["Title"],
+                           collection["Description"],
+                           Convert.ToInt32(collection["Price"]),
+                           Convert.ToDateTime(collection["Deadline"]),
+                           Convert.ToBoolean(collection["Anonymous"][0]),
+                           collection["AcademicLevel"],
+                           collection["Subject"]
+                       );
+                    }
+
+
 
                     //we will get the id once using the CreateAssignmentWithFile method
                     int assignmentId = assignmentBusiness.CreateAssignmentWithFile(assignment);

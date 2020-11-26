@@ -64,7 +64,7 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 try
                 {
-                    FileStream file = new FileStream(@"C:\Users\samla\Downloads\file.txt", FileMode.Create, FileAccess.Write);
+                    FileStream file = new FileStream(@"C:\Users\samla\Downloads\kokot.jpg", FileMode.Create, FileAccess.Write);
                     ms.WriteTo(file);
                     file.Close();
                 }
