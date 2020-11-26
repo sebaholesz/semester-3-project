@@ -50,9 +50,9 @@ namespace BusinessLayer
             return dbAssignment.UpdateAssignment(assignment, id);
         }
 
-        public int DeleteAssignment(int id)
+        public int MakeInactive(int id)
         {
-            return dbAssignment.DeleteAssignment(id);
+            return dbAssignment.MakeAssignmentInactive(id);
         }
 
         public List<string> GetAllAcademicLevels()
@@ -66,7 +66,7 @@ namespace BusinessLayer
         }
 
         public int CreateAssignmentWithFile(Assignment assignment)
-        { 
+        {
             return dbAssignment.CreateAssignmentWithFile(assignment);
         }
     }

@@ -105,7 +105,7 @@ namespace WebApi.Controllers
 
 
         [Route("assignment")]
-        [HttpDelete]
+        [HttpPut]
         public HttpResponseMessage Delete()
         {
             //Invalid request which returns 400
@@ -114,13 +114,13 @@ namespace WebApi.Controllers
 
 
         [Route("assignment/{id}")]
-        [HttpDelete]
-        public HttpResponseMessage Delete(int id)
+        [HttpPut]
+        public HttpResponseMessage MakeInactive(int id)
         {
             //assignmentInterface delete
             //return if operation was successful
 
-            int noOfRows = assignmentBusiness.DeleteAssignment(id);
+            int noOfRows = assignmentBusiness.MakeInactive(id);
             return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
         }
 

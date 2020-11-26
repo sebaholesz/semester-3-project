@@ -136,5 +136,25 @@ namespace webApi.Controllers
                 return View("Error");
             }
         }
+
+
+        [Route("assignment")]
+        [HttpGet]
+        public ActionResult DisplayAllAssignments()
+        {
+            try
+            {
+                ViewBag.Assignment = assignmentBusiness.GetAllActiveAssignments();
+                //TODO return allAssignments view
+                return View();
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                return View("Error");
+            }
+        }
+
+
     }
 }

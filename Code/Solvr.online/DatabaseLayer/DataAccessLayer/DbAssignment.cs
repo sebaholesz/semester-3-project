@@ -115,6 +115,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
+                //TODO update parameters 
                 int numberOfRowsAffected = db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
                     new { title = assignment.Title, assignmentId = id, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
                 return numberOfRowsAffected;
@@ -125,11 +126,11 @@ namespace DatabaseLayer.DataAccessLayer
                 return 0;
             }
         }
-        public int DeleteAssignment(int id)
+        public int MakeAssignmentInactive(int id)
         {
             try
             {
-                return db.Execute("Delete from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return db.Execute("Update [dbo].[Assignment] set isActive=0 where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
             {
