@@ -1,0 +1,42 @@
+﻿@model ModelLayer.Assignment
+
+@{
+    ViewData["Title"] = "Display Assignment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var assignment = ViewBag.Assignment;
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="/css/display-assignment.css" />
+}
+
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1 screen-1300-invisible">
+            </div>
+            <div class="col-md-10 screen-1300-full">
+                <div class="card-columns">
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                </div>
+            </div>
+            <div class="col-md-1 screen-1300-invisible">
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

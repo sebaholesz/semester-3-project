@@ -1,0 +1,81 @@
+﻿@model ModelLayer.Assignment
+
+@{
+    var assignment = ViewBag.Assignment;
+}
+
+<!--<div class="col-md-4 ">
+    <div class="card">
+        <div class="col-md-6">
+            <h5 class="card-title">
+                @assignment.Title
+            </h5>
+            <div class="d-flex flex-row">
+                <div class="col-md-5 assignment-profile-image">-->
+                    @* Some conditional logic where if there is no image URL, we go to the fallback *@
+                    @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
+                    <!--<img alt="Default user avatar" src="/assets/images/default-avatar.png" />
+                </div>
+                <div class="col-md-7">
+                    <p>UserName</p>
+                    <p>score 163428</p>
+                </div>
+            </div>
+            <div class="display-assignment-details">
+                <div class="just-grid">
+                    <span class="details-text-format grid-area-academic-level">@assignment.AcademicLevel</span>
+                    <span class="details-text-format grid-area-subject">@assignment.Subject</span>
+                    <span class="details-text-format grid-area-deadline">@assignment.Deadline</span>
+                    <span class="details-text-format grid-area-price"> @assignment.Price Credits</span>
+                    <span class="details-text-format grid-area-answers">Answers: GETANSWERS</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 align-items-start">
+            <div class="card-description">
+                <p>
+                    @assignment.Description
+                </p>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+@*<div class="col-md-4 ">*@
+    <div class="card shadow border-0">
+        <h5 class="card-header bg-dark text-white border-0 p-2">
+            @assignment.Title
+        </h5>
+        <div class="card-body d-inline-flex">
+            <div class="col-md-6 card-text">
+                <!--<div class="col-md-5 assignment-profile-image">-->
+                @* Some conditional logic where if there is no image URL, we go to the fallback *@
+                @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
+                <!--<img alt="Default user avatar" src="/assets/images/default-avatar.png" />
+            </div>-->
+                <p class="card-details">@assignment.AcademicLevel</p>
+                <p class="card-details">@assignment.Subject</p>
+                <p class="card-details">@assignment.Deadline</p>
+                <p class="card-details">@assignment.Price Credits</p>
+                <p class="card-details">5 Answers</p>
+
+            </div>
+            @*<div class="display-assignment-details">
+                <div class="just-grid">
+                    <span class="details-text-format grid-area-academic-level">@assignment.AcademicLevel</span>
+                    <span class="details-text-format grid-area-subject">@assignment.Subject</span>
+                    <span class="details-text-format grid-area-deadline">@assignment.Deadline</span>
+                    <span class="details-text-format grid-area-price"> @assignment.Price Credits</span>
+                    <span class="details-text-format grid-area-answers">Answers: GETANSWERS</span>
+                </div>
+            </div>*@
+            <div class="col-md-6">
+                <div class="card-description">
+                    <p>
+                        @assignment.Description
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>    
+@*</div>*@

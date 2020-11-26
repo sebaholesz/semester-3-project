@@ -119,6 +119,22 @@ namespace webApi.Controllers
             }
         }
 
+        [Route("assignment/display-assignments")]
+        [HttpGet]
+        public ActionResult DisplayAllAssignments()
+        {
+            try
+            {
+                ViewBag.Assignment = assignmentBusiness.GetByAssignmentId(41);
+                return View("AllAssignments");
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                return View("Error");
+            }
+        }
+
         [Route("assignment/update-assignment/{id}")]
         [HttpGet]
         public ActionResult UpdateAssignment(int id)

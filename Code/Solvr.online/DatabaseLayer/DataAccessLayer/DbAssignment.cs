@@ -99,7 +99,7 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 // TODO handle getting "empty" ids
-                GetFileFromDB(34);
+                //GetFileFromDB(34);
                 return db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
