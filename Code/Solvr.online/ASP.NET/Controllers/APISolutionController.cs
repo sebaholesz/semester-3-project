@@ -41,11 +41,11 @@ namespace WebApi.Controllers
 
         [Route("solution/byAssignmentId/{assignmentId}")]
         [HttpGet]
-        public HttpResponseMessage GetAllSolutionByAssignmentId(int assignmentId)
+        public HttpResponseMessage GetSolutionsByAssignmentId(int assignmentId)
         {
             //the list is oredered by timestamp
 
-            List<Solution> solutions = solutionBusiness.GetSolutionsTimestampOrderedByAssignmentId(assignmentId);
+            List<Solution> solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
             return solutions.Count > 0 ? Request.CreateResponse(HttpStatusCode.OK, solutions) : Request.CreateResponse(HttpStatusCode.NotFound, "Solutions with that AssignmentID not found!");
         }
 

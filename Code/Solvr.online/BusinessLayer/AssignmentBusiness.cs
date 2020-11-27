@@ -8,32 +8,32 @@ namespace BusinessLayer
 {
     public class AssignmentBusiness
     {
-        private readonly IDbAssignment dbAssignment;
-        private AssignmentInputValidation assignmentValidation;
+        private readonly IDbAssignment _dbAssignment;
+        private readonly AssignmentInputValidation _assignmentValidation;
 
         public AssignmentBusiness()
         {
-            dbAssignment = new DbAssignment();
-            assignmentValidation = new AssignmentInputValidation();
+            _dbAssignment = new DbAssignment();
+            _assignmentValidation = new AssignmentInputValidation();
         }
 
         public List<Assignment> GetAllAssignments()
         {
-            return dbAssignment.GetAllAssignments();
+            return _dbAssignment.GetAllAssignments();
         }
         public List<Assignment> GetAllActiveAssignments()
         {
-            return dbAssignment.GetAllActiveAssignments();
+            return _dbAssignment.GetAllActiveAssignments();
         }
         public List<Assignment> GetAllInactiveAssignments()
         {
-            return dbAssignment.GetAllInactiveAssignments();
+            return _dbAssignment.GetAllInactiveAssignments();
         }
         public int CreateAssignment(Assignment assignment)
         {
-            if (assignmentValidation.CheckInput(assignment))
+            if (_assignmentValidation.CheckInput(assignment))
             {
-                return dbAssignment.CreateAssignment(assignment);
+                return _dbAssignment.CreateAssignment(assignment);
             }
             return -1;
 
@@ -41,38 +41,34 @@ namespace BusinessLayer
 
         public Assignment GetByAssignmentId(int id)
         {
-            return dbAssignment.GetByAssignmentId(id);
+            return _dbAssignment.GetByAssignmentId(id);
         }
 
         public int UpdateAssignment(Assignment assignment, int id)
         {
             //TODO validators 
-            return dbAssignment.UpdateAssignment(assignment, id);
+            return _dbAssignment.UpdateAssignment(assignment, id);
         }
 
         public int MakeInactive(int id)
         {
-            return dbAssignment.MakeAssignmentInactive(id);
+            return _dbAssignment.MakeAssignmentInactive(id);
         }
 
         public int MakeAssignmentInactive(int id)
         {
-            return dbAssignment.MakeAssignmentInactive(id);
+            return _dbAssignment.MakeAssignmentInactive(id);
         }
 
         public List<string> GetAllAcademicLevels()
         {
-            return dbAssignment.GetAllAcademicLevels();
+            return _dbAssignment.GetAllAcademicLevels();
         }
 
         public List<string> GetAllSubjects()
         {
-            return dbAssignment.GetAllSubjects();
+            return _dbAssignment.GetAllSubjects();
         }
 
-        public int CreateAssignmentWithFile(Assignment assignment)
-        {
-            return dbAssignment.CreateAssignmentWithFile(assignment);
-        }
     }
 }

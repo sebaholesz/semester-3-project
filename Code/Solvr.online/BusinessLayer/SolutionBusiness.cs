@@ -8,47 +8,47 @@ namespace BusinessLayer
 {
     public class SolutionBusiness
     {
-        private readonly IDbSolution dbSolution;
-        private SolutionInputValidation validateSolution;
+        private readonly IDbSolution _dbSolution;
+        private readonly SolutionInputValidation _validateSolution;
 
         public SolutionBusiness()
         {
-            dbSolution = new DbSolution();
-            validateSolution = new SolutionInputValidation();
+            _dbSolution = new DbSolution();
+            _validateSolution = new SolutionInputValidation();
 
         }
 
         public List<Solution> GetAllSolutions()
         {
-            return dbSolution.GetAllSolutions();
+            return _dbSolution.GetAllSolutions();
         }
 
-        public List<Solution> GetSolutionsTimestampOrderedByAssignmentId(int id)
+        public List<Solution> GetSolutionsByAssignmentId(int id)
         {
-            return dbSolution.GetSolutionsTimestampOrderedByAssignmentId(id);
+            return _dbSolution.GetSolutionsByAssignmentId(id);
         }
 
         public int CreateSolution(Solution solution)
         {
-            if (validateSolution.CheckInput(solution))
+            if (_validateSolution.CheckInput(solution))
             {
-                return dbSolution.CreateSolution(solution);
+                return _dbSolution.CreateSolution(solution);
             }
             return -1;
 
         }
         public Solution GetBySolutionId(int id)
         {
-            return dbSolution.GetBySolutionId(id);
+            return _dbSolution.GetBySolutionId(id);
         }
 
         public int UpdateSolution(Solution solution, int id)
         {
-            return dbSolution.UpdateSolution(solution, id);
+            return _dbSolution.UpdateSolution(solution, id);
         }
         public int DeleteSolution(int id)
         {
-            return dbSolution.DeleteSolution(id);
+            return _dbSolution.DeleteSolution(id);
         }
     }
 }

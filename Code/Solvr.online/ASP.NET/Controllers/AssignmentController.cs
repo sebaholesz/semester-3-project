@@ -78,11 +78,8 @@ namespace webApi.Controllers
                            collection["Subject"]
                        );
                     }
-
-
-
                     //we will get the id once using the CreateAssignmentWithFile method
-                    int assignmentId = assignmentBusiness.CreateAssignmentWithFile(assignment);
+                    int assignmentId = assignmentBusiness.CreateAssignment(assignment);
 
                     if (assignmentId >= 0)
                     {

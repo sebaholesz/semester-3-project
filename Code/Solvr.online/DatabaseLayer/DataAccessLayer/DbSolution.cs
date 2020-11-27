@@ -12,15 +12,16 @@ namespace DatabaseLayer.DataAccessLayer
 {
     public class DbSolution : IDbSolution
     {
-        private readonly IDbConnection db;
+        private readonly IDbConnection _db;
 
         public DbSolution()
         {
-            db = new SqlConnection(HildurConnectionString.ConnectionString);
+            _db = new SqlConnection(HildurConnectionString.ConnectionString);
         }
 
         public int CreateSolution(Solution solution)
         {
+            // TODO ADD SOLUTION FILE / 
             try
             {
                 List<Solution> solutionsBefore = GetSolutionsByAssignmentId(solution.AssignmentId);
@@ -28,36 +29,34 @@ namespace DatabaseLayer.DataAccessLayer
 
                 if (queueLengthBefore > 0)
                 {
-
                     if (DateTime.Compare(solution.Timestamp, solutionsBefore[queueLengthBefore - 1].Timestamp) <= 0)
                     {
                         return -1;
                     }
                 }
-
                 List<Solution> solutionsAfter = GetSolutionsByAssignmentId(solution.AssignmentId);
                 int queueLengthAfter = solutionsAfter.Count;
 
                 if (queueLengthBefore == queueLengthAfter)
                 {
-                    db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) " +
+                    _db.Execute(
+                        @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) " +
                         "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
-                   new
-                   {
-                       assignmentId = solution.AssignmentId,
-                       userId = solution.UserId,
-                       description = solution.Description,
-                       timestamp = solution.Timestamp,
-                       solutionRating = solution.SolutionRating,
-                       anonymous = solution.Anonymous
-                   });
+                        new
+                        {
+                            assignmentId = solution.AssignmentId,
+                            userId = solution.UserId,
+                            description = solution.Description,
+                            timestamp = solution.Timestamp,
+                            solutionRating = solution.SolutionRating,
+                            anonymous = solution.Anonymous
+                        });
+                    // if(solution.SolutionFile)
+                    // add solution file to DB
+                    
                     return queueLengthAfter + 1;
                 }
-                else
-                {
-                    return -1;
-                }
-
+                return -1;
             }
             catch (SqlException e)
             {
@@ -65,29 +64,40 @@ namespace DatabaseLayer.DataAccessLayer
                 return -1;
             }
         }
-
-
+        
         public List<Solution> GetAllSolutions()
         {
-            return db.Query<Solution>("SELECT * FROM [dbo].[Solution]").ToList();
+            try
+            {
+                return _db.Query<Solution>("SELECT * FROM [dbo].[Solution]").ToList();
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
         }
-
-        public List<Solution> GetSolutionsTimestampOrderedByAssignmentId(int id)
-        {
-            return db.Query<Solution>("SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId order by timestamp DESC", new { assignmentId = id }).ToList();
-        }
-
 
         public List<Solution> GetSolutionsByAssignmentId(int id)
         {
-            return db.Query<Solution>("SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId", new { assignmentId = id }).ToList();
+            try
+            {
+                return _db.Query<Solution>(
+                    "SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId order by timestamp DESC",
+                    new {assignmentId = id}).ToList();
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
         }
 
         public Solution GetBySolutionId(int id)
         {
             try
             {
-                return db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
+                return _db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
             }
             catch (Exception ex)
             {
@@ -103,7 +113,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                int numberOfRowsAffected = db.Execute(@"UPDATE [dbo].[Solution] SET assignmentId = @assignmentId, userId = @userId, description = @description, timestamp = @timestamp, solutionRating = @solutionRating, anonymous = @anonymous WHERE solutionId = @solutionId",
+                int numberOfRowsAffected = _db.Execute(@"UPDATE [dbo].[Solution] SET assignmentId = @assignmentId, userId = @userId, description = @description, timestamp = @timestamp, solutionRating = @solutionRating, anonymous = @anonymous WHERE solutionId = @solutionId",
                     new { assignmentId = solution.AssignmentId, userId = solution.UserId, description = solution.Description, timestamp = solution.Timestamp, solutionRating = solution.SolutionRating, anonymous = solution.Anonymous, solutionId = id });
                 return numberOfRowsAffected;
             }
@@ -118,7 +128,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return db.Execute("DELETE FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
+                return _db.Execute("DELETE FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
             }
             catch (SqlException e)
             {
