@@ -2,12 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 
 namespace webApi.Controllers
 {
@@ -95,6 +92,14 @@ namespace webApi.Controllers
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
+        }
+
+        [Route("solution/solution-queue/{assignmentId}")]
+        [HttpGet]
+        public ActionResult ChooseSolution(int assignmentId)
+        {
+            ViewBag.Solutions = solutionBusiness.GetSolutionsTimestampOrderedByAssignmentId(assignmentId);
+            return View("DisplayAllSolutionsForAssignment");
         }
     }
 }

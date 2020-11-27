@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System;
 using System.IO;
+using System.Text;
 
 namespace webApi.Controllers
 {

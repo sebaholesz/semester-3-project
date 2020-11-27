@@ -1,0 +1,70 @@
+﻿@model ModelLayer.Solution
+
+@{
+    ViewData["Title"] = "DisplayAllSolutionsForAssignment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main >
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 screen-1300-invisible">
+            </div>
+            <div class="col-md-8 screen-1300-full">
+                <div class="d-block boxed-row h-100 w-100">
+                    <p id="currentSolutionId" class="d-block"></p>
+                    <p id="currentSolutionUserId" class="d-block"></p>
+                    <p id="currentSolutionTimestamp" class="d-block"></p>
+                    <p id="currentSolutionDescription" class="d-block"></p>
+                    <button disabled id="minusShowIndexButton">move left</button>
+                    <button id="plusShowIndexButton">move right</button>
+                </div>
+            </div>
+            <div class="col-md-2 screen-1300-invisible">
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        const collection = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Solutions))');
+        let currentIndex = 0;
+
+        const displaySolution = (index) => {
+            let solution = { ...collection[index] };
+            console.log(solution)
+            $("#currentSolutionId").text(solution.SolutionId);
+            $("#currentSolutionUserId").text(solution.UserId);
+            $("#currentSolutionTimestamp").text(solution.Timestamp);
+            $("#currentSolutionDescription").text(solution.Description);
+        }
+
+        if (collection.length > 0) {
+            displaySolution(0);
+        }
+
+        $("#minusShowIndexButton").click(() => {
+            if (currentIndex - 1 >= 1) {
+                $("#plusShowIndexButton").attr("disabled", false);
+            }
+            else {
+                $("#minusShowIndexButton").attr("disabled", true);
+            }
+            currentIndex -= 1;
+            displaySolution(currentIndex);
+        });
+
+        $("#plusShowIndexButton").click(() => {
+            if (currentIndex + 1 < collection.length -1) {
+                $("#minusShowIndexButton").attr("disabled", false);
+            }
+            else {
+                $("#plusShowIndexButton").attr("disabled", true);
+            }
+            currentIndex += 1;
+            displaySolution(currentIndex);
+        });
+    </script>
+}
+
