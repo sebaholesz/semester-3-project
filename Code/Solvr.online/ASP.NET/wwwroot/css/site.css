@@ -16,6 +16,34 @@ button:focus {
     outline: none;
 }
 
+.btn-update {
+    background-color: #03CEA4;
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 0 15px;
+    font-size: 20px;
+    outline: none;
+    border: none;
+}
+
+    .btn-update:hover {
+        background-color: #00C895;
+    }
+
+.btn-delete {
+    background-color: #ca1551;
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 0 15px;
+    margin-left: 30px;
+    font-size: 20px;
+    outline: none;
+    border: none;
+}
+
+    .btn-delete:hover {
+        background-color: #B91249;
+    }
 
 .navbar-fluid {
     padding: 0 10px;

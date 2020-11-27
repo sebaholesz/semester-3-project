@@ -1,0 +1,129 @@
+﻿@model ModelLayer.Assignment
+
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var assignment = ViewBag.Assignment;
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="/css/create-assignment.css" />
+}
+
+<main>
+    <div class="container-fluid">
+        <form class="create-assignment-form" asp-controller="Assignment" asp-action="UpdateAssignment" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-2 screen-1300-invisible">
+                </div>
+                <div class="col-md-8 screen-1300-full">
+                    <div class="boxed-row">
+                        <div class="row create-assignment-title-block">
+                            <div class="col-md-7">
+                                <input asp-for="Title" value="@assignment.Title" class="assignment-title-text-field" readonly>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                                <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
+                            </div>
+                            <div class="col-md-5 d-flex align-items-center justify-content-end">
+                                <button type="submit" class="btn-update">
+                                    Update
+                                </button>
+                                <button type="submit" class="btn-delete">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="row ">
+                    <div class="col-md-8">
+                        <div class="boxed-row">
+                            <input asp-for="Title" placeholder="Assignment Title" class="assignment-title-text-field">
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="boxed-row">
+                            <button type="button" class="btn-attach-files">
+                                Attach Files
+                            </button>
+                        </div>
+                    </div>
+                </div>*@
+
+                    <div class="row assignment-description-detail-container">
+                        <div class="col-md-7 height-max">
+                            <div class="assignment-description">
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                                <textarea name="@Html.NameFor(m => m.Description)" class="textarea-assignment-description" readonly>@assignment.Description</textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5 height-max">
+                            @*<div class="boxed-row">
+                            <button type="button" class="btn-attach-files">
+                                Attach Files
+                            </button>
+                        </div>*@
+                            <div class="assignment-details-panel">
+                                <h4>Details</h4>
+                                <div class="form-group">
+                                    <label for="Deadline">
+                                        Deadline
+                                    </label>
+                                    <input asp-for="Deadline" type="datetime-local" value="@ViewBag.AssignmentDeadline" class="form-control" />
+                                    <span asp-validation-for="Deadline" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Price">
+                                        Credits
+                                    </label>
+                                    <input asp-for="Price" type="number" value="@assignment.Price" class="form-control" />
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="AcademicLevel">
+                                        Academic Level
+                                    </label>
+                                    <br />
+                                    <select asp-for="AcademicLevel" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
+                                        <option value="@assignment.AcademicLevel" selected>@assignment.AcademicLevel</option>
+                                    </select>
+                                    <span asp-validation-for="AcademicLevel" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Subject">
+                                        Subject
+                                    </label>
+                                    <br />
+                                    <select asp-for="Subject" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
+                                        <option value="@assignment.Subject" selected>@assignment.Subject</option>
+                                    </select>
+                                    <span asp-validation-for="Subject" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Anonymous">
+                                        Make Anonymous
+                                    </label>
+                                    <br />
+                                    <input asp-for="@Model.Anonymous" type="checkbox" class="checkbox-make-anonymous" value="@assignment.Anonymous" checked="@assignment.Anonymous" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 screen-1300-invisible">
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

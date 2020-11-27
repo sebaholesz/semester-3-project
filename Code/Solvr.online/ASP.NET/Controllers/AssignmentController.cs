@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
+using Newtonsoft.Json;
+using System.Globalization;
 using System;
 using System.IO;
 
@@ -137,8 +139,7 @@ namespace webApi.Controllers
             }
         }
 
-
-        [Route("assignment")]
+        [Route("assignment/display-assignments")]
         [HttpGet]
         public ActionResult DisplayAllAssignments()
         {
@@ -146,7 +147,7 @@ namespace webApi.Controllers
             {
                 ViewBag.Assignment = assignmentBusiness.GetAllActiveAssignments();
                 //TODO return allAssignments view
-                return View();
+                return View("AllAssignments");
             }
             catch (Exception e)
             {
@@ -155,6 +156,124 @@ namespace webApi.Controllers
             }
         }
 
+        [Route("assignment/update-assignment/{id}")]
+        [HttpGet]
+        public ActionResult UpdateAssignment(int id)
+        {
+            try
+            {
+                Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
+                ViewBag.Assignment = assignment;
+                ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
+                return View("UpdateAssignment");
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                return View("Error");
+            }
+        }
 
+        [Route("assignment/update-assignment/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateAssignment(IFormCollection collection, int id)
+        {
+            {
+                try
+                {
+                    if (ModelState.IsValid)
+                    {
+                        //TODO notify all solvers of the changes
+                        Assignment assignment = new Assignment(
+                            collection["Title"],
+                            collection["Description"],
+                            Convert.ToInt32(collection["Price"]),
+                            Convert.ToDateTime(collection["Deadline"]),
+                            Convert.ToBoolean(collection["Anonymous"][0]),
+                            collection["AcademicLevel"],
+                            collection["Subject"],
+                            Encoding.ASCII.GetBytes(collection["AssignmentFile"])
+                        );
+
+                        int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, id);
+
+                        if (noOfRowsAffected > 0)
+                        {
+                            ViewBag.Message = "Assignment updated successfully";
+                            ViewBag.ResponseStyleClass = "text-success";
+                            ViewBag.ButtonText = "Display your assignment";
+                            ViewBag.ButtonLink = "/assignment/display-assignment/" + id;
+                            ViewBag.PageTitle = "Assignment updated!";
+                            ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
+                            ViewBag.Image = "/assets/icons/success.svg";
+                        }
+                        else
+                        {
+                            ViewBag.Message = "Assignment update failed";
+                            ViewBag.ResponseStyleClass = "text-danger";
+                            ViewBag.ButtonText = "Go back to the assignment form";
+                            ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
+                            ViewBag.PageTitle = "Assignment update failed!";
+                            ViewBag.SubMessage = "There was a server error \ntry again later";
+                            ViewBag.Image = "/assets/icons/error.svg";
+                        }
+                    }
+                    else
+                    { 
+                        ViewBag.Message = "Assignment update failed";
+                        ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to the assignment form";
+                        ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
+                        ViewBag.PageTitle = "Assignment update failed!";
+                        ViewBag.SubMessage = "Invalid data inserted";
+                        ViewBag.Image = "/assets/icons/error.svg";
+                    }
+                    return View("UserFeedback");
+                }
+                catch (Exception e)
+                {
+                    ViewBag.ErrorMessage = e.Message;
+                    return View("Error");
+                }
+            }
+        }
+
+        [Route("assignment/delete-assignment/{id}")]
+        [HttpDelete]
+        public ActionResult DeleteAssignment(int id)
+        {
+            try
+            {
+                int noOfRowsAffected = assignmentBusiness.DeleteAssignment(id);
+
+                if (noOfRowsAffected > 0)
+                {
+                    ViewBag.Message = "Assignment deleted successfully";
+                    ViewBag.ResponseStyleClass = "text-success";
+                    ViewBag.ButtonText = "Go back to homepage";
+                    ViewBag.ButtonLink = "/";
+                    ViewBag.PageTitle = "Assignment deleted!";
+                    ViewBag.SubMessage = "Your assignment is now deleted";
+                    ViewBag.Image = "/assets/icons/success.svg";
+                }
+                else
+                {
+                    ViewBag.Message = "Assignment deletion failed";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to the assignment form";
+                    ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
+                    ViewBag.PageTitle = "Assignment deletion failed!";
+                    ViewBag.SubMessage = "There was a server error \ntry again later";
+                    ViewBag.Image = "/assets/icons/error.svg";
+                }
+                return View("UserFeedback");
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message;
+                return View("Error");
+            }
+        }
     }
 }

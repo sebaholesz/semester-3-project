@@ -113,6 +113,32 @@
     height: 60vh;
 }
 
+.card-details {
+    margin-bottom: 5px;
+}
+
+.card-body{
+    padding: 10px;
+}
+
+.card-text{
+    padding: 0px;
+}
+
+.card-description{
+    padding-left: 5px;
+}
+
+
+.subject {
+    background-color: #AEF5CA;
+    border-radius: 10px;
+}
+
+.academic-level {
+    background-color: #AEF5CA;
+    border-radius: 10px;
+}
 
 
 
