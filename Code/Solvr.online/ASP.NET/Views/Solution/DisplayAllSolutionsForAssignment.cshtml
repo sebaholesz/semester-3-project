@@ -5,19 +5,82 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<main >
+@section Stylesheets {
+    <link rel="stylesheet" href="/css/create-assignment.css" />
+    @*this need to be put in its own file*@
+    <style>
+        .btn-previous-next-solution {
+            background-color: #5891b0;
+            color: #FFFFFF;
+            border-radius: 8px;
+            padding: 0 15px;
+            font-size: 20px;
+            outline: none;
+            border: none;
+        }
+
+            .btn-previous-next-solution:disabled {
+                background-color: #585e61;
+                color: #a1a1a1;
+                cursor: not-allowed
+            }
+    </style>
+}
+
+@*this needs "restyling" (getting some other CSS styling than from the create-assignment.css)*@
+<main>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2 screen-1300-invisible">
             </div>
             <div class="col-md-8 screen-1300-full">
-                <div class="d-block boxed-row h-100 w-100">
-                    <p id="currentSolutionId" class="d-block"></p>
-                    <p id="currentSolutionUserId" class="d-block"></p>
-                    <p id="currentSolutionTimestamp" class="d-block"></p>
-                    <p id="currentSolutionDescription" class="d-block"></p>
-                    <button disabled id="minusShowIndexButton">move left</button>
-                    <button id="plusShowIndexButton">move right</button>
+                <div class="boxed-row">
+                    <div class="row create-assignment-title-block">
+                        <div class="col-md-6">
+                            <button disabled onclick="minusCurrentIndex()" id="minusCurrentIndexButton" class="btn-previous-next-solution">
+                                Previous
+                            </button>
+                            <button onclick="plusCurrentIndex()" id="plusCurrentIndexButton" class="btn-previous-next-solution">
+                                Next
+                            </button>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center justify-content-end">
+                            <button onclick="chooseSolution()" class="btn-update">
+                                Choose this solution
+                            </button>
+                            <button onclick="rejectSolution()" class="btn-delete">
+                                Reject this solution
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row assignment-description-detail-container">
+                    <div class="col-md-7 height-max">
+                        <div class="assignment-description">
+                            <p id="currentSolutionDescription" class="d-block w-100"></p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 height-max">
+                        <div class="assignment-details-panel">
+                            <h4>Solution details</h4>
+                            <div>
+                                <label>
+                                    Posted on
+                                </label>
+                                <span id="currentSolutionTimestamp" class="d-block"></span>
+                            </div>
+
+                            <div>
+                                <label>
+                                    Solver info
+                                </label>
+                                <p>rn we just showing the id, later it will get more info</p>
+                                <p id="currentSolutionUserId" class="d-block"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-2 screen-1300-invisible">
@@ -44,27 +107,54 @@
             displaySolution(0);
         }
 
-        $("#minusShowIndexButton").click(() => {
+        const minusCurrentIndex = () => {
             if (currentIndex - 1 >= 1) {
-                $("#plusShowIndexButton").attr("disabled", false);
+                $("#plusCurrentIndexButton").attr("disabled", false);
             }
             else {
-                $("#minusShowIndexButton").attr("disabled", true);
+                $("#minusCurrentIndexButton").attr("disabled", true);
             }
             currentIndex -= 1;
             displaySolution(currentIndex);
-        });
+        };
 
-        $("#plusShowIndexButton").click(() => {
+        const plusCurrentIndex = () => {
             if (currentIndex + 1 < collection.length -1) {
-                $("#minusShowIndexButton").attr("disabled", false);
+                $("#minusCurrentIndexButton").attr("disabled", false);
             }
             else {
-                $("#plusShowIndexButton").attr("disabled", true);
+                $("#plusCurrentIndexButton").attr("disabled", true);
             }
             currentIndex += 1;
             displaySolution(currentIndex);
-        });
+        };
+
+        const chooseSolution = () => {
+            if (confirm('Do you really want to choose this solution?')) {
+                //send http request to the BE
+                console.log("yes I do")
+            }
+        }
+
+        const rejectSolution = () => {
+            //this can be done in an easier way (probably) but I am drunk while writing this 
+            if (collection.length - 1 > 0) {
+                collection.splice(currentIndex, 1);
+                currentIndex = 0;
+            }
+         
+            if (collection.length > 0) {
+                $("#minusCurrentIndexButton").attr("disabled", true);
+            }
+
+            if (collection.length <= 0) {
+                $("#minusCurrentIndexButton").attr("disabled", true);
+                $("#plusCurrentIndexButton").attr("disabled", true);
+            }
+
+            displaySolution(currentIndex);
+        }
+
     </script>
 }
 
