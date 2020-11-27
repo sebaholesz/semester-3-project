@@ -1,9 +1,10 @@
 ﻿@model ModelLayer.Assignment
 
 @{
-    ViewData["Title"] = "Display Assignment";
+    ViewData["Title"] = "Assignments";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var assignment = ViewBag.Assignment;
+    //var assignment = ViewBag.Assignment;
+    List<Assignment> assignments = ViewBag.Assignments;
 }
 
 @section Stylesheets {
@@ -17,18 +18,11 @@
             </div>
             <div class="col-md-10 screen-1300-full">
                 <div class="card-columns">
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
-                    @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml")
+                    @foreach (var assignment in assignments)
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml", assignment)
+                    }
+
                 </div>
             </div>
             <div class="col-md-1 screen-1300-invisible">

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System;
 using System.IO;
+using System.Text;
 
 namespace webApi.Controllers
 {
@@ -145,7 +146,7 @@ namespace webApi.Controllers
         {
             try
             {
-                ViewBag.Assignment = assignmentBusiness.GetAllActiveAssignments();
+                ViewBag.Assignments = assignmentBusiness.GetAllActiveAssignments();
                 //TODO return allAssignments view
                 return View("AllAssignments");
             }
@@ -154,6 +155,13 @@ namespace webApi.Controllers
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
+        }
+
+        [HttpGet]
+        public ActionResult AssignmentCard(Assignment assignment)
+        {
+            ViewBag.Assignment = assignment;
+            return View("AssignmentCard");
         }
 
         [Route("assignment/update-assignment/{id}")]

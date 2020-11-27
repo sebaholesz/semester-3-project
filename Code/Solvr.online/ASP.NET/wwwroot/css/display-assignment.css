@@ -122,23 +122,40 @@
 }
 
 .card-text{
-    padding: 0px;
+    padding: 2px;
 }
 
 .card-description{
     padding-left: 5px;
 }
 
-
-.subject {
-    background-color: #AEF5CA;
-    border-radius: 10px;
+.card-subject {
+    border: 2px;
+    border-style: solid;
+    border-width: thin;
+    border-color: #D81E5B;
+    color: #2E294E;
+    background-color: #D81E5B;
+    border-radius: 6px;
+    margin: 3px;
 }
 
-.academic-level {
-    background-color: #AEF5CA;
-    border-radius: 10px;
+.card-academicLevel {
+    border: 2px;
+    border-style: solid;
+    border-width: thin;
+    border-color: #EAC435;
+    color: #2E294E;
+    background-color: #EAC435;
+    border-radius: 6px;
+    margin: 3px;
 }
 
+.assignment-card {
+    text-decoration: none;
+    color: #2E294E;
+}
 
-
+.header {
+    background-color: #274C77;
+}

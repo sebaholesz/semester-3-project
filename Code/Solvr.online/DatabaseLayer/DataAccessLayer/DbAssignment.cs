@@ -151,5 +151,10 @@ namespace DatabaseLayer.DataAccessLayer
         {
             return db.Query<string>("SELECT * FROM [dbo].[Subject]").ToList();
         }
+
+        public int DeleteAssignment(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
