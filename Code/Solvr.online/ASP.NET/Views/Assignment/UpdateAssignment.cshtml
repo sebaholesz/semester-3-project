@@ -1,7 +1,7 @@
 ﻿@model ModelLayer.Assignment
 
 @{
-    ViewData["Title"] = "Update";
+    ViewData["Title"] = "Update Assignment";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var assignment = ViewBag.Assignment;
 }
@@ -29,28 +29,12 @@
                                 <button type="submit" class="btn-update">
                                     Update
                                 </button>
-                                <button type="submit" class="btn-delete">
+                                <button type="button" onclick="deleteAssignment(@assignment.AssignmentId)" class="btn-delete">
                                     Delete
                                 </button>
                             </div>
                         </div>
                     </div>
-
-                    @*<div class="row ">
-                    <div class="col-md-8">
-                        <div class="boxed-row">
-                            <input asp-for="Title" placeholder="Assignment Title" class="assignment-title-text-field">
-                            <span asp-validation-for="Title" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="boxed-row">
-                            <button type="button" class="btn-attach-files">
-                                Attach Files
-                            </button>
-                        </div>
-                    </div>
-                </div>*@
 
                     <div class="row assignment-description-detail-container">
                         <div class="col-md-7 height-max">
@@ -126,4 +110,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/js/update-assignment.js"></script>
 }

@@ -55,6 +55,11 @@ namespace BusinessLayer
             return dbAssignment.MakeAssignmentInactive(id);
         }
 
+        public int MakeAssignmentInactive(int id)
+        {
+            return dbAssignment.MakeAssignmentInactive(id);
+        }
+
         public List<string> GetAllAcademicLevels()
         {
             return dbAssignment.GetAllAcademicLevels();

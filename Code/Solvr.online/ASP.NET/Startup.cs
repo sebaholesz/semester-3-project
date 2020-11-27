@@ -51,6 +51,15 @@ namespace ASP.NET
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 400 || context.Response.StatusCode == 404 || context.Response.StatusCode == 405)
+                {
+                    context.Request.Path = "/error/"+ context.Response.StatusCode;
+                    await next();
+                }
+            });
             app.UseStaticFiles();
 
             app.UseRouting();

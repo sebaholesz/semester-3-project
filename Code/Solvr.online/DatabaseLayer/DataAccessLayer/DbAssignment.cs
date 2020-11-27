@@ -103,6 +103,7 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 // TODO handle getting "empty" ids
                 //GetFileFromDB(34);
+
                 return db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
@@ -111,6 +112,7 @@ namespace DatabaseLayer.DataAccessLayer
                 return null;
             }
         }
+        
         public int UpdateAssignment(Assignment assignment, int id)
         {
             try
@@ -126,6 +128,7 @@ namespace DatabaseLayer.DataAccessLayer
                 return 0;
             }
         }
+
         public int MakeAssignmentInactive(int id)
         {
             try

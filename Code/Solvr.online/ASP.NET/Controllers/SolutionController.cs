@@ -33,8 +33,8 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
 
@@ -92,8 +92,8 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
     }
