@@ -103,58 +103,64 @@
             $("#currentSolutionDescription").text(solution.Description);
         }
 
+        //the logic from here until the end of the js file can probably be implemented in a more simple manner, but it works
         if (collection.length > 0) {
             displaySolution(0);
         }
 
         const minusCurrentIndex = () => {
-            if (currentIndex - 1 >= 1) {
+            console.log(currentIndex);
+            if (currentIndex - 1 >= 0) {
+                currentIndex -= 1;
                 $("#plusCurrentIndexButton").attr("disabled", false);
             }
-            else {
+            if (currentIndex === 0) {
                 $("#minusCurrentIndexButton").attr("disabled", true);
             }
-            currentIndex -= 1;
             displaySolution(currentIndex);
+            console.log(currentIndex);
         };
 
         const plusCurrentIndex = () => {
-            if (currentIndex + 1 < collection.length -1) {
+            console.log(currentIndex);
+            if (currentIndex + 1 < collection.length) {
+                currentIndex += 1;
                 $("#minusCurrentIndexButton").attr("disabled", false);
             }
-            else {
+            if (currentIndex + 1 === collection.length) {
                 $("#plusCurrentIndexButton").attr("disabled", true);
             }
-            currentIndex += 1;
             displaySolution(currentIndex);
+            console.log(currentIndex);
         };
 
         const chooseSolution = () => {
             if (confirm('Do you really want to choose this solution?')) {
-                //send http request to the BE
+                //redirect to the solution (+assignment) details page
+                    //implement the "download all attachment files" button
+                //reject all the other solutions
+                //mark the chosen solution as "chosen"
+                    
                 console.log("yes I do")
             }
         }
 
         const rejectSolution = () => {
-            //this can be done in an easier way (probably) but I am drunk while writing this 
+            console.log(currentIndex);
             if (collection.length - 1 > 0) {
                 collection.splice(currentIndex, 1);
+                $("#minusCurrentIndexButton").attr("disabled", true);
+                $("#plusCurrentIndexButton").attr("disabled", false);
                 currentIndex = 0;
             }
-         
-            if (collection.length > 0) {
-                $("#minusCurrentIndexButton").attr("disabled", true);
-            }
 
-            if (collection.length <= 0) {
+            if (collection.length === 1) {
                 $("#minusCurrentIndexButton").attr("disabled", true);
                 $("#plusCurrentIndexButton").attr("disabled", true);
             }
-
             displaySolution(currentIndex);
+            console.log(currentIndex);
         }
-
     </script>
 }
 
