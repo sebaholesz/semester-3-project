@@ -99,6 +99,7 @@ CREATE TABLE [dbo].[Customer]
      [description] VARCHAR(50) NOT NULL, 
 
      [price] INT NOT NULL, 
+     [postDate] DATETIME NOT NULL,
 
      [deadline] DATETIME NOT NULL, 
 
@@ -233,6 +234,13 @@ create table [dbo].[AssignmentFile] (
 	assignmentFile varbinary(max),
 	constraint fkFileAssignmentId foreign key(assignmentId) references [Assignment](assignmentId),
 )
+
+create table [dbo].[SolutionFile] (
+	solutionId int NOT NULL,
+	solutionFile varbinary(max),
+	constraint fkFileSolutionId foreign key(solutionId) references [Solution](solutionId),
+)
+
 
 
 

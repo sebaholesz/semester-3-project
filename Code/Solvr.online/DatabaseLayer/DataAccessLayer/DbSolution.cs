@@ -3,7 +3,6 @@ using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -39,21 +38,40 @@ namespace DatabaseLayer.DataAccessLayer
 
                 if (queueLengthBefore == queueLengthAfter)
                 {
-                    _db.Execute(
-                        @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) " +
-                        "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
-                        new
+                    _db.Open();
+                    using (var transaction = _db.BeginTransaction())
+                    {
+                        try
                         {
-                            assignmentId = solution.AssignmentId,
-                            userId = solution.UserId,
-                            description = solution.Description,
-                            timestamp = solution.Timestamp,
-                            solutionRating = solution.SolutionRating,
-                            anonymous = solution.Anonymous
-                        });
-                    // if(solution.SolutionFile)
-                    // add solution file to DB
-                    
+                            int lastUsedId = _db.ExecuteScalar<int>(
+                                @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) " +
+                                "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous); SELECT SCOPE_IDENTITY()",
+                                new
+                                {
+                                    assignmentId = solution.AssignmentId,
+                                    userId = solution.UserId,
+                                    description = solution.Description,
+                                    timestamp = solution.Timestamp,
+                                    solutionRating = solution.SolutionRating,
+                                    anonymous = solution.Anonymous
+                                }, transaction);
+                            if (solution.SolutionFile != null)
+                            {
+                                _db.Execute(@"INSERT INTO [dbo].[SolutionFile](solutionId, solutionFile) values (@solutionId, @solutionFile)",
+                                    new { solutionId = lastUsedId, solutionFile = solution.SolutionFile }, transaction);
+                            }
+                            transaction.Commit();
+                            _db.Close();
+                        }
+                        catch (SqlException e)
+                        {
+                            transaction.Rollback();
+                            _db.Close();
+                            Console.WriteLine(e.Message);
+                            return -1;
+                        }
+
+                    }
                     return queueLengthAfter + 1;
                 }
                 return -1;
@@ -64,7 +82,7 @@ namespace DatabaseLayer.DataAccessLayer
                 return -1;
             }
         }
-        
+
         public List<Solution> GetAllSolutions()
         {
             try
@@ -84,7 +102,7 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 return _db.Query<Solution>(
                     "SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId order by timestamp DESC",
-                    new {assignmentId = id}).ToList();
+                    new { assignmentId = id }).ToList();
             }
             catch (SqlException e)
             {

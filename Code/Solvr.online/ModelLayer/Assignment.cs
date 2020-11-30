@@ -7,7 +7,7 @@ namespace ModelLayer
     public class Assignment
     {
         //TODO add PostDate property to DB
-        
+
         public int AssignmentId { get; set; }
         [Required]
         [StringLength(30)]
@@ -28,12 +28,14 @@ namespace ModelLayer
         [Required]
         public string Subject { get; set; }
         public byte[] AssignmentFile { get; set; }
-        
-        public Assignment(string title, string description, int price, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] assignmentFile)
+        public List<Solution> Solutions { get; set; }
+
+        public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] assignmentFile)
         {
             this.Title = title;
             this.Description = description;
             this.Price = price;
+            this.PostDate = postDate;
             this.Deadline = deadline;
             this.Anonymous = anonymous;
             this.AcademicLevel = academicLevel;
@@ -41,11 +43,12 @@ namespace ModelLayer
             this.AssignmentFile = assignmentFile;
         }
 
-        public Assignment(string title, string description, int price, DateTime deadline, bool anonymous, string academicLevel, string subject)
+        public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject)
         {
             this.Title = title;
             this.Description = description;
             this.Price = price;
+            this.PostDate = postDate;
             this.Deadline = deadline;
             this.Anonymous = anonymous;
             this.AcademicLevel = academicLevel;
@@ -55,7 +58,7 @@ namespace ModelLayer
         public Assignment()
         {
         }
-        
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Deadline <= DateTime.Now)

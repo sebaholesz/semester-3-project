@@ -2,21 +2,22 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
-using Newtonsoft.Json;
-using System.Globalization;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace webApi.Controllers
 {
     public class AssignmentController : Controller
     {
         private readonly AssignmentBusiness assignmentBusiness;
+        private readonly SolutionBusiness solutionBusiness;
 
         public AssignmentController()
         {
             assignmentBusiness = new AssignmentBusiness();
+            solutionBusiness = new SolutionBusiness();
         }
 
         [Route("assignment/create-assignment")]
@@ -40,7 +41,7 @@ namespace webApi.Controllers
         [Route("assignment/create-assignment")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async System.Threading.Tasks.Task<ActionResult> CreateAssignmentAsync(IFormCollection collection, IFormFile files)
+        public async Task<ActionResult> CreateAssignmentAsync(IFormCollection collection, IFormFile files)
         {
             try
             {
@@ -54,14 +55,15 @@ namespace webApi.Controllers
                         await files.CopyToAsync(dataStream);
 
                         assignment = new Assignment(
-                        collection["Title"],
-                        collection["Description"],
-                        Convert.ToInt32(collection["Price"]),
-                        Convert.ToDateTime(collection["Deadline"]),
-                        Convert.ToBoolean(collection["Anonymous"][0]),
-                        collection["AcademicLevel"],
-                        collection["Subject"],
-                        dataStream.ToArray()
+                            collection["Title"],
+                            collection["Description"],
+                            Convert.ToInt32(collection["Price"]),
+                            DateTime.Now,
+                            Convert.ToDateTime(collection["Deadline"]),
+                            Convert.ToBoolean(collection["Anonymous"][0]),
+                            collection["AcademicLevel"],
+                            collection["Subject"],
+                            dataStream.ToArray()
                         );
 
                         dataStream.Close();
@@ -72,6 +74,7 @@ namespace webApi.Controllers
                            collection["Title"],
                            collection["Description"],
                            Convert.ToInt32(collection["Price"]),
+                           DateTime.Now,
                            Convert.ToDateTime(collection["Deadline"]),
                            Convert.ToBoolean(collection["Anonymous"][0]),
                            collection["AcademicLevel"],
@@ -128,6 +131,7 @@ namespace webApi.Controllers
             try
             {
                 ViewBag.Assignment = assignmentBusiness.GetByAssignmentId(id);
+                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id);
                 return View("DisplayAssignment");
             }
             catch (Exception e)
@@ -144,6 +148,7 @@ namespace webApi.Controllers
             try
             {
                 ViewBag.Assignments = assignmentBusiness.GetAllActiveAssignments();
+
                 //TODO return allAssignments view
                 return View("AllAssignments");
             }
@@ -194,6 +199,7 @@ namespace webApi.Controllers
                             collection["Title"],
                             collection["Description"],
                             Convert.ToInt32(collection["Price"]),
+                            DateTime.Now,
                             Convert.ToDateTime(collection["Deadline"]),
                             Convert.ToBoolean(collection["Anonymous"][0]),
                             collection["AcademicLevel"],
@@ -225,7 +231,7 @@ namespace webApi.Controllers
                         }
                     }
                     else
-                    { 
+                    {
                         ViewBag.Message = "Assignment update failed";
                         ViewBag.ResponseStyleClass = "text-danger";
                         ViewBag.ButtonText = "Go back to the assignment form";
