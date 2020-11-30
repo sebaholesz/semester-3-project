@@ -190,14 +190,9 @@ namespace DatabaseLayer.DataAccessLayer
 
         public int DeleteAssignment(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        public int DeleteAssignment(int id)
-        {
             try
             {
-                return db.Execute("DELETE * FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return _db.Execute("DELETE * FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
             {

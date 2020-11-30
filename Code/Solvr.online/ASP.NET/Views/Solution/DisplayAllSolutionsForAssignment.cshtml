@@ -18,18 +18,18 @@
                 <div class="boxed-row">
                     <div class="row choose-solution-title-block">
                         <div class="col-md-6">
-                            <button disabled onclick="minusCurrentIndex()" id="minusCurrentIndexButton" class="btn-previous-next-solution">
+                            <button disabled id="minusCurrentIndexButton" class="btn-previous-next-solution">
                                 Previous
                             </button>
-                            <button onclick="plusCurrentIndex()" id="plusCurrentIndexButton" class="btn-previous-next-solution">
+                            <button id="plusCurrentIndexButton" class="btn-previous-next-solution">
                                 Next
                             </button>
                         </div>
                         <div class="col-md-6 d-flex align-items-center justify-content-end">
-                            <button onclick="chooseSolution()" class="btn-update">
+                            <button id="chooseSolutionButton" class="btn-update">
                                 Choose this solution
                             </button>
-                            <button onclick="rejectSolution()" class="btn-delete">
+                            <button id="rejectSolutionButton" class="btn-delete">
                                 Reject this solution
                             </button>
                         </div>
@@ -71,6 +71,75 @@
 </main>
 
 @section Scripts {
-    <script type="text/javascript" src="~/js/choose-solution.js"></script>
+    <script>
+        const collection = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Solutions))');
+        let currentIndex = 0;
+
+        const displaySolution = (index) => {
+        let solution = {...collection[index]};
+            $("#currentSolutionId").text(solution.SolutionId);
+            $("#currentSolutionUserId").text(solution.UserId);
+            $("#currentSolutionTimestamp").text(solution.Timestamp);
+            $("#currentSolutionDescription").text(solution.Description);
+        }
+
+        if (collection.length > 0) {
+        displaySolution(0);
+        }
+
+        $("#minusCurrentIndexButton").click(() => {
+            if (currentIndex - 1 >= 0) {
+                currentIndex -= 1;
+                $("#plusCurrentIndexButton").attr("disabled", false);
+            }
+            if (currentIndex === 0) {
+            $("#minusCurrentIndexButton").attr("disabled", true);
+                }
+                displaySolution(currentIndex);
+        });
+
+        $("#plusCurrentIndexButton").click(() => {
+            if (currentIndex + 1 < collection.length) {
+                currentIndex += 1;
+                $("#minusCurrentIndexButton").attr("disabled", false);
+            }
+            if (currentIndex + 1 === collection.length) {
+        $("#plusCurrentIndexButton").attr("disabled", true);
+            }
+            displaySolution(currentIndex);
+        });
+
+        $("#chooseSolutionButton").click(() => {
+            if (confirm('Do you really want to choose this solution?')) {
+
+                const solutionId = collection[currentIndex].SolutionId;
+                const xhrChooseSolutionBody = solutionId;
+                const xhrGetSolution = new XMLHttpRequest();
+                const xhrChooseSolution = new XMLHttpRequest();
+
+                xhrChooseSolution.open('PUT', "/solution/choose-solution");
+                xhrChooseSolution.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhrChooseSolution.send(JSON.stringify(xhrChooseSolutionBody));
+                xhrChooseSolution.onload = () => {
+                    document.body.innerHTML = xhrChooseSolution.response
+                };
+            }
+        });
+
+        $("#rejectSolutionButton").click(() => {
+            if (collection.length - 1 > 0) {
+                collection.splice(currentIndex, 1);
+                $("#minusCurrentIndexButton").attr("disabled", true);
+                $("#plusCurrentIndexButton").attr("disabled", false);
+                currentIndex = 0;
+            }
+
+            if (collection.length === 1) {
+                $("#minusCurrentIndexButton").attr("disabled", true);
+                $("#plusCurrentIndexButton").attr("disabled", true);
+            }
+            displaySolution(currentIndex);
+        });
+    </script>
 }
 

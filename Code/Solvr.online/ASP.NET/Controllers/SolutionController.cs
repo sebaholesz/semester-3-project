@@ -6,6 +6,7 @@ using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace webApi.Controllers
 {
@@ -27,6 +28,7 @@ namespace webApi.Controllers
             try
             {
                 ViewBag.Assignment = assignmentBusiness.GetByAssignmentId(id);
+                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id).Count;
                 return View("CreateSolution");
             }
             catch (Exception e)

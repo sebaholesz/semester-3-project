@@ -45,16 +45,16 @@ namespace DatabaseLayer.DataAccessLayer
                         {
                             int lastUsedId = _db.ExecuteScalar<int>(
                                 @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous, accepted) " +
-                                "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0)",
-                            new
-                            {
-                                assignmentId = solution.AssignmentId,
-                                userId = solution.UserId,
-                                description = solution.Description,
-                                timestamp = solution.Timestamp,
-                                solutionRating = solution.SolutionRating,
-                                anonymous = solution.Anonymous
-                            });
+                                "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0); SELECT SCOPE_IDENTITY()",
+                                new
+                                {
+                                    assignmentId = solution.AssignmentId,
+                                    userId = solution.UserId,
+                                    description = solution.Description,
+                                    timestamp = solution.Timestamp,
+                                    solutionRating = solution.SolutionRating,
+                                    anonymous = solution.Anonymous
+                                }, transaction );
                             if (solution.SolutionFile != null)
                             {
                                 _db.Execute(@"INSERT INTO [dbo].[SolutionFile](solutionId, solutionFile) values (@solutionId, @solutionFile)",
@@ -160,7 +160,7 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 //mark the one solution as accepted
-                return db.Execute("UPDATE [dbo].[Solution]  SET accepted=1 WHERE solutionId=@solutionId", new { solutionId = solutionId });
+                return _db.Execute("UPDATE [dbo].[Solution]  SET accepted=1 WHERE solutionId=@solutionId", new { solutionId = solutionId });
             }
             catch (Exception e)
             {

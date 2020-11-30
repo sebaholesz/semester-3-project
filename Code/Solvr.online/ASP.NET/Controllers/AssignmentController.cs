@@ -131,7 +131,7 @@ namespace webApi.Controllers
             try
             {
                 ViewBag.Assignment = assignmentBusiness.GetByAssignmentId(id);
-                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id);
+                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id).Count;
                 return View("DisplayAssignment");
             }
             catch (Exception e)

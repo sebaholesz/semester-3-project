@@ -54,7 +54,7 @@ namespace BusinessLayer
 
         public int ChooseSolution(int solutionId)
         {
-            return dbSolution.ChooseSolution(solutionId);
+            return _dbSolution.ChooseSolution(solutionId);
         }
     }
 }

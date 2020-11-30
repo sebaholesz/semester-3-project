@@ -19,7 +19,7 @@
             <div class="col-md-8 screen-1300-full">
                 <div class="row">
                     <div class="col-md-12">
-                        <form asp-controller="Solution" asp-action="CreateSolution" method="post">
+                        <form asp-controller="Solution" enctype="multipart/form-data" asp-action="CreateSolution" method="post">
                             @Html.AntiForgeryToken()
 
                             <div class="boxed-row">
@@ -52,8 +52,8 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div class="boxed-row">
-                                        <input  name="files" type="file"
-                                               id="avatar"
+                                        <input name="files" type="file"
+                                               id="add-file"
                                                accept="image/png, image/jpeg">
                                     </div>
                                 </div>

@@ -16,6 +16,10 @@ button:focus {
     outline: none;
 }
 
+#add-file {
+    overflow: hidden;
+}
+
 .btn-update {
     background-color: #03CEA4;
     color: #FFFFFF;
