@@ -24,9 +24,9 @@
 
                             <div class="boxed-row">
                                 <div class="row create-solution-title-block">
-                                    <div class="col-md-9">
+                                    <div class="col-md-9 d-flex align-items-center">
                                         <h3 class="create-solution-page-title">
-                                            Create solution
+                                            @assignment.Title
                                         </h3>
                                         <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
                                     </div>
@@ -37,18 +37,32 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="row ">
+                                <div class="col-md-7">
+                                    <div class="boxed-row d-flex align-items-center">
+                                        <label class="m-0">
+                                            Make Anonymous
+                                        </label>
+                                        <label class="switch">
+                                            <input asp-for="Solution.Anonymous" type="checkbox" value="true" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                        @*<input asp-for="Solution.Anonymous" type="checkbox" data-toggle="toggle" class="toggle-make-anonymous" value="true" checked />*@
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="boxed-row">
+                                        <input  name="files" type="file"
+                                               id="avatar"
+                                               accept="image/png, image/jpeg">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="boxed-row solution-description-detail-container">
                                 <div class="solution-description-detail-content height-max">
                                     <input asp-for="Solution.AssignmentId" type="hidden" value="@assignment.AssignmentId" />
                                     <div class="solution-description">
-                                        <div class="form-group">
-                                            <label for="Anonymous">
-                                                Make Anonymous
-                                            </label>
-                                            <br />
-                                            <input asp-for="Solution.Anonymous" type="checkbox" class="checkbox-make-anonymous" value="true" checked />
-                                        </div>
+
                                         <span asp-validation-for="Solution.Description" class="text-danger"></span>
                                         <textarea asp-for="Solution.Description" placeholder="Write the description of your solution here..." class="textarea-solution-description"></textarea>
                                     </div>

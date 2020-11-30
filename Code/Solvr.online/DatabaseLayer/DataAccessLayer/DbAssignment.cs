@@ -3,12 +3,10 @@ using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 
 namespace DatabaseLayer.DataAccessLayer
 {
@@ -23,25 +21,30 @@ namespace DatabaseLayer.DataAccessLayer
 
         public int CreateAssignment(Assignment assignment)
         {
-            //TODO add POSTDATE
             _db.Open();
             using (var transaction = _db.BeginTransaction())
             {
                 try
                 {
                     int lastUsedId = _db.ExecuteScalar<int>(
-                        @"Insert into [dbo].[Assignment](title,description, price, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
+                        @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
                         new
                         {
-                            title = assignment.Title, description = assignment.Description, price = assignment.Price,
-                            deadline = assignment.Deadline, anonymous = assignment.Anonymous,
-                            academicLevel = assignment.AcademicLevel, subject = assignment.Subject, isActive = true
-                        },transaction);
+                            title = assignment.Title,
+                            description = assignment.Description,
+                            price = assignment.Price,
+                            postDate = assignment.PostDate,
+                            deadline = assignment.Deadline,
+                            anonymous = assignment.Anonymous,
+                            academicLevel = assignment.AcademicLevel,
+                            subject = assignment.Subject,
+                            isActive = true
+                        }, transaction);
                     if (assignment.AssignmentFile != null)
                     {
                         _db.Execute(
                             @"Insert into [dbo].[AssignmentFile](assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)",
-                            new {assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile}, transaction);
+                            new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile }, transaction);
                     }
 
                     transaction.Commit();
@@ -57,7 +60,7 @@ namespace DatabaseLayer.DataAccessLayer
                 }
             }
         }
-        
+
         public void GetFileFromDB(int id)
         {
             //TODO create a default path for users to download file
@@ -105,7 +108,7 @@ namespace DatabaseLayer.DataAccessLayer
         }
 
         public List<Assignment> GetAllInactiveAssignments()
-        {    
+        {
             try
             {
                 return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0").ToList();
@@ -130,14 +133,13 @@ namespace DatabaseLayer.DataAccessLayer
                 return null;
             }
         }
-        
+
         public int UpdateAssignment(Assignment assignment, int id)
         {
             try
             {
-                //TODO update parameters / add PostDate
-                int numberOfRowsAffected = _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
-                    new { title = assignment.Title, assignmentId = id, description = assignment.Description, price = assignment.Price, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
+                int numberOfRowsAffected = _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
+                    new { title = assignment.Title, assignmentId = id, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
                 return numberOfRowsAffected;
             }
             catch (SqlException e)

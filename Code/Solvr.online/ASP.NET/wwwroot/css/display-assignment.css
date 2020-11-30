@@ -19,9 +19,10 @@
     border: none;
 }
 
-.btn-solve-assignment:hover {
-    background-color: #00C895;
-}
+    .btn-solve-assignment:hover {
+        background-color: #00C895;
+        color: #FFFFFF;
+    }
 
 .btn-attach-files {
     width: 100%;

@@ -5,6 +5,7 @@ using ModelLayer;
 using System.Text.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace webApi.Controllers
 {
@@ -38,26 +39,46 @@ namespace webApi.Controllers
         [Route("solution/assignment/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateSolution(IFormCollection collection)
+        public async Task<ActionResult> CreateSolution(IFormCollection collection, IFormFile files)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    Solution solution = new Solution(
-                        Convert.ToInt32(collection["Solution.AssignmentId"]),
-                        12,
-                        collection["Solution.Description"],
-                        DateTime.Now,
-                        Convert.ToBoolean(collection["Solution.Anonymous"][0])
+                    Solution solution;
+                    if (files != null)
+                    {
+                        var dataStream = new MemoryStream();
+                        await files.CopyToAsync(dataStream);
+
+                        solution = new Solution(
+                            Convert.ToInt32(collection["Solution.AssignmentId"]),
+                            12,
+                            collection["Solution.Description"],
+                            DateTime.Now,
+                            Convert.ToBoolean(collection["Solution.Anonymous"][0]),
+                            dataStream.ToArray()
                         );
+                        dataStream.Close();
+                    }
+                    else
+                    {
+                        solution = new Solution(
+                            Convert.ToInt32(collection["Solution.AssignmentId"]),
+                            12,
+                            collection["Solution.Description"],
+                            DateTime.Now,
+                            Convert.ToBoolean(collection["Solution.Anonymous"][0])
+                        );
+                    }
+
 
                     int queueOrder = solutionBusiness.CreateSolution(solution);
-                    
+
                     if (queueOrder > 0)
                     {
                         ViewBag.Message = "Solution created successfully";
-                        ViewBag.ResponseStyleClass ="text-success";
+                        ViewBag.ResponseStyleClass = "text-success";
                         ViewBag.ButtonText = "Go back to homepage";
                         ViewBag.ButtonLink = "/";
                         ViewBag.PageTitle = "Solution created!";
