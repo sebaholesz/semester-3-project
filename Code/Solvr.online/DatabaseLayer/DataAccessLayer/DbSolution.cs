@@ -40,8 +40,8 @@ namespace DatabaseLayer.DataAccessLayer
 
                 if (queueLengthBefore == queueLengthAfter)
                 {
-                    db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous) " +
-                        "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous)",
+                    db.Execute(@"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous, accepted) " +
+                        "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0)",
                    new
                    {
                        assignmentId = solution.AssignmentId,
@@ -74,7 +74,7 @@ namespace DatabaseLayer.DataAccessLayer
 
         public List<Solution> GetSolutionsTimestampOrderedByAssignmentId(int id)
         {
-            return db.Query<Solution>("SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId order by timestamp DESC", new { assignmentId = id }).ToList();
+            return db.Query<Solution>("SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId order by timestamp ASC", new { assignmentId = id }).ToList();
         }
 
 
@@ -125,6 +125,23 @@ namespace DatabaseLayer.DataAccessLayer
                 System.Console.WriteLine(e.Message);
                 return 0;
             }
+        }
+
+        public int ChooseSolution(int solutionId)
+        {
+            //using(var transaction = db.BeginTransaction())
+            //{
+            //    db.Open();
+            try
+            {
+                //mark the one solution as accepted
+                return db.Execute("UPDATE [dbo].[Solution]  SET accepted=1 WHERE solutionId=@solutionId", new { solutionId = solutionId });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            //}
         }
     }
 }

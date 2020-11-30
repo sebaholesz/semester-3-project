@@ -2,6 +2,7 @@
 using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
@@ -49,6 +50,11 @@ namespace BusinessLayer
         public int DeleteSolution(int id)
         {
             return dbSolution.DeleteSolution(id);
+        }
+
+        public int ChooseSolution(int solutionId)
+        {
+            return dbSolution.ChooseSolution(solutionId);
         }
     }
 }
