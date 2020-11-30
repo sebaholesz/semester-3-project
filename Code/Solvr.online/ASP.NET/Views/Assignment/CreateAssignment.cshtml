@@ -110,7 +110,10 @@
                                         Make Anonymous
                                     </label>
                                     <br />
-                                    <input asp-for="@Model.Anonymous" type="checkbox" class="checkbox-make-anonymous" value="true" checked />
+                                    <label class="switch">
+                                        <input asp-for="@Model.Anonymous" type="checkbox" value="true" checked>
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
