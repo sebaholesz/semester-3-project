@@ -1,0 +1,76 @@
+﻿@model ModelLayer.Solution
+
+@{
+    ViewData["Title"] = "DisplayAllSolutionsForAssignment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="/css/choose-solution.css" />
+}
+
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 screen-1300-invisible">
+            </div>
+            <div class="col-md-8 screen-1300-full">
+                <div class="boxed-row">
+                    <div class="row choose-solution-title-block">
+                        <div class="col-md-6">
+                            <button disabled onclick="minusCurrentIndex()" id="minusCurrentIndexButton" class="btn-previous-next-solution">
+                                Previous
+                            </button>
+                            <button onclick="plusCurrentIndex()" id="plusCurrentIndexButton" class="btn-previous-next-solution">
+                                Next
+                            </button>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center justify-content-end">
+                            <button onclick="chooseSolution()" class="btn-update">
+                                Choose this solution
+                            </button>
+                            <button onclick="rejectSolution()" class="btn-delete">
+                                Reject this solution
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row solution-description-detail-container">
+                    <div class="col-md-7 height-max">
+                        <div class="solution-description">
+                            <p id="currentSolutionDescription" class="d-block w-100"></p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 height-max">
+                        <div class="solution-details-panel">
+                            <h4>Solution details</h4>
+                            <div>
+                                <label>
+                                    Posted on
+                                </label>
+                                <span id="currentSolutionTimestamp" class="d-block"></span>
+                            </div>
+
+                            <div>
+                                <label>
+                                    Solver info
+                                </label>
+                                <p>rn we just showing the id, later it will get more info</p>
+                                <p id="currentSolutionUserId" class="d-block"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 screen-1300-invisible">
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/choose-solution.js"></script>
+}
+
