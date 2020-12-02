@@ -54,7 +54,7 @@ namespace DatabaseLayer.DataAccessLayer
                                     timestamp = solution.Timestamp,
                                     solutionRating = solution.SolutionRating,
                                     anonymous = solution.Anonymous
-                                }, transaction );
+                                }, transaction);
                             if (solution.SolutionFile != null)
                             {
                                 _db.Execute(@"INSERT INTO [dbo].[SolutionFile](solutionId, solutionFile) values (@solutionId, @solutionFile)",

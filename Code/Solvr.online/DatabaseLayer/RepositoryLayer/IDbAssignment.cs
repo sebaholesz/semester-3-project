@@ -15,6 +15,7 @@ namespace DatabaseLayer.RepositoryLayer
         int MakeAssignmentInactive(int id);
         List<string> GetAllAcademicLevels();
         List<string> GetAllSubjects();
-        void GetFileFromDB(int id);
+        byte[] GetFileFromDB(int id);
+        int DeleteAssignment(int id);
     }
 }

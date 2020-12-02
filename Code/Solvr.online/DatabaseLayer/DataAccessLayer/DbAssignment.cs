@@ -61,23 +61,17 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public void GetFileFromDB(int id)
+        public byte[] GetFileFromDB(int id)
         {
             //TODO create a default path for users to download file
-            byte[] fileData = _db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = id });
-
-            using (MemoryStream ms = new MemoryStream(fileData))
+            try
             {
-                try
-                {
-                    FileStream file = new FileStream(@"C:\Users\Lenovo\Desktop\plswork.png", FileMode.Create, FileAccess.Write);
-                    ms.WriteTo(file);
-                    file.Close();
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                byte[] fileData = _db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = id });
+                return fileData;
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
 
@@ -138,7 +132,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                int numberOfRowsAffected = _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
+                int numberOfRowsAffected = _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
                     new { title = assignment.Title, assignmentId = id, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
                 return numberOfRowsAffected;
             }
@@ -192,7 +186,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Execute("DELETE * FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return _db.Execute("DELETE FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
             {

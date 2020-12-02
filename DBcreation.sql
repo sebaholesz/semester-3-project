@@ -153,6 +153,8 @@ CREATE TABLE [dbo].[Customer]
 	 [solutionRating] DECIMAL(2,1) NOT NULL,
 
 	 [anonymous] BIT NOT NULL,
+	 
+	 [accepted] BIT NOT NULL,
 
 
 	 constraint fkSassignmentId foreign key(assignmentId) references [Assignment](assignmentId),
