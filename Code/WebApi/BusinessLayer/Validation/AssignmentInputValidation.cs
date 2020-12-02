@@ -25,7 +25,6 @@ namespace BusinessLayer.Validation
 
         public bool CheckInput(Assignment assignment)
         {
-            //default return is true
             bool value = true;
             foreach (var item in assignment.GetType().GetProperties())
             {
