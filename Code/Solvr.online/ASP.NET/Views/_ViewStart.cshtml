@@ -1,4 +1,15 @@
-﻿@{ 
-    Layout = "_LayoutWIthUserSidebar";
-    //Layout = "_LayoutLogin";
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    @if (SignInManager.IsSignedIn(User))
+    {
+        Layout = "/Views/Shared/_LayoutWithUserSidebar.cshtml";
+    }
+    else
+    {
+        Layout = "/Views/Shared/_LayoutLogin.cshtml";
+    }
+
 }

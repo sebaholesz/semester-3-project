@@ -159,6 +159,29 @@ button:focus {
         color: #058787;
     }
 
+.nav-login {
+    color: #03CEA4;
+}
+
+    .nav-login:focus,
+    .nav-login:hover {
+        border-top: solid 5px;
+        border-color: #03CEA4;
+        color: #03CEA4;
+    }
+
+
+.nav-register {
+    color: #F0544F;
+}
+
+    .nav-register:hover,
+    .nav-register:focus {
+        border-top: solid 5px;
+        border-color: #F0544F;
+        color: #F0544F;
+    }
+
 /*#endregion */
 
 
@@ -387,6 +410,9 @@ a:hover {
     font-size: 1.2em;
     line-height: 1.3em;
     color: #D81E5B;
+    background-color: transparent;
+    outline: none;
+    border: none;
 }
 
     .btn-log-out:hover {
@@ -551,3 +577,28 @@ a:hover {
         height: 110% !important;
     }
 }
+
+.start-logo{
+    font-size: 70px;
+}
+
+.btn-register {
+    background-color: #E8D33F;
+    color: #2E294E;
+    border: none;
+    outline: none;
+}
+
+    .btn-register:hover {
+        background-color: #CCBA3B;
+        color: #2E294E;
+        border: none;
+        outline: none;
+    }
+
+    .btn-register:focus {
+        background-color: #CCBA3B;
+        color: #2E294E;
+        border: none;
+        outline: none;
+    }

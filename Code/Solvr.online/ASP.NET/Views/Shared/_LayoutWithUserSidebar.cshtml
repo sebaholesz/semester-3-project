@@ -130,11 +130,17 @@
                     </div>
 
                     <div class="user-sidebar-log-out">
-                        <a class="btn-log-out"
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" class="btn-log-out">
+                                <img class="btn-log-out-icon"
+                                     src="/assets/icons/logout.svg">Log Out
+                            </button>
+                        
+                        @*<a class="btn-log-out"
                            href="#">
-                            <img class="btn-log-out-icon"
-                                 src="/assets/icons/logout.svg">Log Out
-                        </a>
+                            
+                        </a>*@
+                        </form>
                     </div>
 
                 </div>
