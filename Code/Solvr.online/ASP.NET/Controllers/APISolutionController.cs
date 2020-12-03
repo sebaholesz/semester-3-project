@@ -1,14 +1,12 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
 
 namespace WebApi.Controllers
 {
     [Route("apiV1/")]
-    public class APISolutionController : ApiController
+    public class APISolutionController : ControllerBase
     {
         private readonly SolutionBusiness solutionBusiness;
 
@@ -19,90 +17,132 @@ namespace WebApi.Controllers
 
         [Route("solution")]
         [HttpGet]
-        public HttpResponseMessage Get()
+        public IActionResult Get()
         {
             //Get the List<Assignments>
             List<Solution> solutions = solutionBusiness.GetAllSolutions();
 
             //Check if the List<Assignments> is not empty and return 200 + solutions if true else return 404 + messasge
-            return solutions.Count > 0 ? Request.CreateResponse(HttpStatusCode.OK, solutions) : Request.CreateResponse(HttpStatusCode.NotFound, "No Solutions found!");
+            if (solutions.Count > 0)
+            {
+                return Ok(solutions);
+            }
+            else
+            {
+                return NotFound("No Solutions found!");
+            }
         }
 
         [Route("solution/{id}")]
         [HttpGet]
-        public HttpResponseMessage Get(int id)
+        public IActionResult Get(int id)
         {
             //assignmentInterface get
             //return in HttpResonseMessage body Assignment
 
             Solution solution = solutionBusiness.GetBySolutionId(id);
-            return solution != null ? Request.CreateResponse(HttpStatusCode.OK, solution) : Request.CreateResponse(HttpStatusCode.NotFound, "Solution with that ID not found!");
+            if (solution != null)
+            {
+                return Ok(solution);
+            }
+            else
+            {
+                return NotFound("Solution with that ID not found!");
+            }
         }
 
         [Route("solution/byAssignmentId/{assignmentId}")]
         [HttpGet]
-        public HttpResponseMessage GetSolutionsByAssignmentId(int assignmentId)
+        public IActionResult GetSolutionsByAssignmentId(int assignmentId)
         {
             //the list is oredered by timestamp
 
             List<Solution> solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
-            return solutions.Count > 0 ? Request.CreateResponse(HttpStatusCode.OK, solutions) : Request.CreateResponse(HttpStatusCode.NotFound, "Solutions with that AssignmentID not found!");
+            if (solutions.Count > 0)
+            {
+                return Ok(solutions);
+            }
+            else
+            {
+                return NotFound("Solutions with that AssignmentID not found!");
+            }
         }
 
         [Route("solution")]
         [HttpPost]
-        public HttpResponseMessage Post([FromBody] Solution solution)
+        public IActionResult Post([FromBody] Solution solution)
         {
             //Attempt the creation of the solutioin and save the int value of the rows affected
             int queuePosition = solutionBusiness.CreateSolution(solution);
 
             //Check if the creation was successful and return 201 + queue position or 409 + -1 as a fail message
-            return queuePosition >= 0 ? Request.CreateResponse(HttpStatusCode.Created, queuePosition) : Request.CreateResponse(HttpStatusCode.Conflict, queuePosition);
+            if (queuePosition >= 0)
+            {
+                return StatusCode(201, queuePosition);
+            }
+            else
+            {
+                return StatusCode(409, queuePosition);
+            }
         }
 
         [Route("solution/{id}")]
         [HttpPost]
-        public HttpResponseMessage Post(int id)
+        public IActionResult Post(int id)
         {
             //Invalid request which returns 400
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request!");
+            return BadRequest("The URL Is Invalid - Bad Request!");
         }
 
         [Route("solution/{id}")]
         [HttpPut]
-        public HttpResponseMessage Put([FromBody] Solution solution, int id)
+        public IActionResult Put([FromBody] Solution solution, int id)
         {
             //assignmentInterface update
             //return in HttpResonseMessage body Assignment
 
             int noOfRows = solutionBusiness.UpdateSolution(solution, id);
-            return noOfRows > 0 ? Request.CreateResponse(HttpStatusCode.OK, "Solution Updated Successfuly!") : Request.CreateResponse(HttpStatusCode.NotFound, "Solution was not found!");
+            if (noOfRows > 0)
+            {
+                return Ok("Solution Updated Successfuly!");
+            }
+            else
+            {
+                return NotFound("Solution was not found!");
+            }
         }
 
         [Route("solution")]
         [HttpPut]
-        public HttpResponseMessage Put()
+        public IActionResult Put()
         {
             //Invalid request which returns 400
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request!");
+            return BadRequest("The URL Is Invalid - Bad Request!");
         }
 
         [Route("solution/{id}")]
         [HttpDelete]
-        public HttpResponseMessage Delete(int id)
+        public IActionResult Delete(int id)
         {
             //return if operation was successful
 
             int noOfRows = solutionBusiness.DeleteSolution(id);
-            return noOfRows > 0 ? Request.CreateResponse(HttpStatusCode.OK, "Solution Deleted Successfuly!") : Request.CreateResponse(HttpStatusCode.NotFound, "Solution was not found!");
+            if (noOfRows > 0)
+            {
+                return Ok("Solution Deleted Successfuly!");
+            }
+            else
+            {
+                return NotFound("Solution was not found!");
+            }
         }
 
         [Route("solution")]
         [HttpDelete]
-        public HttpResponseMessage Delete()
+        public IActionResult Delete()
         {
             //Invalid request which returns 400
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request!");
+            return BadRequest("The URL Is Invalid - Bad Request!");
         }
     }
 }

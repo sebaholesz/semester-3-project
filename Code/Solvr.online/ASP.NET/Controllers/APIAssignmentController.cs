@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BusinessLayer;
+﻿using BusinessLayer;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace webApi.Controllers
 {
@@ -19,7 +17,7 @@ namespace webApi.Controllers
             assignmentBusiness = new AssignmentBusiness();
         }
 
-        [Route("twoja-mama")]
+        [Route("assignment")]
         [HttpGet]
         public IActionResult Get()
         {
@@ -47,73 +45,78 @@ namespace webApi.Controllers
         //}
 
 
-        ////[Route("assignment")]
-        //[HttpPost]
-        //public int PostCreateAssignment([FromBody] Assignment assignment)
-        //{
-        //    int rowsAffected = assignmentBusiness.CreateAssignment(assignment);
+        [Route("assignment")]
+        [HttpPost]
+        public int CreateAssignment([FromBody] Assignment assignment)
+        {
+            int rowsAffected = assignmentBusiness.CreateAssignment(assignment);
 
-        //    //Check if the creation was successful
-        //    if (rowsAffected > 0)
-        //    {
-        //        return 1;
-        //    }
-        //    else
-        //    {
-        //        return -1;
-        //    }
-        //}
-
-
-        //[Route("assignment/{id}")]
-        //[HttpPost]
-        //public HttpResponseMessage PostCreateAssignmentWithId(int id)
-        //{
-        //    //Invalid request which returns 400
-        //    return 
-        //}
+            //Check if the creation was successful
+            if (rowsAffected > 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+            //}
 
 
-        //[Route("assignment")]
-        //[HttpPut]
-        //public HttpResponseMessage Put()
-        //{
-        //    //Invalid request which returns 400
-        //    return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
-        //}
+            //[Route("assignment/{id}")]
+            //[HttpPost]
+            //public HttpResponseMessage PostCreateAssignmentWithId(int id)
+            //{
+            //    //Invalid request which returns 400
+            //    return 
+            //}
 
 
-        //[Route("assignment/{id}")]
-        //[HttpPut]
-        //public HttpResponseMessage Put([FromBody] Assignment assignment, int id)
-        //{
-        //    //assignmentInterface update
-        //    //return in HttpResonseMessage body Assignment
-
-        //    int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
-        //    return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
-        //}
+            //[Route("assignment")]
+            //[HttpPut]
+            //public HttpResponseMessage Put()
+            //{
+            //    //Invalid request which returns 400
+            //    return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
+            //}
 
 
-        //[Route("assignment")]
-        //[HttpPut]
-        //public HttpResponseMessage Delete()
-        //{
-        //    //Invalid request which returns 400
-        //    return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
-        //}
+            //[Route("assignment/{id}")]
+            //[HttpPut]
+            //public HttpResponseMessage Put([FromBody] Assignment assignment, int id)
+            //{
+            //    //assignmentInterface update
+            //    //return in HttpResonseMessage body Assignment
+
+            //    int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
+            //    return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
+            //}
+        }
 
 
-        //[Route("assignment/{id}")]
-        //[HttpPut]
-        //public HttpResponseMessage MakeInactive(int id)
-        //{
-        //    //assignmentInterface delete
-        //    //return if operation was successful
+        [Route("assignment")]
+        [HttpPut]
+        public IActionResult Delete()
+        {
+            //Invalid request which returns 400
+            return BadRequest("The URL Is Invalid - Bad Request!");
+        }
 
-        //    int noOfRows = assignmentBusiness.MakeInactive(id);
-        //    return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
-        //}
+
+        [Route("assignment/{id}")]
+        [HttpPut]
+        public IActionResult MakeInactive(int id)
+        {
+            int noOfRows = assignmentBusiness.MakeInactive(id);
+            if (noOfRows > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
         //[Route("academiclevel")]
         //[HttpGet]

@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "BusinessLa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP.NET", "ASP.NET\ASP.NET.csproj", "{55CBFD1C-1D2E-41CE-9415-9BECB6AC74CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolvrOnlineUnitTests", "SolvrOnlineUnitTests\SolvrOnlineUnitTests.csproj", "{48FE2E5C-4D65-4ADB-8721-BFE5BC146D5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolvrOnlineUnitTests", "SolvrOnlineUnitTests\SolvrOnlineUnitTests.csproj", "{48FE2E5C-4D65-4ADB-8721-BFE5BC146D5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApplication", "DesktopApplication\DesktopApplication.csproj", "{0A903465-F74D-473E-9D38-7597D7FF6AB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{48FE2E5C-4D65-4ADB-8721-BFE5BC146D5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48FE2E5C-4D65-4ADB-8721-BFE5BC146D5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48FE2E5C-4D65-4ADB-8721-BFE5BC146D5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A903465-F74D-473E-9D38-7597D7FF6AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A903465-F74D-473E-9D38-7597D7FF6AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A903465-F74D-473E-9D38-7597D7FF6AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A903465-F74D-473E-9D38-7597D7FF6AB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
