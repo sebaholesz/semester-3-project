@@ -65,13 +65,20 @@ namespace ASP.NET
             app.UseRouting();
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
+                //endpoints.MapControllerRoute(
+                //   name: "api",
+                //   pattern: "apiV1/twoja-mama",
+                //   defaults: new { controller = "APIAssignment", action = "GetTwojaMama" });
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{controller}/{action}/{id?}",
+                //    defaults: new { controller = "Home", action = "Index" });
                 endpoints.MapRazorPages();
             });
         }
