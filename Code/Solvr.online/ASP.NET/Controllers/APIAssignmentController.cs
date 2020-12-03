@@ -60,50 +60,50 @@ namespace webApi.Controllers
             {
                 return -1;
             }
-            //}
-
-
-            //[Route("assignment/{id}")]
-            //[HttpPost]
-            //public HttpResponseMessage PostCreateAssignmentWithId(int id)
-            //{
-            //    //Invalid request which returns 400
-            //    return 
-            //}
-
-
-            //[Route("assignment")]
-            //[HttpPut]
-            //public HttpResponseMessage Put()
-            //{
-            //    //Invalid request which returns 400
-            //    return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
-            //}
-
-
-            //[Route("assignment/{id}")]
-            //[HttpPut]
-            //public HttpResponseMessage Put([FromBody] Assignment assignment, int id)
-            //{
-            //    //assignmentInterface update
-            //    //return in HttpResonseMessage body Assignment
-
-            //    int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
-            //    return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
-            //}
         }
 
 
-        [Route("assignment")]
+        //[Route("assignment/{id}")]
+        //[HttpPost]
+        //public HttpResponseMessage PostCreateAssignmentWithId(int id)
+        //{
+        //    //Invalid request which returns 400
+        //    return 
+        //}
+
+
+        //[Route("assignment")]
+        //[HttpPut]
+        //public HttpResponseMessage Put()
+        //{
+        //    //Invalid request which returns 400
+        //    return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
+        //}
+
+
+        //[Route("assignment/{id}")]
+        //[HttpPut]
+        //public HttpResponseMessage Put([FromBody] Assignment assignment, int id)
+        //{
+        //    //assignmentInterface update
+        //    //return in HttpResonseMessage body Assignment
+
+        //    int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
+        //    return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
+        //}
+        //}
+
+
+        [Route("assignment/inactive")]
         [HttpPut]
-        public IActionResult Delete()
+        public IActionResult MakeInactive()
         {
             //Invalid request which returns 400
             return BadRequest("The URL Is Invalid - Bad Request!");
         }
 
 
-        [Route("assignment/{id}")]
+        [Route("assignment/inactive/{id}")]
         [HttpPut]
         public IActionResult MakeInactive(int id)
         {

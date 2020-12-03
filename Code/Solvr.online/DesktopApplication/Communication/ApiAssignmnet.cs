@@ -28,10 +28,12 @@ namespace DesktopApplication.Communication
 
         public HttpResponseMessage MakeAssignmentInactive(int assignmentId)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44395/");
-            var url = "apiV1/assignment/" + assignmentId;
-            HttpResponseMessage response = client.PutAsJsonAsync(url).Result;
+            HttpClient client = new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:44395/")
+            };
+            var url = "apiV1/assignment/inactive/" + assignmentId;
+            HttpResponseMessage response = client.PutAsJsonAsync(url, assignmentId).Result;
             if (response.IsSuccessStatusCode)
             {
                 client.Dispose();

@@ -1,9 +1,5 @@
-﻿using BusinessLayer;
-using DesktopApplication.Communication;
+﻿using DesktopApplication.Communication;
 using ModelLayer;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Windows;
 
 namespace DesktopApplication
@@ -26,6 +22,25 @@ namespace DesktopApplication
         {
             AssignmentTable.ItemsSource = _apiAssignment.GetAllAssignments();
             //AssignmentTable.ItemsSource = ab.GetAllAssignments();
+        }
+
+        private void MakeInactive_Click(object sender, RoutedEventArgs e)
+        {
+            if (AssignmentTable.SelectedItem is Assignment assignment)
+            {
+                int assignmentId = assignment.AssignmentId;
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Are you sure?", "Make inactive", System.Windows.MessageBoxButton.YesNo);
+
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    _apiAssignment.MakeAssignmentInactive(assignmentId);
+                    Read_Click(sender, e);
+                }
+                else
+                {
+                    AssignmentTable.SelectedItem = null;
+                }
+            }
         }
     }
 }
