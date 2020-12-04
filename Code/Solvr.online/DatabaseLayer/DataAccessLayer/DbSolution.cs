@@ -33,6 +33,24 @@ namespace DatabaseLayer.DataAccessLayer
                         return -1;
                     }
                 }
+
+                //check if this assignment wasnt done by the same user and that he hasnt already solved this one
+                //can probably be done in a more DRY and clean way, but will do for now
+                //TODO refactor
+                List<string> userIdsThatSolvedThisAssignment = _db.Query<string>("Select [userId] from [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = solution.AssignmentId }).ToList();
+
+                if(userIdsThatSolvedThisAssignment.Contains(solution.UserId))
+                {
+                    return -2;
+                }
+
+                string assignmentAuthorId = _db.QueryFirst<string>("Select [userId] from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = solution.AssignmentId });
+
+                if (assignmentAuthorId.Equals(solution.UserId))
+                {
+                    return -3;
+                }
+
                 List<Solution> solutionsAfter = GetSolutionsByAssignmentId(solution.AssignmentId);
                 int queueLengthAfter = solutionsAfter.Count;
 
@@ -44,16 +62,16 @@ namespace DatabaseLayer.DataAccessLayer
                         try
                         {
                             int lastUsedId = _db.ExecuteScalar<int>(
-                                @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous, accepted) " +
-                                "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0); SELECT SCOPE_IDENTITY()",
+                                @"INSERT INTO [dbo].[Solution](assignmentId, description, timestamp, solutionRating, anonymous, accepted, userId) " +
+                                "VALUES (@assignmentId, @description, @timestamp, @solutionRating, @anonymous, 0, @userId); SELECT SCOPE_IDENTITY()",
                                 new
                                 {
                                     assignmentId = solution.AssignmentId,
-                                    userId = solution.UserId,
                                     description = solution.Description,
                                     timestamp = solution.Timestamp,
                                     solutionRating = solution.SolutionRating,
-                                    anonymous = solution.Anonymous
+                                    anonymous = solution.Anonymous,
+                                    userId = solution.UserId
                                 }, transaction );
                             if (solution.SolutionFile != null)
                             {
@@ -63,12 +81,11 @@ namespace DatabaseLayer.DataAccessLayer
                             transaction.Commit();
                             _db.Close();
                         }
-                        catch (SqlException e)
+                        catch (SqlException e)           
                         {
                             transaction.Rollback();
                             _db.Close();
-                            Console.WriteLine(e.Message);
-                            return -1;
+                            throw e;
                         }
 
                     }
@@ -78,8 +95,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
-                return -1;
+                throw e;
             }
         }
 
@@ -91,8 +107,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
@@ -106,8 +121,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
@@ -117,13 +131,9 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 return _db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] WHERE solutionId=@solutionId", new { solutionId = id });
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                if (ex is SqlException || ex is InvalidExpressionException)
-                {
-                    System.Console.WriteLine(ex.Message);
-                }
-                return null;
+                throw e;
             }
         }
 
@@ -137,8 +147,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return 0;
+                throw e;
             }
         }
 
@@ -150,8 +159,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return 0;
+                throw e;
             }
         }
 
@@ -163,6 +171,18 @@ namespace DatabaseLayer.DataAccessLayer
                 return _db.Execute("UPDATE [dbo].[Solution]  SET accepted=1 WHERE solutionId=@solutionId", new { solutionId = solutionId });
             }
             catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public Solution GetSolutionForUserByAssignmentId(string userId, int assignmentId)
+        {
+            try
+            {
+                return _db.QueryFirst<Solution>("Select * from [dbo].[Solution] where assignmentId=@assignmentId and userId=@userId", new { assignmentId = assignmentId, userId = userId });
+            }
+            catch (SqlException e)
             {
                 throw e;
             }

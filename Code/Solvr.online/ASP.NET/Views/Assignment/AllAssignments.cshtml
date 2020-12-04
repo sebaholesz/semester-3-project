@@ -15,9 +15,19 @@
         <div class="row">
             <div class="col-md-12 screen-1300-full">
                 <div class="card-columns">
-                    @foreach (var assignment in assignments)
+                    @if (ViewBag.ShowSolvedByUser)
                     {
-                        @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml", assignment)
+                        @foreach (var assignment in assignments)
+                        {
+                            @await Html.PartialAsync("~/Views/Shared/AssignmentCardSolvedByUser.cshtml", assignment)
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var assignment in assignments)
+                        {
+                            @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml", assignment)
+                        }
                     }
 
                 </div>

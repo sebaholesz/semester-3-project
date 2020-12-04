@@ -56,5 +56,10 @@ namespace BusinessLayer
         {
             return _dbSolution.ChooseSolution(solutionId);
         }
+
+        public Solution GetSolutionForUserByAssignmentId(string userId, int assignmentId)
+        {
+            return _dbSolution.GetSolutionForUserByAssignmentId(userId, assignmentId);
+        }
     }
 }

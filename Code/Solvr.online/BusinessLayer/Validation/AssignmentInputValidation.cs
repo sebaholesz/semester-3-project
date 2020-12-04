@@ -33,12 +33,12 @@ namespace BusinessLayer.Validation
                 {
                     #region Assignment.Title
                     case "Title":
-                        value = assignment.Title.Length > _titleMinLength && assignment.Title.Length < _titleMaxLength;
+                        value = assignment.Title.Length >= _titleMinLength && assignment.Title.Length <= _titleMaxLength;
                         break;
                     #endregion
                     #region Assignment.Description
                     case "Description":
-                        value = assignment.Description.Length > _descriptionMinLength && assignment.Description.Length < _descriptionMaxLength;
+                        value = assignment.Description.Length >= _descriptionMinLength && assignment.Description.Length <= _descriptionMaxLength;
                         break;
                     #endregion
                     #region Assignment.Price

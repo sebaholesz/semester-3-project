@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace webApi.Controllers
 {
@@ -57,11 +58,11 @@ namespace webApi.Controllers
 
                         solution = new Solution(
                             Convert.ToInt32(collection["Solution.AssignmentId"]),
-                            12,
                             collection["Solution.Description"],
                             DateTime.Now,
                             Convert.ToBoolean(collection["Solution.Anonymous"][0]),
-                            dataStream.ToArray()
+                            dataStream.ToArray(),
+                            User.FindFirstValue(ClaimTypes.NameIdentifier)
                         );
                         dataStream.Close();
                     }
@@ -69,10 +70,10 @@ namespace webApi.Controllers
                     {
                         solution = new Solution(
                             Convert.ToInt32(collection["Solution.AssignmentId"]),
-                            12,
                             collection["Solution.Description"],
                             DateTime.Now,
-                            Convert.ToBoolean(collection["Solution.Anonymous"][0])
+                            Convert.ToBoolean(collection["Solution.Anonymous"][0]),
+                            User.FindFirstValue(ClaimTypes.NameIdentifier)
                         );
                     }
 
@@ -88,6 +89,26 @@ namespace webApi.Controllers
                         ViewBag.PageTitle = "Solution created!";
                         ViewBag.SubMessage = "You are number " + queueOrder + " in the queue";
                         ViewBag.Image = "/assets/icons/success.svg";
+                    }
+                    else if (queueOrder == -2)
+                    {
+                        ViewBag.Message = "Solution creation failed";
+                        ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to the solution form";
+                        ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
+                        ViewBag.PageTitle = "Solution creation failed!";
+                        ViewBag.SubMessage = "You already solved this assignment";
+                        ViewBag.Image = "/assets/icons/error.svg";
+                    }
+                    else if (queueOrder == -3)
+                    {
+                        ViewBag.Message = "Solution creation failed";
+                        ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to the solution form";
+                        ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
+                        ViewBag.PageTitle = "Solution creation failed!";
+                        ViewBag.SubMessage = "You cannot solve your own assignment";
+                        ViewBag.Image = "/assets/icons/error.svg";
                     }
                     else
                     {
@@ -159,6 +180,42 @@ namespace webApi.Controllers
                     ViewBag.Image = "/assets/icons/error.svg";
                 }
                 return View("UserFeedback");
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        [Route("solution/user-solution-for-assignment/{assignmentId}")]
+        [HttpGet]
+        public ActionResult DisplaySolutionForUserByAssignmentId(int assignmentId)
+        {
+            try
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                Solution userSolution = solutionBusiness.GetSolutionForUserByAssignmentId(userId, assignmentId);
+
+                if (!userSolution.Equals(null))
+                {
+                    Assignment solvedAssignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                    ViewBag.Assignment = solvedAssignment;
+                    ViewBag.Solution = userSolution;
+
+                    return View("DisplaySolution");
+                }
+                else
+                {
+                    ViewBag.Message = "Could not find your solution";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to homepage";
+                    ViewBag.ButtonLink = "/";
+                    ViewBag.PageTitle = "Could not find your solution!";
+                    ViewBag.SubMessage = "You did not \nsolve this assignment";
+                    ViewBag.Image = "/assets/icons/error.svg";
+                    return View("UserFeedback");
+                }
             }
             catch (Exception e)
             {

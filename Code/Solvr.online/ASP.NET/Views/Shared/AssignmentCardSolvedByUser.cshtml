@@ -5,7 +5,7 @@
     var solutions = ViewBag.Solutions;
 }
 
-<a href="/assignment/display-assignment/@Model.AssignmentId" class="assignment-card">
+<a href="/solution/user-solution-for-assignment/@Model.AssignmentId" class="assignment-card">
     <div class="card shadow border-0">
         <h5 class="card-header header text-white border-0 p-2">
             @Model.Title
@@ -18,7 +18,6 @@
                 <div class="card-subject">
                     <p class="card-details text-center">@Model.Subject</p>
                 </div>
-
             </div>
             <div class="col-md-6 card-text">
                 <p class="card-details">@Model.Deadline</p>

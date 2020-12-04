@@ -75,5 +75,10 @@ namespace BusinessLayer
         {
             return _dbAssignment.GetAllAssignmentsForUser(userId);
         }
+
+        public List<Assignment> GetAllAssignmentsSolvedByUser(string userId)
+        {
+            return _dbAssignment.GetAllAssignmentsSolvedByUser(userId);
+        }
     }
 }

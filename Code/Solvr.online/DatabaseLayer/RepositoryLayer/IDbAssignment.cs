@@ -17,5 +17,6 @@ namespace DatabaseLayer.RepositoryLayer
         List<string> GetAllSubjects();
         void GetFileFromDB(int id);
         List<Assignment> GetAllAssignmentsForUser(string userId);
+        List<Assignment> GetAllAssignmentsSolvedByUser(string userId);
     }
 }

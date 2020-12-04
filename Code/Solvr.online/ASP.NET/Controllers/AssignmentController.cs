@@ -159,6 +159,8 @@ namespace webApi.Controllers
                 if (assignments.Count > 0)
                 {
                     ViewBag.Assignments = assignments;
+                    ViewBag.ShowSolvedByUser = false;
+
 
                     return View("AllAssignments");
                 }
@@ -179,13 +181,6 @@ namespace webApi.Controllers
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
-        }
-
-        [HttpGet]
-        public ActionResult AssignmentCard(Assignment assignment)
-        {
-            ViewBag.Assignment = assignment;
-            return View("AssignmentCard");
         }
 
         [Route("assignment/update-assignment/{id}")]
@@ -320,6 +315,42 @@ namespace webApi.Controllers
                 if (assignments.Count > 0)
                 {
                     ViewBag.Assignments = assignments;
+                    ViewBag.ShowSolvedByUser = false;
+
+                    return View("AllAssignments");
+                }
+                else
+                {
+                    ViewBag.Message = "No assignment found";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to homepage";
+                    ViewBag.ButtonLink = "/";
+                    ViewBag.PageTitle = "No assignments found!";
+                    ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                    ViewBag.Image = "/assets/icons/error.svg";
+                    return View("UserFeedback");
+                }
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        [Route("assignment/solved-by-user")]
+        [HttpGet]
+        public ActionResult GetAllAssignmentsSolvedByLoggedInUser()
+        {
+            try
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                List<Assignment> solvedAssignments = assignmentBusiness.GetAllAssignmentsSolvedByUser(userId);
+
+                if (solvedAssignments.Count > 0)
+                {
+                    ViewBag.Assignments = solvedAssignments;
+                    ViewBag.ShowSolvedByUser = true;
 
                     return View("AllAssignments");
                 }

@@ -206,7 +206,20 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1 and userId=@userId", new { userid = userId }).ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where userId=@userId", new { userid = userId }).ToList();
+            }
+            catch (SqlException e)
+            {
+                System.Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        public List<Assignment> GetAllAssignmentsSolvedByUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where assignmentId = (Select assignmentId from [dbo].[Solution] where userId=@userId)", new { userId = userId }).ToList();
             }
             catch (SqlException e)
             {

@@ -4,11 +4,11 @@
     ViewData["Title"] = "Display Assignment";
     Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
     var assignment = ViewBag.Assignment;
+    var solution = ViewBag.Solution;
 }
 
 @section Stylesheets {
-    <link href="/css/create-solution.css" rel="stylesheet" />
-    <link href="/css/display-assignment.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/display-assignment.css" />
 }
 
 <main>
@@ -17,57 +17,49 @@
             <div class="col-md-12 screen-1300-full">
                 <div class="row">
                     <div class="col-md-12">
-                        <form asp-controller="Solution" enctype="multipart/form-data" asp-action="CreateSolution" method="post">
-                            @Html.AntiForgeryToken()
-
+      
                             <div class="boxed-row">
                                 <div class="row create-solution-title-block">
-                                    <div class="col-md-9 d-flex align-items-center">
+                                    
+                                    <div class="col-md-12 d-flex align-items-center">
                                         <h3 class="create-solution-page-title">
                                             @assignment.Title
                                         </h3>
                                         <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
                                     </div>
-                                    <div class="col-md-3 d-flex align-items-center justify-content-end">
-                                        <button type="submit" class="btn-publish-solution">
-                                            Post The Solution
-                                        </button>
-                                    </div>
+
                                 </div>
                             </div>
+
                             <div class="row ">
                                 <div class="col-md-7">
                                     <div class="boxed-row d-flex align-items-center">
-                                        <label class="m-0">
-                                            Make Anonymous
-                                        </label>
-                                        <label class="switch">
-                                            <input asp-for="Solution.Anonymous" type="checkbox" value="true" checked>
-                                            <span class="slider round"></span>
-                                        </label>
-                                        @*<input asp-for="Solution.Anonymous" type="checkbox" data-toggle="toggle" class="toggle-make-anonymous" value="true" checked />*@
+                                        @if (solution.Anonymous)
+                                        {
+                                            <p>you posted this solution anonymously</p>
+                                        }
+                                        else
+                                        {
+                                            <p>you posted this solution publicly</p>
+                                        }
                                     </div>
                                 </div>
                                 <div class="col-md-5">
                                     <div class="boxed-row">
-                                        <input name="files" type="file"
-                                               id="add-file"
-                                               accept="image/png, image/jpeg">
+                                        download file
                                     </div>
                                 </div>
                             </div>
                             <div class="boxed-row solution-description-detail-container">
                                 <div class="solution-description-detail-content height-max">
-                                    <input asp-for="Solution.AssignmentId" type="hidden" value="@assignment.AssignmentId" />
                                     <div class="solution-description">
-
-                                        <span asp-validation-for="Solution.Description" class="text-danger"></span>
-                                        <textarea asp-for="Solution.Description" placeholder="Write the description of your solution here..." class="textarea-solution-description"></textarea>
+                                        <p>
+                                            @solution.Description
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                        </form>
                     </div>
                 </div>
                 @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
