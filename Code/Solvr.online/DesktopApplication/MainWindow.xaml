@@ -6,8 +6,52 @@
         xmlns:local="clr-namespace:DesktopApplication"
         mc:Ignorable="d" FontSize="25"
         Title="Solvr.online" Height="450" Width="840">
+
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--Sidebar-->
+        <Button Grid.Row="0" Grid.Column="0" FontFamily="Poppins" FontSize="25" Background="Transparent" BorderBrush="Transparent" >
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Foreground="#2E294E">solvr.</TextBlock>
+                <TextBlock Foreground="#CA1551">online</TextBlock>
+            </StackPanel>
+        </Button>
+        <Button Grid.Row="1" Grid.Column="0" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Click="Read_Click">Assignments</Button>
+        <!--Main Window-->
+        <Rectangle Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="7" Grid.RowSpan="8" Fill="#03CEA4" Opacity="0.23"/>
+
+        <Button Grid.Row="0" Grid.Column="6" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Click="screen2.Visibility = Visibility.Visible">Update</Button>
+        <Button Grid.Row="0" Grid.Column="7" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Click="MakeInactive_Click">Make Inactive</Button>
+        
+        <DataGrid Background="Transparent" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="7" Grid.RowSpan="7" FontFamily="Poppins" FontSize="15" BorderBrush="Transparent" HeadersVisibility="None" IsReadOnly="True" Name="AssignmentTable">
+        </DataGrid>
+
+        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="7" Grid.RowSpan="8" Visibility="Hidden" Name="screen2">
+            <TextBlock>Screen 2</TextBlock>
+        </Grid>
+            
+
+        
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -39,7 +83,7 @@
             Make inactive
         </Button>
         <DataGrid Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4" Grid.RowSpan="5" FontSize="12" IsReadOnly="True" Name="AssignmentTable">
-        </DataGrid>
+        </DataGrid>-->
 
     </Grid>
 </Window>
