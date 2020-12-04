@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace webApi.Controllers
 {
+    [Authorize]
     public class SolutionController : Controller
     {
         private readonly AssignmentBusiness assignmentBusiness;

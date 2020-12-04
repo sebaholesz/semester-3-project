@@ -27,7 +27,7 @@ namespace DatabaseLayer.DataAccessLayer
                 try
                 {
                     int lastUsedId = _db.ExecuteScalar<int>(
-                        @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
+                        @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive, userId) values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive, @userId); SELECT SCOPE_IDENTITY()",
                         new
                         {
                             title = assignment.Title,
@@ -38,7 +38,8 @@ namespace DatabaseLayer.DataAccessLayer
                             anonymous = assignment.Anonymous,
                             academicLevel = assignment.AcademicLevel,
                             subject = assignment.Subject,
-                            isActive = true
+                            isActive = true,
+                            userId = assignment.UserId
                         }, transaction);
                     if (assignment.AssignmentFile != null)
                     {
@@ -198,6 +199,19 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 System.Console.WriteLine(e.Message);
                 return 0;
+            }
+        }
+
+        public List<Assignment> GetAllAssignmentsForUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1 and userId=@userId", new { userid = userId }).ToList();
+            }
+            catch (SqlException e)
+            {
+                System.Console.WriteLine(e.Message);
+                return null;
             }
         }
     }

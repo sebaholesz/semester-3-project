@@ -3,13 +3,5 @@
 @inject UserManager<User> UserManager
 
 @{
-    @if (SignInManager.IsSignedIn(User))
-    {
-        Layout = "/Views/Shared/_LayoutWithUserSidebar.cshtml";
-    }
-    else
-    {
-        Layout = "/Views/Shared/_LayoutLogin.cshtml";
-    }
-
+    Layout = "/Views/Shared/_LayoutWithUserSidebar.cshtml";
 }

@@ -15,7 +15,7 @@ namespace ModelLayer
         [Required]
         [StringLength(500)]
         public string Description { get; set; }
-        public string Author { get; set; }
+        public string UserId { get; set; }
         [Required]
         [Range(0, 10000)]
         public int Price { get; set; }
@@ -29,6 +29,33 @@ namespace ModelLayer
         public string Subject { get; set; }
         public byte[] AssignmentFile { get; set; }
         public List<Solution> Solutions { get; set; }
+
+        public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] assignmentFile, string userId)
+        {
+            this.Title = title;
+            this.Description = description;
+            this.Price = price;
+            this.PostDate = postDate;
+            this.Deadline = deadline;
+            this.Anonymous = anonymous;
+            this.AcademicLevel = academicLevel;
+            this.Subject = subject;
+            this.AssignmentFile = assignmentFile;
+            this.UserId = userId;
+        }
+
+        public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject, string userId)
+        {
+            this.Title = title;
+            this.Description = description;
+            this.Price = price;
+            this.PostDate = postDate;
+            this.Deadline = deadline;
+            this.Anonymous = anonymous;
+            this.AcademicLevel = academicLevel;
+            this.Subject = subject;
+            this.UserId = userId;
+        }
 
         public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] assignmentFile)
         {

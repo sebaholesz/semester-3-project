@@ -2,6 +2,7 @@
 using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
@@ -70,5 +71,9 @@ namespace BusinessLayer
             return _dbAssignment.GetAllSubjects();
         }
 
+        public List<Assignment> GetAllAssignmentsForUser(string userId)
+        {
+            return _dbAssignment.GetAllAssignmentsForUser(userId);
+        }
     }
 }

@@ -1,14 +1,19 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace webApi.Controllers
 {
+    [Authorize]
     public class AssignmentController : Controller
     {
         private readonly AssignmentBusiness assignmentBusiness;
@@ -63,7 +68,8 @@ namespace webApi.Controllers
                             Convert.ToBoolean(collection["Anonymous"][0]),
                             collection["AcademicLevel"],
                             collection["Subject"],
-                            dataStream.ToArray()
+                            dataStream.ToArray(),
+                            User.FindFirstValue(ClaimTypes.NameIdentifier)
                         );
 
                         dataStream.Close();
@@ -78,7 +84,8 @@ namespace webApi.Controllers
                            Convert.ToDateTime(collection["Deadline"]),
                            Convert.ToBoolean(collection["Anonymous"][0]),
                            collection["AcademicLevel"],
-                           collection["Subject"]
+                           collection["Subject"],
+                           User.FindFirstValue(ClaimTypes.NameIdentifier)
                        );
                     }
                     //we will get the id once using the CreateAssignmentWithFile method
@@ -141,16 +148,31 @@ namespace webApi.Controllers
             }
         }
 
+        [AllowAnonymous]
         [Route("assignment/display-assignments")]
         [HttpGet]
         public ActionResult DisplayAllAssignments()
         {
             try
             {
-                ViewBag.Assignments = assignmentBusiness.GetAllActiveAssignments();
+                List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignments();
+                if (assignments.Count > 0)
+                {
+                    ViewBag.Assignments = assignments;
 
-                //TODO return allAssignments view
-                return View("AllAssignments");
+                    return View("AllAssignments");
+                }
+                else
+                {
+                    ViewBag.Message = "No assignment found";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to homepage";
+                    ViewBag.ButtonLink = "/";
+                    ViewBag.PageTitle = "No assignments found!";
+                    ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                    ViewBag.Image = "/assets/icons/error.svg";
+                    return View("UserFeedback");
+                }
             }
             catch (Exception e)
             {
@@ -189,46 +211,34 @@ namespace webApi.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult UpdateAssignment(IFormCollection collection, int id)
         {
+            try
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    if (ModelState.IsValid)
+                    //TODO notify all solvers of the changes
+                    Assignment assignment = new Assignment(
+                        collection["Title"],
+                        collection["Description"],
+                        Convert.ToInt32(collection["Price"]),
+                        DateTime.Now,
+                        Convert.ToDateTime(collection["Deadline"]),
+                        Convert.ToBoolean(collection["Anonymous"][0]),
+                        collection["AcademicLevel"],
+                        collection["Subject"],
+                        Encoding.ASCII.GetBytes(collection["AssignmentFile"])
+                    );
+
+                    int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, id);
+
+                    if (noOfRowsAffected > 0)
                     {
-                        //TODO notify all solvers of the changes
-                        Assignment assignment = new Assignment(
-                            collection["Title"],
-                            collection["Description"],
-                            Convert.ToInt32(collection["Price"]),
-                            DateTime.Now,
-                            Convert.ToDateTime(collection["Deadline"]),
-                            Convert.ToBoolean(collection["Anonymous"][0]),
-                            collection["AcademicLevel"],
-                            collection["Subject"],
-                            Encoding.ASCII.GetBytes(collection["AssignmentFile"])
-                        );
-
-                        int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, id);
-
-                        if (noOfRowsAffected > 0)
-                        {
-                            ViewBag.Message = "Assignment updated successfully";
-                            ViewBag.ResponseStyleClass = "text-success";
-                            ViewBag.ButtonText = "Display your assignment";
-                            ViewBag.ButtonLink = "/assignment/display-assignment/" + id;
-                            ViewBag.PageTitle = "Assignment updated!";
-                            ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-                            ViewBag.Image = "/assets/icons/success.svg";
-                        }
-                        else
-                        {
-                            ViewBag.Message = "Assignment update failed";
-                            ViewBag.ResponseStyleClass = "text-danger";
-                            ViewBag.ButtonText = "Go back to the assignment form";
-                            ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
-                            ViewBag.PageTitle = "Assignment update failed!";
-                            ViewBag.SubMessage = "There was a server error \ntry again later";
-                            ViewBag.Image = "/assets/icons/error.svg";
-                        }
+                        ViewBag.Message = "Assignment updated successfully";
+                        ViewBag.ResponseStyleClass = "text-success";
+                        ViewBag.ButtonText = "Display your assignment";
+                        ViewBag.ButtonLink = "/assignment/display-assignment/" + id;
+                        ViewBag.PageTitle = "Assignment updated!";
+                        ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
+                        ViewBag.Image = "/assets/icons/success.svg";
                     }
                     else
                     {
@@ -237,16 +247,26 @@ namespace webApi.Controllers
                         ViewBag.ButtonText = "Go back to the assignment form";
                         ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
                         ViewBag.PageTitle = "Assignment update failed!";
-                        ViewBag.SubMessage = "Invalid data inserted";
+                        ViewBag.SubMessage = "There was a server error \ntry again later";
                         ViewBag.Image = "/assets/icons/error.svg";
                     }
-                    return View("UserFeedback");
                 }
-                catch (Exception e)
+                else
                 {
-                    TempData["ErrorMessage"] = e.Message;
-                    return Redirect("/error");
+                    ViewBag.Message = "Assignment update failed";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to the assignment form";
+                    ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
+                    ViewBag.PageTitle = "Assignment update failed!";
+                    ViewBag.SubMessage = "Invalid data inserted";
+                    ViewBag.Image = "/assets/icons/error.svg";
                 }
+                return View("UserFeedback");
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
 
@@ -280,6 +300,40 @@ namespace webApi.Controllers
                     ViewBag.Image = "/assets/icons/error.svg";
                 }
                 return View("UserFeedback");
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        [Route("assignment/user")]
+        [HttpGet]
+        public ActionResult GetAllAssignmentsForLoggedInUser()
+        {
+            try
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                List<Assignment> assignments = assignmentBusiness.GetAllAssignmentsForUser(userId);
+
+                if (assignments.Count > 0)
+                {
+                    ViewBag.Assignments = assignments;
+
+                    return View("AllAssignments");
+                }
+                else
+                {
+                    ViewBag.Message = "No assignment found";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to homepage";
+                    ViewBag.ButtonLink = "/";
+                    ViewBag.PageTitle = "No assignments found!";
+                    ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                    ViewBag.Image = "/assets/icons/error.svg";
+                    return View("UserFeedback");
+                }
             }
             catch (Exception e)
             {

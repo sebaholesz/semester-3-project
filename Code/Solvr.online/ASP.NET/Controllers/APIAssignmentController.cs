@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [Route("apiV1/")]
     public class APIAssignmentController : ApiController
     {
@@ -38,7 +39,6 @@ namespace WebApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.NotFound, "No Assigments Found!");
             }
         }
-
 
         [Route("assignment/{id}")]
         [HttpGet]

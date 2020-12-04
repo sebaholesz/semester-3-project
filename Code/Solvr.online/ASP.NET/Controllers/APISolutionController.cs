@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [Route("apiV1/")]
     public class APISolutionController : ApiController
     {
