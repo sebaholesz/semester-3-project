@@ -18,11 +18,13 @@ namespace webApi.Controllers
     {
         private readonly AssignmentBusiness assignmentBusiness;
         private readonly SolutionBusiness solutionBusiness;
+        private readonly UserBusiness userBusiness;
 
         public AssignmentController()
         {
             assignmentBusiness = new AssignmentBusiness();
             solutionBusiness = new SolutionBusiness();
+            userBusiness = new UserBusiness();
         }
 
         [Route("assignment/create-assignment")]
@@ -137,8 +139,19 @@ namespace webApi.Controllers
         {
             try
             {
-                ViewBag.Assignment = assignmentBusiness.GetByAssignmentId(id);
+                Assignment  assignment = assignmentBusiness.GetByAssignmentId(id);
+                ViewBag.Assignment = assignment;
                 ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id).Count;
+
+                ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
+                if (assignment.Anonymous)
+                {
+                    ViewBag.Name = "";
+                }
+                else
+                {
+                    ViewBag.Name = userBusiness.GetUserName(assignment.UserId);
+                }
                 return View("DisplayAssignment");
             }
             catch (Exception e)

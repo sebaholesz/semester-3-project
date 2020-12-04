@@ -17,11 +17,13 @@ namespace webApi.Controllers
     {
         private readonly AssignmentBusiness assignmentBusiness;
         private readonly SolutionBusiness solutionBusiness;
+        private readonly UserBusiness userBusiness;
 
         public SolutionController()
         {
             assignmentBusiness = new AssignmentBusiness();
             solutionBusiness = new SolutionBusiness();
+            userBusiness = new UserBusiness();
         }
 
         [Route("solution/assignment/{id}")]
@@ -30,8 +32,19 @@ namespace webApi.Controllers
         {
             try
             {
-                ViewBag.Assignment = assignmentBusiness.GetByAssignmentId(id);
+                Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
+                ViewBag.Assignment = assignment;
                 ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id).Count;
+
+                ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
+                if (assignment.Anonymous)
+                {
+                    ViewBag.Name = "";
+                }
+                else
+                {
+                    ViewBag.Name = userBusiness.GetUserName(assignment.UserId);
+                }
                 return View("CreateSolution");
             }
             catch (Exception e)
@@ -202,6 +215,16 @@ namespace webApi.Controllers
                     Assignment solvedAssignment = assignmentBusiness.GetByAssignmentId(assignmentId);
                     ViewBag.Assignment = solvedAssignment;
                     ViewBag.Solution = userSolution;
+
+                    ViewBag.Username = userBusiness.GetUserUsername(solvedAssignment.UserId);
+                    if (solvedAssignment.Anonymous)
+                    {
+                        ViewBag.Name = "";
+                    }
+                    else
+                    {
+                        ViewBag.Name = userBusiness.GetUserName(solvedAssignment.UserId);
+                    }
 
                     return View("DisplaySolution");
                 }
