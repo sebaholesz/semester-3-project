@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "DisplayAllSolutionsForAssignment";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
 }
 
 @section Stylesheets {
@@ -12,9 +12,7 @@
 <main>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2 screen-1300-invisible">
-            </div>
-            <div class="col-md-8 screen-1300-full">
+            <div class="col-md-12 screen-1300-full">
                 <div class="boxed-row">
                     <div class="row choose-solution-title-block">
                         <div class="col-md-6">
@@ -63,8 +61,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2 screen-1300-invisible">
             </div>
         </div>
     </div>

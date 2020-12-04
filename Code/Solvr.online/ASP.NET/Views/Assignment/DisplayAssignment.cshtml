@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Display Assignment";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
     var assignment = ViewBag.Assignment;
 }
 
@@ -13,9 +13,7 @@
 <main>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2 screen-1300-invisible">
-            </div>
-            <div class="col-md-8 screen-1300-full">
+            <div class="col-md-12 screen-1300-full">
                 <div class="boxed-row">
                     <div class="row display-assignment-title-block">
                         <div class="col-md-8">
@@ -32,8 +30,6 @@
                     </div>
                 </div>
                 @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
-            </div>
-            <div class="col-md-2 screen-1300-invisible">
             </div>
         </div>
     </div>

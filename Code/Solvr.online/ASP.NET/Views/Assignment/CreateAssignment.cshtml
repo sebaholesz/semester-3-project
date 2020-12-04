@@ -1,7 +1,7 @@
 ﻿@model ModelLayer.Assignment;
 @{
     ViewData["Title"] = "Create Assignment";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
 }
 
 @section Stylesheets {
@@ -13,9 +13,7 @@
         <form asp-controller="Assignment" enctype="multipart/form-data" asp-action="CreateAssignment" method="post">
             @Html.AntiForgeryToken()
             <div class="row">
-                <div class="col-md-2 screen-1300-invisible">
-                </div>
-                <div class="col-md-8 screen-1300-full">
+                <div class="col-md-12 screen-1300-full">
                     <div class="boxed-row">
                         <div class="row create-assignment-title-block">
                             <div class="col-md-9">
@@ -118,8 +116,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-2 screen-1300-invisible">
                 </div>
             </div>
         </form>
