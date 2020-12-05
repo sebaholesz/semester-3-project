@@ -13,6 +13,7 @@ namespace DatabaseLayer.RepositoryLayer
         int UpdateAssignment(Assignment assignment, int id);
         //int DeleteAssignment(int id);
         int MakeAssignmentInactive(int id);
+        int MakeAssignmentActive(int id);
         List<string> GetAllAcademicLevels();
         List<string> GetAllSubjects();
         byte[] GetFileFromDB(int id);

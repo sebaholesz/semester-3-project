@@ -39,7 +39,7 @@
         <!--Main Window-->
         <Rectangle Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="7" Grid.RowSpan="8" Fill="#03CEA4" Opacity="0.23"/>
 
-        <Button Grid.Row="0" Grid.Column="6" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Click="screen2.Visibility = Visibility.Visible">Update</Button>
+        <Button Grid.Row="0" Grid.Column="6" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent">Update</Button>
         <Button Grid.Row="0" Grid.Column="7" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Click="MakeInactive_Click">Make Inactive</Button>
         
         <DataGrid Background="Transparent" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="7" Grid.RowSpan="7" FontFamily="Poppins" FontSize="15" BorderBrush="Transparent" HeadersVisibility="None" IsReadOnly="True" Name="AssignmentTable">

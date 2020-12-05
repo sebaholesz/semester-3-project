@@ -72,26 +72,32 @@ namespace webApi.Controllers
         //}
 
 
-        //[Route("assignment")]
-        //[HttpPut]
-        //public HttpResponseMessage Put()
-        //{
-        //    //Invalid request which returns 400
-        //    return Request.CreateResponse(HttpStatusCode.BadRequest, "The URL Is Invalid - Bad Request");
-        //}
+        [Route("assignment")]
+        [HttpPut]
+        public IActionResult Put()
+        {
+            //Invalid request which returns 400
+            return BadRequest("The URL Is Invalid - Bad Request!");
+        }
 
 
-        //[Route("assignment/{id}")]
-        //[HttpPut]
-        //public HttpResponseMessage Put([FromBody] Assignment assignment, int id)
-        //{
-        //    //assignmentInterface update
-        //    //return in HttpResonseMessage body Assignment
+        [Route("assignment/{id}")]
+        [HttpPut]
+        public IActionResult Put([FromBody] Assignment assignment, int id)
+        {
+            //assignmentInterface update
+            //return in HttpResonseMessage body Assignment
 
-        //    int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
-        //    return noOfRows > 0 ? new HttpResponseMessage(HttpStatusCode.OK) : new HttpResponseMessage(HttpStatusCode.NotFound);
-        //}
-        //}
+            int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
+            if (noOfRows > 0)
+            {
+                return Ok("Assignment updated successfully!");
+            }
+            else
+            {
+                return NotFound($"Assignment with id {id} was not found");
+            }
+        }
 
 
         [Route("assignment/inactive")]
@@ -108,6 +114,29 @@ namespace webApi.Controllers
         public IActionResult MakeInactive(int id)
         {
             int noOfRows = assignmentBusiness.MakeInactive(id);
+            if (noOfRows > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [Route("assignment/active")]
+        [HttpPut]
+        public IActionResult MakeActive()
+        {
+            //Invalid request which returns 400
+            return BadRequest("The URL Is Invalid - Bad Request!");
+        }
+
+        [Route("assignment/active/{id}")]
+        [HttpPut]
+        public IActionResult MakActive(int id)
+        {
+            int noOfRows = assignmentBusiness.MakeActive(id);
             if (noOfRows > 0)
             {
                 return Ok();

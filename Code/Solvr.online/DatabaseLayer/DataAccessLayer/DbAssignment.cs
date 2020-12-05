@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 
 namespace DatabaseLayer.DataAccessLayer
@@ -148,6 +147,19 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 return _db.Execute("Update [dbo].[Assignment] set isActive=0 where assignmentId=@assignmentId", new { assignmentId = id });
+            }
+            catch (SqlException e)
+            {
+                System.Console.WriteLine(e.Message);
+                return -1;
+            }
+        }
+
+        public int MakeAssignmentActive(int id)
+        {
+            try
+            {
+                return _db.Execute("Update [dbo].[Assignment] set isActive=1 where assignmentId=@assignmentId", new { assignmentId = id });
             }
             catch (SqlException e)
             {

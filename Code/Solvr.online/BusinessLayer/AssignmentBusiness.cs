@@ -59,6 +59,11 @@ namespace BusinessLayer
             return _dbAssignment.MakeAssignmentInactive(id);
         }
 
+        public int MakeActive(int id)
+        {
+            return _dbAssignment.MakeAssignmentActive(id);
+        }
+
         public List<string> GetAllAcademicLevels()
         {
             return _dbAssignment.GetAllAcademicLevels();
@@ -68,6 +73,5 @@ namespace BusinessLayer
         {
             return _dbAssignment.GetAllSubjects();
         }
-
     }
 }
