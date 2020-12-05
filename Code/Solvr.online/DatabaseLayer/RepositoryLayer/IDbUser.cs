@@ -1,7 +1,4 @@
-﻿using ModelLayer;
-using System.Collections.Generic;
-
-namespace DatabaseLayer.RepositoryLayer
+﻿namespace DatabaseLayer.RepositoryLayer
 {
     public interface IDbUser
     {

@@ -94,9 +94,19 @@ namespace ASP.NET.Areas.Identity.Pages.Account
                     if (user != null)
                     {
                         userName = user.UserName;
+
+                        //register last login for the user into the database
+                        user.LastLogin = DateTime.Now.ToString();
+                        var lastLoginResult = await _userManager.UpdateAsync(user);
+                        if (!lastLoginResult.Succeeded)
+                        {
+                            throw new Exception($"Unexpected error occurred setting the last login date" +
+                                $" ({lastLoginResult.ToString()}) for user with ID '{user.Id}'.");
+                        }
                     }
                 }
                 var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");

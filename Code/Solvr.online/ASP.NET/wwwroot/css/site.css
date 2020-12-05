@@ -20,6 +20,13 @@ button:focus {
     overflow: hidden;
 }
 
+.btn:focus,
+.btn:hover {
+    -moz-box-shadow: inherit;
+    -webkit-box-shadow: inherit;
+    box-shadow: 0 0px 8px 5px rgba(0, 0, 0, 0.2);
+}
+
 .btn-update {
     background-color: #03CEA4;
     color: #FFFFFF;
@@ -34,12 +41,15 @@ button:focus {
         background-color: #00C895;
     }
 
+.btn-block-with-left-margin {
+    margin-left: 15px;
+}
+
 .btn-delete {
     background-color: #ca1551;
     color: #FFFFFF;
     border-radius: 8px;
     padding: 0 15px;
-    margin-left: 30px;
     font-size: 20px;
     outline: none;
     border: none;
@@ -47,6 +57,31 @@ button:focus {
 
     .btn-delete:hover {
         background-color: #B91249;
+    }
+
+.btn-default-style {
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 0 15px;
+    font-size: 20px;
+    background-color: #006e8a;
+    border: none !important;
+    outline: none !important;
+}
+
+    .btn-default-style:disabled {
+        background-color: #435d63;
+        color: #aeb4b5;
+    }
+
+    .btn-default-style:visited,
+    .btn-default-style:hover,
+    .btn-default-style:active,
+    .btn-default-style:focus {
+        color: #ffffff;
+        background-color: #025266;
+        border: none !important;
+        outline: none !important;
     }
 
 .navbar-fluid {
@@ -102,8 +137,7 @@ button:focus {
 }
 
 /*#region navbar links color styling */
-
-.nav-dashboard {
+    .nav-dashboard {
     color: #2E294E;
 }
 
@@ -442,6 +476,14 @@ a:hover {
     }
 }
 
+/*below 1500px styling*/
+@media (max-width: 1500px) {
+    .screen-1500-full-with-sidebar {
+        max-width: calc(100% - 250px);
+        flex: 0 0 100% !important;
+    }
+}
+
 /*below 1300px styling*/
 @media (max-width: 1300px) {
     .nav {
@@ -453,7 +495,7 @@ a:hover {
     }
 
     .screen-1300-full {
-        max-width: 100%;
+        max-width: 80vw;
         flex: 0 0 100% !important;
     }
 }

@@ -47,8 +47,9 @@
 }
 
 .just-grid {
+    height: 100%;
     display: grid;
-    grid-template-columns: 33.3% 33.3% 33.3%;
+    grid-template-columns: 35% 20% 45%;
     grid-template-rows: 50% 50%;
     grid-template-areas: 
         "post-date credits academic-level"
@@ -95,7 +96,7 @@
         margin: 0px;
         border-radius: 100%;
         border: 4px solid rgb(194, 194, 194);
-        max-width: 35%;
+        max-width: 60px;
     }
 
 .assignment-profile{
@@ -159,4 +160,28 @@
 
 .header {
     background-color: #274C77;
+}
+
+.header-inactive {
+    background-color: #666666;
+}
+
+.display-author-details,
+.display-assignment-details {
+    min-height: 90px;
+    max-height: 90px;
+}
+
+/*below 1500 styling*/
+@media(max-width:1500px){
+    .card-columns {
+        column-count: 2;
+    }
+}
+
+/*below 1100 styling*/
+@media(max-width:1100px) {
+    .card-columns {
+        column-count: 1;
+    }
 }

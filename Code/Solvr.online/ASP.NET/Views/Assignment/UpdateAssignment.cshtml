@@ -18,18 +18,27 @@
                 <div class="col-md-12 screen-1300-full">
                     <div class="boxed-row">
                         <div class="row create-assignment-title-block">
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                                 <input asp-for="Title" value="@assignment.Title" class="assignment-title-text-field" readonly>
                                 <span asp-validation-for="Title" class="text-danger"></span>
                                 <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
                             </div>
-                            <div class="col-md-5 d-flex align-items-center justify-content-end">
-                                <button type="submit" class="btn-update">
-                                    Update
-                                </button>
-                                <button type="button" onclick="deleteAssignment(@assignment.AssignmentId)" class="btn-delete">
-                                    Delete
-                                </button>
+                            <div class="col-md-6 d-flex align-items-center justify-content-end">
+                                <div>
+                                    <a href="/assignment/close-assignment/@assignment.AssignmentId" class="btn-default-style">
+                                        Close
+                                    </a>
+                                </div>
+                                <div class="btn-block-with-left-margin">
+                                    <button type="submit" class="btn-update">
+                                        Update
+                                    </button>
+                                </div>
+                                <div class="btn-block-with-left-margin">
+                                    <button type="button" onclick="deleteAssignment(@assignment.AssignmentId)" class="btn-delete">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,14 +1,12 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
-using System.Text.Json;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.IO;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace webApi.Controllers
 {
@@ -51,7 +49,7 @@ namespace webApi.Controllers
             {
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
-            }   
+            }
         }
 
         [Route("solution/assignment/{id}")]
@@ -169,7 +167,7 @@ namespace webApi.Controllers
             {
                 int noOfRowsAffected = solutionBusiness.ChooseSolution(solutionId);
 
-                if(noOfRowsAffected == 1)
+                if (noOfRowsAffected == 1)
                 {
                     //display solution here
                     //return View("");

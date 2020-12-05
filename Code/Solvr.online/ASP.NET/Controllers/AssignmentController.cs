@@ -1,7 +1,6 @@
 ﻿using BusinessLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
 using System;
@@ -139,7 +138,7 @@ namespace webApi.Controllers
         {
             try
             {
-                Assignment  assignment = assignmentBusiness.GetByAssignmentId(id);
+                Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
                 ViewBag.Assignment = assignment;
                 ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id).Count;
 
@@ -172,8 +171,8 @@ namespace webApi.Controllers
                 if (assignments.Count > 0)
                 {
                     ViewBag.Assignments = assignments;
-                    ViewBag.ShowSolvedByUser = false;
-
+                    ViewData["ShowSolvedByUser"] = false;
+                    ViewData["AuthorOfAssignment"] = false;
 
                     return View("AllAssignments");
                 }
@@ -196,13 +195,13 @@ namespace webApi.Controllers
             }
         }
 
-        [Route("assignment/update-assignment/{id}")]
+        [Route("assignment/update-assignment/{assignmentId}")]
         [HttpGet]
-        public ActionResult UpdateAssignment(int id)
+        public ActionResult UpdateAssignment(int assignmentId)
         {
             try
             {
-                Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
+                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
                 ViewBag.Assignment = assignment;
                 ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
                 return View("UpdateAssignment");
@@ -214,10 +213,10 @@ namespace webApi.Controllers
             }
         }
 
-        [Route("assignment/update-assignment/{id}")]
+        [Route("assignment/update-assignment/{assignmentId}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateAssignment(IFormCollection collection, int id)
+        public ActionResult UpdateAssignment(IFormCollection collection, int assignmentId)
         {
             try
             {
@@ -236,14 +235,14 @@ namespace webApi.Controllers
                         Encoding.ASCII.GetBytes(collection["AssignmentFile"])
                     );
 
-                    int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, id);
+                    int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, assignmentId);
 
                     if (noOfRowsAffected > 0)
                     {
                         ViewBag.Message = "Assignment updated successfully";
                         ViewBag.ResponseStyleClass = "text-success";
                         ViewBag.ButtonText = "Display your assignment";
-                        ViewBag.ButtonLink = "/assignment/display-assignment/" + id;
+                        ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
                         ViewBag.PageTitle = "Assignment updated!";
                         ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
                         ViewBag.Image = "/assets/icons/success.svg";
@@ -253,7 +252,7 @@ namespace webApi.Controllers
                         ViewBag.Message = "Assignment update failed";
                         ViewBag.ResponseStyleClass = "text-danger";
                         ViewBag.ButtonText = "Go back to the assignment form";
-                        ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
+                        ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
                         ViewBag.PageTitle = "Assignment update failed!";
                         ViewBag.SubMessage = "There was a server error \ntry again later";
                         ViewBag.Image = "/assets/icons/error.svg";
@@ -264,7 +263,7 @@ namespace webApi.Controllers
                     ViewBag.Message = "Assignment update failed";
                     ViewBag.ResponseStyleClass = "text-danger";
                     ViewBag.ButtonText = "Go back to the assignment form";
-                    ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
+                    ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
                     ViewBag.PageTitle = "Assignment update failed!";
                     ViewBag.SubMessage = "Invalid data inserted";
                     ViewBag.Image = "/assets/icons/error.svg";
@@ -328,7 +327,8 @@ namespace webApi.Controllers
                 if (assignments.Count > 0)
                 {
                     ViewBag.Assignments = assignments;
-                    ViewBag.ShowSolvedByUser = false;
+                    ViewData["ShowSolvedByUser"] = false;
+                    ViewData["AuthorOfAssignment"] = true;
 
                     return View("AllAssignments");
                 }
@@ -363,18 +363,51 @@ namespace webApi.Controllers
                 if (solvedAssignments.Count > 0)
                 {
                     ViewBag.Assignments = solvedAssignments;
-                    ViewBag.ShowSolvedByUser = true;
+                    ViewData["ShowSolvedByUser"] = true;
+                    ViewData["AuthorOfAssignment"] = false;
 
                     return View("AllAssignments");
                 }
                 else
                 {
-                    ViewBag.Message = "No assignment found";
+                    ViewBag.Message = "No solutions found";
                     ViewBag.ResponseStyleClass = "text-danger";
                     ViewBag.ButtonText = "Go back to homepage";
                     ViewBag.ButtonLink = "/";
-                    ViewBag.PageTitle = "No assignments found!";
-                    ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                    ViewBag.PageTitle = "No soluitons found!";
+                    ViewBag.SubMessage = "You have not solved \nany assignments yet!";
+                    ViewBag.Image = "/assets/icons/error.svg";
+                    return View("UserFeedback");
+                }
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        [Route("assignment/close-assignment/{assignmentId}")]
+        [HttpGet]
+        public ActionResult CloseAssignment(int assignmentId)
+        {
+            try
+            {
+                int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(assignmentId);
+
+                if(noOfRowsAffected == 1)
+                {
+                    string redirectUrl = "/solution/solution-queue/" + assignmentId;
+                    return Redirect(redirectUrl);
+                }
+                else
+                {
+                    ViewBag.Message = "Could not close assignment";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to homepage";
+                    ViewBag.ButtonLink = "/";
+                    ViewBag.PageTitle = "Could not close assignment!";
+                    ViewBag.SubMessage = "There was an error!\nThe assignment was not closed";
                     ViewBag.Image = "/assets/icons/error.svg";
                     return View("UserFeedback");
                 }

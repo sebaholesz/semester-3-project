@@ -39,7 +39,7 @@ namespace DatabaseLayer.DataAccessLayer
                 //TODO refactor
                 List<string> userIdsThatSolvedThisAssignment = _db.Query<string>("Select [userId] from [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = solution.AssignmentId }).ToList();
 
-                if(userIdsThatSolvedThisAssignment.Contains(solution.UserId))
+                if (userIdsThatSolvedThisAssignment.Contains(solution.UserId))
                 {
                     return -2;
                 }
@@ -72,7 +72,7 @@ namespace DatabaseLayer.DataAccessLayer
                                     solutionRating = solution.SolutionRating,
                                     anonymous = solution.Anonymous,
                                     userId = solution.UserId
-                                }, transaction );
+                                }, transaction);
                             if (solution.SolutionFile != null)
                             {
                                 _db.Execute(@"INSERT INTO [dbo].[SolutionFile](solutionId, solutionFile) values (@solutionId, @solutionFile)",
@@ -81,7 +81,7 @@ namespace DatabaseLayer.DataAccessLayer
                             transaction.Commit();
                             _db.Close();
                         }
-                        catch (SqlException e)           
+                        catch (SqlException e)
                         {
                             transaction.Rollback();
                             _db.Close();
@@ -117,7 +117,7 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 return _db.Query<Solution>(
                     "SELECT * FROM [dbo].[Solution] where assignmentId = @assignmentId order by timestamp ASC",
-                    new {assignmentId = id}).ToList();
+                    new { assignmentId = id }).ToList();
             }
             catch (SqlException e)
             {

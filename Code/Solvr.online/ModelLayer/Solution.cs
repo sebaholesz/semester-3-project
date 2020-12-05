@@ -27,7 +27,7 @@ namespace ModelLayer
             this.SolutionRating = solutionRating;
         }
 
-        public Solution(int assignmentId, string description, DateTime timestamp, bool anonymous, string userId,  decimal solutionRating = 0)
+        public Solution(int assignmentId, string description, DateTime timestamp, bool anonymous, string userId, decimal solutionRating = 0)
         {
             this.AssignmentId = assignmentId;
             this.Description = description;
@@ -36,7 +36,7 @@ namespace ModelLayer
             this.UserId = userId;
             this.SolutionRating = solutionRating;
         }
-        
+
         public Solution()
         {
         }
