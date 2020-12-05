@@ -27,6 +27,7 @@ namespace ModelLayer
         public string AcademicLevel { get; set; }
         [Required]
         public string Subject { get; set; }
+        public bool IsActive { get; set; }
         public byte[] AssignmentFile { get; set; }
         public List<Solution> Solutions { get; set; }
 

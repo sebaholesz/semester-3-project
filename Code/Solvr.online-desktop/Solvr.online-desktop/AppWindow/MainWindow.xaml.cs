@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Solvr.online_desktop
+namespace Solvr.online_desktop.AppWindow
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -26,16 +26,16 @@ namespace Solvr.online_desktop.ApiCalls
             }
         }
 
-        public static HttpResponseMessage UpdateAssignment(int assignmentId)
+        public static HttpResponseMessage UpdateAssignment(int assignmentId, string title, string description, int price, DateTime deadline, Boolean anonymous, string academicLevel, string subject)
         {
             HttpClient client = new HttpClient
             {
                 BaseAddress = new Uri("https://localhost:44395/")
             };
-            //User user = new User(username, lastLogin, password, firstName, lastName, email);
+            Assignment assignment = new Assignment(title, description, price, deadline, anonymous, academicLevel, subject);
 
             string url = "apiV1/assignment/" + assignmentId;
-            HttpResponseMessage response = client.PutAsJsonAsync(url, assignmentId).Result;
+            HttpResponseMessage response = client.PutAsJsonAsync(url, assignment).Result;
             if (response.IsSuccessStatusCode)
             {
                 client.Dispose();
@@ -55,7 +55,7 @@ namespace Solvr.online_desktop.ApiCalls
             {
                 BaseAddress = new Uri("https://localhost:44395/")
             };
-            var url = "apiV1/assignment/iactive/" + assignmentId;
+            var url = "apiV1/assignment/active/" + assignmentId;
             HttpResponseMessage response = client.PutAsJsonAsync(url, assignmentId).Result;
             if (response.IsSuccessStatusCode)
             {

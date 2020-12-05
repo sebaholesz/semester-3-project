@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Solvr.online_desktop
+namespace Solvr.online_desktop.AppWindow
 {
     /// <summary>
     /// Interaction logic for HomePage.xaml
