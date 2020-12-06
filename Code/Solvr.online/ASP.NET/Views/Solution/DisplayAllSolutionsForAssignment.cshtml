@@ -121,8 +121,10 @@
         $("#chooseSolutionButton").click(() => {
             if (confirm('Do you really want to choose this solution?')) {
 
-                const solutionId = collection[currentIndex].SolutionId;
-                const xhrChooseSolutionBody = solutionId;
+                const solutionId = collection[currentIndex].SolutionId.toString();
+                const assignmentId = collection[currentIndex].AssignmentId.toString();
+                const reqBody = solutionId + "*" + assignmentId;
+                const xhrChooseSolutionBody = reqBody;
                 const xhrGetSolution = new XMLHttpRequest();
                 const xhrChooseSolution = new XMLHttpRequest();
 

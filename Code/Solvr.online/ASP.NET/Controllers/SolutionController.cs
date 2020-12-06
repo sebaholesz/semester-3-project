@@ -24,26 +24,48 @@ namespace webApi.Controllers
             userBusiness = new UserBusiness();
         }
 
-        [Route("solution/assignment/{id}")]
+        /*can be accessed by everybody who 
+         * hasnt posted the assignment  
+         * and hasnt solved it yet 
+         * and is logged in
+         */
+        [Route("solution/assignment/{assignmentId}")]
         [HttpGet]
-        public ActionResult CreateSolution(int id)
+        public ActionResult CreateSolution(int assignmentId)
         {
             try
             {
-                Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
-                ViewBag.Assignment = assignment;
-                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id).Count;
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
 
-                ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
-                if (assignment.Anonymous)
+                /*
+                 * 0 = hes neither author nor previous solver
+                 * 1 = authorUserId = currentUserId
+                 * 2 = solverId = currentUserId
+                 */
+                switch (returnCode)
                 {
-                    ViewBag.Name = "";
+                    case 0:
+                        Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                        ViewBag.Assignment = assignment;
+                        ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
+                        ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
+                        if (assignment.Anonymous)
+                        {
+                            ViewBag.Name = "";
+                        }
+                        else
+                        {
+                            ViewBag.Name = userBusiness.GetUserName(assignment.UserId);
+                        }
+                        return View("CreateSolution");
+                    case 1:
+                        return Redirect("/assignment/update-assignment/" + assignmentId);
+                    case 2:
+                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                    default:
+                        throw new Exception("Internal server error");
                 }
-                else
-                {
-                    ViewBag.Name = userBusiness.GetUserName(assignment.UserId);
-                }
-                return View("CreateSolution");
             }
             catch (Exception e)
             {
@@ -52,7 +74,12 @@ namespace webApi.Controllers
             }
         }
 
-        [Route("solution/assignment/{id}")]
+        /*can be accessed by everybody who 
+         * hasnt posted the assignment  
+         * and hasnt solved it yet 
+         * and is logged in
+         */
+        [Route("solution/assignment")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateSolution(IFormCollection collection, IFormFile files)
@@ -61,75 +88,74 @@ namespace webApi.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Solution solution;
-                    if (files != null)
-                    {
-                        var dataStream = new MemoryStream();
-                        await files.CopyToAsync(dataStream);
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    int assignmentId = Convert.ToInt32(collection["Solution.AssignmentId"]);
+                    int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId , userId);
+                    int queueOrder;
 
-                        solution = new Solution(
-                            Convert.ToInt32(collection["Solution.AssignmentId"]),
-                            collection["Solution.Description"],
-                            DateTime.Now,
-                            Convert.ToBoolean(collection["Solution.Anonymous"][0]),
-                            dataStream.ToArray(),
-                            User.FindFirstValue(ClaimTypes.NameIdentifier)
-                        );
-                        dataStream.Close();
-                    }
-                    else
+                    /*
+                     * 1 = OK
+                     * -1 = authorUserId = currentUserId
+                     * -2 = solverId = currentUserId
+                     */
+                    switch (returnCode)
                     {
-                        solution = new Solution(
-                            Convert.ToInt32(collection["Solution.AssignmentId"]),
-                            collection["Solution.Description"],
-                            DateTime.Now,
-                            Convert.ToBoolean(collection["Solution.Anonymous"][0]),
-                            User.FindFirstValue(ClaimTypes.NameIdentifier)
-                        );
-                    }
+                        case 1:
+                            Solution solution;
+                            if (files != null)
+                            {
+                                var dataStream = new MemoryStream();
+                                await files.CopyToAsync(dataStream);
 
+                                solution = new Solution(
+                                    Convert.ToInt32(collection["Solution.AssignmentId"]),
+                                    collection["Solution.Description"],
+                                    DateTime.Now,
+                                    Convert.ToBoolean(collection["Solution.Anonymous"][0]),
+                                    dataStream.ToArray(),
+                                    User.FindFirstValue(ClaimTypes.NameIdentifier)
+                                );
+                                dataStream.Close();
+                            }
+                            else
+                            {
+                                solution = new Solution(
+                                    Convert.ToInt32(collection["Solution.AssignmentId"]),
+                                    collection["Solution.Description"],
+                                    DateTime.Now,
+                                    Convert.ToBoolean(collection["Solution.Anonymous"][0]),
+                                    User.FindFirstValue(ClaimTypes.NameIdentifier)
+                                );
+                            }
+                            queueOrder = solutionBusiness.CreateSolution(solution);
 
-                    int queueOrder = solutionBusiness.CreateSolution(solution);
-
-                    if (queueOrder > 0)
-                    {
-                        ViewBag.Message = "Solution created successfully";
-                        ViewBag.ResponseStyleClass = "text-success";
-                        ViewBag.ButtonText = "Go back to homepage";
-                        ViewBag.ButtonLink = "/";
-                        ViewBag.PageTitle = "Solution created!";
-                        ViewBag.SubMessage = "You are number " + queueOrder + " in the queue";
-                        ViewBag.Image = "/assets/icons/success.svg";
-                    }
-                    else if (queueOrder == -2)
-                    {
-                        ViewBag.Message = "Solution creation failed";
-                        ViewBag.ResponseStyleClass = "text-danger";
-                        ViewBag.ButtonText = "Go back to the solution form";
-                        ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
-                        ViewBag.PageTitle = "Solution creation failed!";
-                        ViewBag.SubMessage = "You already solved this assignment";
-                        ViewBag.Image = "/assets/icons/error.svg";
-                    }
-                    else if (queueOrder == -3)
-                    {
-                        ViewBag.Message = "Solution creation failed";
-                        ViewBag.ResponseStyleClass = "text-danger";
-                        ViewBag.ButtonText = "Go back to the solution form";
-                        ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
-                        ViewBag.PageTitle = "Solution creation failed!";
-                        ViewBag.SubMessage = "You cannot solve your own assignment";
-                        ViewBag.Image = "/assets/icons/error.svg";
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Solution creation failed";
-                        ViewBag.ResponseStyleClass = "text-danger";
-                        ViewBag.ButtonText = "Go back to the solution form";
-                        ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
-                        ViewBag.PageTitle = "Solution creation failed!";
-                        ViewBag.SubMessage = "You are not in the queue";
-                        ViewBag.Image = "/assets/icons/error.svg";
+                            if (queueOrder > 0)
+                            {
+                                ViewBag.Message = "Solution created successfully";
+                                ViewBag.ResponseStyleClass = "text-success";
+                                ViewBag.ButtonText = "Go back to homepage";
+                                ViewBag.ButtonLink = "/";
+                                ViewBag.PageTitle = "Solution created!";
+                                ViewBag.SubMessage = "You are number " + queueOrder + " in the queue";
+                                ViewBag.Image = "/assets/icons/success.svg";
+                            }
+                            else
+                            {
+                                ViewBag.Message = "Solution creation failed";
+                                ViewBag.ResponseStyleClass = "text-danger";
+                                ViewBag.ButtonText = "Go back to the solution form";
+                                ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
+                                ViewBag.PageTitle = "Solution creation failed!";
+                                ViewBag.SubMessage = "You are not in the queue";
+                                ViewBag.Image = "/assets/icons/error.svg";
+                            }
+                            return View("UserFeedback");
+                        case -1:
+                            return Redirect("/assignment/update-assignment/" + assignmentId);
+                        case -2:
+                            return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                        default:
+                            throw new Exception("Internal server error");
                     }
                 }
                 else
@@ -141,8 +167,8 @@ namespace webApi.Controllers
                     ViewBag.PageTitle = "Solution creation failed!";
                     ViewBag.SubMessage = "Invalid data inserted \nyou are not in the queue";
                     ViewBag.Image = "/assets/icons/error.svg";
+                    return View("UserFeedback");
                 }
-                return View("UserFeedback");
             }
             catch (Exception e)
             {
@@ -151,46 +177,106 @@ namespace webApi.Controllers
             }
         }
 
+        /*can be accessed by everybody who 
+         * posted the assignment  
+         * and is logged in
+         */
         [Route("solution/solution-queue/{assignmentId}")]
         [HttpGet]
         public ActionResult ChooseSolutionGet(int assignmentId)
         {
-            ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
-            return View("DisplayAllSolutionsForAssignment");
+            try
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
+
+                /*
+                 * 0 = hes neither author nor previous solver
+                 * 1 = authorUserId = currentUserId
+                 * 2 = solverId = currentUserId
+                 */
+                switch (returnCode)
+                {
+                    case 0:
+                        return Redirect("/assignment/display-assignment/" + assignmentId);
+                    case 1:
+                        ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
+                        return View("DisplayAllSolutionsForAssignment");
+                    case 2:
+                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                    default:
+                        throw new Exception("Internal server error");
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
+        /*can be accessed by everybody who 
+         * posted the assignment  
+         * and is logged in
+         */
         [Route("solution/choose-solution")]
         [HttpPut]
-        public ActionResult ChooseSolutionPut([FromBody] int solutionId)
+        public ActionResult ChooseSolutionPut([FromBody] string reqBody)
         {
             try
             {
-                int noOfRowsAffected = solutionBusiness.ChooseSolution(solutionId);
+                string[] reqBodyStringArray =  reqBody.Split("*");
+                int solutionId = Convert.ToInt32(reqBodyStringArray[0]);
+                int assignmentId = Convert.ToInt32(reqBodyStringArray[1]);
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
 
-                if (noOfRowsAffected == 1)
+                /*
+                 * 0 = hes neither author nor previous solver
+                 * 1 = authorUserId = currentUserId
+                 * 2 = solverId = currentUserId
+                 */
+                switch (returnCode)
                 {
-                    //display solution here
-                    //return View("");
-                    ViewBag.Message = "Solution accepted";
-                    ViewBag.ResponseStyleClass = "text-success";
-                    ViewBag.ButtonText = "Go back to homepage";
-                    ViewBag.ButtonLink = "/";
-                    ViewBag.PageTitle = "Solution accepted!";
-                    ViewBag.SubMessage = "The solution is now accepted \nand is waiting for you";
-                    ViewBag.Image = "/assets/icons/success.svg";
+                    case 0:
+                        return Redirect("/assignment/display-assignment/" + assignmentId);
+                    case 1:
+                        if(solutionBusiness.ChooseSolution(solutionId, assignmentId))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            ViewBag.Message = "Solution acceptation failed";
+                            ViewBag.ResponseStyleClass = "text-danger";
+                            ViewBag.ButtonText = "Go back to homepage";
+                            ViewBag.ButtonLink = "/";
+                            ViewBag.PageTitle = "Solution acceptation failed!";
+                            ViewBag.SubMessage = "There was an internal error \nwhile processing your request";
+                            ViewBag.Image = "/assets/icons/error.svg";
+                        }
+                        return View("UserFeedback");
+                    case 2:
+                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                    default:
+                        throw new Exception("Internal server error");
+                }
+
+                Solution solution = solutionBusiness.GetSolutionByAssignmentId(assignmentId);
+
+                Assignment solvedAssignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                ViewBag.Assignment = solvedAssignment;
+                ViewBag.Solution = solution;
+
+                ViewBag.Username = userBusiness.GetUserUsername(solvedAssignment.UserId);
+                if (solvedAssignment.Anonymous)
+                {
+                    ViewBag.Name = "";
                 }
                 else
                 {
-                    //return error here
-                    ViewBag.Message = "Solution acceptation failed";
-                    ViewBag.ResponseStyleClass = "text-danger";
-                    ViewBag.ButtonText = "Go back to homepage";
-                    ViewBag.ButtonLink = "/";
-                    ViewBag.PageTitle = "Solution acceptation failed!";
-                    ViewBag.SubMessage = "There was an internal error \nwhile processing your request";
-                    ViewBag.Image = "/assets/icons/error.svg";
+                    ViewBag.Name = userBusiness.GetUserName(solvedAssignment.UserId);
                 }
-                return View("UserFeedback");
+                return View("DisplaySolution");
             }
             catch (Exception e)
             {
@@ -199,20 +285,24 @@ namespace webApi.Controllers
             }
         }
 
+        /*can be accessed by everybody who 
+         * posted the assignment  
+         * and is logged in
+         */
         [Route("solution/user-solution-for-assignment/{assignmentId}")]
         [HttpGet]
-        public ActionResult DisplaySolutionForUserByAssignmentId(int assignmentId)
+        public ActionResult DisplayAcceptedSolutionByAssignmentId(int assignmentId)
         {
             try
             {
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                Solution userSolution = solutionBusiness.GetSolutionForUserByAssignmentId(userId, assignmentId);
+                Solution solution = solutionBusiness.GetSolutionByAssignmentId(assignmentId);
 
-                if (!userSolution.Equals(null))
+                Assignment solvedAssignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                if (!solvedAssignment.IsActive)
                 {
-                    Assignment solvedAssignment = assignmentBusiness.GetByAssignmentId(assignmentId);
                     ViewBag.Assignment = solvedAssignment;
-                    ViewBag.Solution = userSolution;
+                    ViewBag.Solution = solution;
 
                     ViewBag.Username = userBusiness.GetUserUsername(solvedAssignment.UserId);
                     if (solvedAssignment.Anonymous)
@@ -228,14 +318,7 @@ namespace webApi.Controllers
                 }
                 else
                 {
-                    ViewBag.Message = "Could not find your solution";
-                    ViewBag.ResponseStyleClass = "text-danger";
-                    ViewBag.ButtonText = "Go back to homepage";
-                    ViewBag.ButtonLink = "/";
-                    ViewBag.PageTitle = "Could not find your solution!";
-                    ViewBag.SubMessage = "You did not \nsolve this assignment";
-                    ViewBag.Image = "/assets/icons/error.svg";
-                    return View("UserFeedback");
+                    throw new Exception("The assignment is not closed yet");
                 }
             }
             catch (Exception e)

@@ -9,11 +9,13 @@ namespace BusinessLayer
     public class AssignmentBusiness
     {
         private readonly IDbAssignment _dbAssignment;
+        private readonly IDbSolution _dbSolution;
         private readonly AssignmentInputValidation _assignmentValidation;
 
         public AssignmentBusiness()
         {
             _dbAssignment = new DbAssignment();
+            _dbSolution = new DbSolution();
             _assignmentValidation = new AssignmentInputValidation();
         }
 
@@ -90,6 +92,25 @@ namespace BusinessLayer
         public List<Assignment> GetAllAssignmentsSolvedByUser(string userId)
         {
             return _dbAssignment.GetAllAssignmentsSolvedByUser(userId);
+        }
+
+        public int CheckUserVsAssignment(int assignmentId, string userId)
+        {
+            string authorUserId = _dbAssignment.GetAuthorUserId(assignmentId);
+            List<string> allSolversForAssignment = _dbSolution.GetAllSolversForAssignment(assignmentId);
+
+            if (authorUserId.Equals(userId))
+            {
+                return 1;
+            }
+            else if (allSolversForAssignment.Contains(userId))
+            {
+                return 2;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

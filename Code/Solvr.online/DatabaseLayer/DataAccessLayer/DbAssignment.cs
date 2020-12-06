@@ -251,5 +251,17 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+
+        public string GetAuthorUserId(int assignmentId)
+        {
+            try
+            {
+                return _db.QueryFirst<string>("Select userId from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

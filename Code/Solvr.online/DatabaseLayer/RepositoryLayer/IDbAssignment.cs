@@ -21,5 +21,6 @@ namespace DatabaseLayer.RepositoryLayer
         int DeleteAssignment(int id);
         List<Assignment> GetAllAssignmentsForUser(string userId);
         List<Assignment> GetAllAssignmentsSolvedByUser(string userId);
+        string GetAuthorUserId(int assignmentId);
     }
 }

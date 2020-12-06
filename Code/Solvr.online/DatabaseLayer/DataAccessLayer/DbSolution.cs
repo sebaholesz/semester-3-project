@@ -176,11 +176,23 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public Solution GetSolutionForUserByAssignmentId(string userId, int assignmentId)
+        public Solution GetSolutionByAssignmentId(int assignmentId)
         {
             try
             {
-                return _db.QueryFirst<Solution>("Select * from [dbo].[Solution] where assignmentId=@assignmentId and userId=@userId", new { assignmentId = assignmentId, userId = userId });
+                return _db.QueryFirst<Solution>("Select * from [dbo].[Solution] where assignmentId=@assignmentId ", new { assignmentId = assignmentId});
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public List<string> GetAllSolversForAssignment(int assignmentId)
+        {
+            try
+            {
+                return _db.Query<string>("Select userId from [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = assignmentId}).ToList();
             }
             catch (SqlException e)
             {

@@ -138,7 +138,7 @@ namespace webApi.Controllers
             }
         }
 
-        /*can be only accessed by everybody who 
+        /*can be accessed by everybody who 
          * hasnt posted the assignment  
          * and hasnt solved it yet 
          * and is logged in

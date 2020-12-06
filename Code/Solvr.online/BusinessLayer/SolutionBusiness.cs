@@ -2,6 +2,7 @@
 using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
@@ -9,11 +10,13 @@ namespace BusinessLayer
     public class SolutionBusiness
     {
         private readonly IDbSolution _dbSolution;
+        private readonly AssignmentBusiness _assignmentBusiness;
         private readonly SolutionInputValidation _validateSolution;
 
         public SolutionBusiness()
         {
             _dbSolution = new DbSolution();
+            _assignmentBusiness = new AssignmentBusiness();
             _validateSolution = new SolutionInputValidation();
 
         }
@@ -51,14 +54,25 @@ namespace BusinessLayer
             return _dbSolution.DeleteSolution(id);
         }
 
-        public int ChooseSolution(int solutionId)
+        public bool ChooseSolution(int solutionId, int assignmentId)
         {
-            return _dbSolution.ChooseSolution(solutionId);
+            bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1 ? true : false; ;
+            bool successfulyMadeInactive = _assignmentBusiness.MakeAssignmentInactive(assignmentId) == 1 ? true : false;
+            return successfulyAccepted && successfulyMadeInactive;
         }
 
-        public Solution GetSolutionForUserByAssignmentId(string userId, int assignmentId)
+        public Solution GetSolutionByAssignmentId(int assignmentId)
         {
-            return _dbSolution.GetSolutionForUserByAssignmentId(userId, assignmentId);
+            Solution solution = _dbSolution.GetSolutionByAssignmentId(assignmentId);
+
+            if (!solution.Equals(null))
+            {
+                return solution;
+            }
+            else
+            {
+                throw new Exception("Could not find your solution");
+            }
         }
     }
 }
