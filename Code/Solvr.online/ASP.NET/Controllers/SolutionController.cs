@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -201,8 +202,23 @@ namespace webApi.Controllers
                     case 0:
                         return Redirect("/assignment/display-assignment/" + assignmentId);
                     case 1:
-                        ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
-                        return View("DisplayAllSolutionsForAssignment");
+                        List<Solution> solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
+                        if(solutions.Count > 0)
+                        {
+                            ViewBag.Solutions = solutions;
+                            return View("DisplayAllSolutionsForAssignment");
+                        }
+                        else
+                        {
+                            ViewBag.Message = "No solutions found";
+                            ViewBag.ResponseStyleClass = "text-danger";
+                            ViewBag.ButtonText = "Go back to the solution form";
+                            ViewBag.ButtonLink = "/solution/assignment/" + assignmentId;
+                            ViewBag.PageTitle = "No solutions found!";
+                            ViewBag.SubMessage = "No one has solved your assignment yet";
+                            ViewBag.Image = "/assets/icons/error.svg";
+                            return View("UserFeedback");
+                        }
                     case 2:
                         return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
                     default:

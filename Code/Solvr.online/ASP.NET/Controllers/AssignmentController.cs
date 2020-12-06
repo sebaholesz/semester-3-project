@@ -300,7 +300,6 @@ namespace webApi.Controllers
                                 assignment.Title = collection["Title"];
                                 assignment.Description = collection["Description"];
                                 assignment.Price = Convert.ToInt32(collection["Price"]);
-                                assignment.PostDate = DateTime.Now;
                                 assignment.Deadline = Convert.ToDateTime(collection["Deadline"]);
                                 assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
                                 assignment.AcademicLevel = collection["AcademicLevel"];

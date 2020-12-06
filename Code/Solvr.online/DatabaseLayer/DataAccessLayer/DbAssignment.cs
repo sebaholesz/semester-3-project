@@ -85,7 +85,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment]").ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] Order By [postDate] Desc").ToList();
             }
             catch (SqlException e)
             {
@@ -97,7 +97,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1 and not userId=@userId", new {userId = userId}).ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1 and not userId=@userId Order By [postDate] Desc", new {userId = userId}).ToList();
             }
             catch (SqlException e)
             {
@@ -109,7 +109,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0 and not userId=@userId", new {userId = userId}).ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0 and not userId=@userId Order By [postDate] Desc", new {userId = userId}).ToList();
             } catch (SqlException e)
             {
                 throw e;
@@ -120,7 +120,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1").ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1 Order By [postDate] Desc").ToList();
             }
             catch (SqlException e)
             {
@@ -132,7 +132,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0").ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0 Order By [postDate] Desc").ToList();
             }
             catch (SqlException e)
             {
@@ -182,7 +182,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return = _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
+                return _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
                     new { title = assignment.Title, assignmentId = assignmentId, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
             }
             catch (SqlException e)
@@ -243,7 +243,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where userId=@userId", new { userid = userId }).ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where userId=@userId Order By [postDate] Desc", new { userid = userId }).ToList();
             }
             catch (SqlException e)
             {
@@ -255,7 +255,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where assignmentId = (Select assignmentId from [dbo].[Solution] where userId=@userId)", new { userId = userId }).ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where assignmentId = (Select assignmentId from [dbo].[Solution] where userId=@userId) Order By [postDate] Desc", new { userId = userId }).ToList();
             }
             catch (SqlException e)
             {

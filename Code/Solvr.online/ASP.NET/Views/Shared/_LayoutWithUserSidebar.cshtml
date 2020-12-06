@@ -48,8 +48,8 @@
                         <div class="navbar-button-search-block">
 
                             <div class="navbar-mobile-line">
-                                <a href="/assignment/create-assignment" class="btn-post-assignment">
-                                    <img class="btn btn-post-assignment-icon" src="/assets/icons/add.svg">
+                                <a href="/assignment/create-assignment" class="btn btn-post-assignment">
+                                    <img class="btn-post-assignment-icon" src="/assets/icons/add.svg">
                                     Post Assignment
                                 </a>
                             </div>
@@ -115,10 +115,10 @@
                             <div class="user-sidebar-profile-image">
                                 @* Some conditional logic where if there is no image URL, we go to the fallback *@
                                 @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
-                                <img alt="Default user avatar" src="/assets/images/default-avatar.png" />
+                                <img alt="Default user avatar" src="Assets/Images/hunterek.png" />
                             </div>
                             <div class="user-sidebar-username">
-                                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
+                                <a class="mt-1" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
                             </div>
                         </div>
 
