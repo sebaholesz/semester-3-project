@@ -21,6 +21,15 @@ namespace BusinessLayer
         {
             return _dbAssignment.GetAllAssignments();
         }
+
+        public List<Assignment> GetAllActiveAssignmentsNotSolvedByUser(string userId)
+        {
+            return _dbAssignment.GetAllActiveAssignmentsNotSolvedByUser(userId);
+        }
+        public List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId)
+        {
+            return _dbAssignment.GetAllInactiveAssignmentsNotSolvedByUser(userId);
+        }
         public List<Assignment> GetAllActiveAssignments()
         {
             return _dbAssignment.GetAllActiveAssignments();
@@ -38,12 +47,15 @@ namespace BusinessLayer
             return -1;
 
         }
-
         public Assignment GetByAssignmentId(int id)
         {
             return _dbAssignment.GetByAssignmentId(id);
         }
 
+        public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)
+        {
+            return _dbAssignment.CheckIfUserAlreadySolvedThisAssignment(asignmentId, userId);
+        }
         public int UpdateAssignment(Assignment assignment, int id)
         {
             //TODO validators 

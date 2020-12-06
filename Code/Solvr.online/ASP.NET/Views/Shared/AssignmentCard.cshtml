@@ -5,22 +5,22 @@
     var solutions = ViewBag.Solutions;
     var authorOfAssignment = (bool)ViewData["AuthorOfAssignment"];
     var showSolvedByUser = (bool)ViewData["ShowSolvedByUser"];
-    var actionLink = "";
-    if (authorOfAssignment && Model.IsActive)
-    {
-        actionLink = "/assignment/update-assignment/" + Model.AssignmentId;
-    }
-    else if (showSolvedByUser)
-    {
-        actionLink = "/solution/user-solution-for-assignment/" + Model.AssignmentId;
-    }
-    else
-    {
-        actionLink = "/assignment/display-assignment/" + Model.AssignmentId;
-    }
+    //var actionLink = "";
+    //if (authorOfAssignment && Model.IsActive)
+    //{
+    //    actionLink = "/assignment/update-assignment/" + Model.AssignmentId;
+    //}
+    //else if (showSolvedByUser)
+    //{
+    //    actionLink = "/solution/user-solution-for-assignment/" + Model.AssignmentId;
+    //}
+    //else
+    //{
+    //    actionLink = "/assignment/display-assignment/" + Model.AssignmentId;
+    //}
 }
 
-<a href="@actionLink" class="assignment-card">
+<a href="/assignment/display-assignment/@Model.AssignmentId" class="assignment-card">
     <div class="card shadow border-0">
         @if (Model.IsActive)
         {

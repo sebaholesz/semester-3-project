@@ -56,8 +56,7 @@ namespace DatabaseLayer.DataAccessLayer
                 {
                     transaction.Rollback();
                     _db.Close();
-                    System.Console.WriteLine(e.Message);
-                    return -1;
+                throw e;
                 }
             }
         }
@@ -90,8 +89,30 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
+            }
+        }
+
+        public List<Assignment> GetAllActiveAssignmentsNotSolvedByUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1 and not userId=@userId", new {userId = userId}).ToList();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0 and not userId=@userId", new {userId = userId}).ToList();
+            } catch (SqlException e)
+            {
+                throw e;
             }
         }
 
@@ -103,8 +124,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
@@ -116,8 +136,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
@@ -130,10 +149,23 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
+
+        public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId) 
+        {
+            try
+            {
+                List<string> allSolversForAssignment =_db.Query<string>("Select [userId] from [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = asignmentId }).ToList();
+                return allSolversForAssignment.Contains(userId);
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
 
         public int UpdateAssignment(Assignment assignment, int id)
         {
@@ -145,8 +177,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return -1;
+                throw e;
             }
         }
 
@@ -158,8 +189,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return -1;
+                throw e;
             }
         }
 
@@ -171,8 +201,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
@@ -184,8 +213,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                Console.WriteLine(e);
-                return null;
+                throw e;
             }
         }
 
@@ -197,8 +225,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return 0;
+                throw e;
             }
         }
 
@@ -210,8 +237,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
@@ -223,8 +249,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
     }

@@ -26,6 +26,9 @@ namespace webApi.Controllers
             userBusiness = new UserBusiness();
         }
 
+        /*can be accessed by everybody who 
+         * is logged in
+         */
         [Route("assignment/create-assignment")]
         [HttpGet]
         public ActionResult CreateAssignment()
@@ -34,7 +37,6 @@ namespace webApi.Controllers
             {
                 ViewBag.AcademicLevels = assignmentBusiness.GetAllAcademicLevels();
                 ViewBag.Subjects = assignmentBusiness.GetAllSubjects();
-                //throw new Exception("The lkdncalkndc failed");
                 return View("CreateAssignment");
             }
             catch (Exception e)
@@ -44,6 +46,9 @@ namespace webApi.Controllers
             }
         }
 
+        /*can be accessed by everybody who 
+         * is logged in
+         */
         [Route("assignment/create-assignment")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -89,6 +94,7 @@ namespace webApi.Controllers
                            User.FindFirstValue(ClaimTypes.NameIdentifier)
                        );
                     }
+
                     //we will get the id once using the CreateAssignmentWithFile method
                     int assignmentId = assignmentBusiness.CreateAssignment(assignment);
 
@@ -132,16 +138,36 @@ namespace webApi.Controllers
             }
         }
 
-        [Route("assignment/display-assignment/{id}")]
+        /*can be only accessed by everybody who 
+         * hasnt posted the assignment  
+         * and hasnt solved it yet 
+         * and is logged in
+         */
+        [Route("assignment/display-assignment/{assignmentId}")]
         [HttpGet]
-        public ActionResult DisplayAssignment(int id)
+        public ActionResult DisplayAssignment(int assignmentId)
         {
             try
             {
-                Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
+                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
                 ViewBag.Assignment = assignment;
-                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(id).Count;
+                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
 
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                //check if the user that tries to access the assignment isnt the author
+                if (assignment.UserId.Equals(userId))
+                {
+                    return Redirect("/assignment/update-assignment/" + assignment.AssignmentId);
+                }
+
+                //check if the user that tries to access the assignment hasnt already solved the assignment
+                if(assignmentBusiness.CheckIfUserAlreadySolvedThisAssignment(assignment.AssignmentId, userId))
+                {
+                    return Redirect("/solution/user-solution-for-assignment/" + assignment.AssignmentId);
+                }
+
+                //if the user isnt the author nor he solved the assignment, display it in normal way
                 ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
                 if (assignment.Anonymous)
                 {
@@ -160,6 +186,7 @@ namespace webApi.Controllers
             }
         }
 
+        //can be accessed by everybody
         [AllowAnonymous]
         [Route("assignment/display-assignments")]
         [HttpGet]
@@ -167,13 +194,10 @@ namespace webApi.Controllers
         {
             try
             {
-                List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignments();
+                List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotSolvedByUser(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 if (assignments.Count > 0)
                 {
                     ViewBag.Assignments = assignments;
-                    ViewData["ShowSolvedByUser"] = false;
-                    ViewData["AuthorOfAssignment"] = false;
-
                     return View("AllAssignments");
                 }
                 else
@@ -195,6 +219,10 @@ namespace webApi.Controllers
             }
         }
 
+        /*can be accessed by everybody who 
+         * posted the assignment
+         * and only if the assignment is still active
+         */
         [Route("assignment/update-assignment/{assignmentId}")]
         [HttpGet]
         public ActionResult UpdateAssignment(int assignmentId)
@@ -202,6 +230,14 @@ namespace webApi.Controllers
             try
             {
                 Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                //check if the user who is trying to access the update page really posted the assignment and if the assignment is still active
+                if (!assignment.UserId.Equals(userId) || assignment.IsActive == false)
+                {
+                    return Redirect("assignment/display-assignment/" + assignmentId);
+                }
+
                 ViewBag.Assignment = assignment;
                 ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
                 return View("UpdateAssignment");
@@ -213,6 +249,10 @@ namespace webApi.Controllers
             }
         }
 
+        /*can be accessed by everybody who 
+         * posted the assignment
+         * and only if the assignment is still active
+         */
         [Route("assignment/update-assignment/{assignmentId}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -222,18 +262,25 @@ namespace webApi.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                    //check if the user who is trying to access the update page really posted the assignment and if the assignment is still active
+                    if (!assignment.UserId.Equals(userId) || assignment.IsActive == false)
+                    {
+                        return Redirect("assignment/display-assignment/" + assignmentId);
+                    }
+
                     //TODO notify all solvers of the changes
-                    Assignment assignment = new Assignment(
-                        collection["Title"],
-                        collection["Description"],
-                        Convert.ToInt32(collection["Price"]),
-                        DateTime.Now,
-                        Convert.ToDateTime(collection["Deadline"]),
-                        Convert.ToBoolean(collection["Anonymous"][0]),
-                        collection["AcademicLevel"],
-                        collection["Subject"],
-                        Encoding.ASCII.GetBytes(collection["AssignmentFile"])
-                    );
+                    assignment.Title = collection["Title"];
+                    assignment.Description = collection["Description"];
+                    assignment.Price = Convert.ToInt32(collection["Price"]);
+                    assignment.PostDate = DateTime.Now;
+                    assignment.Deadline = Convert.ToDateTime(collection["Deadline"]);
+                    assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
+                    assignment.AcademicLevel = collection["AcademicLevel"];
+                    assignment.Subject = collection["Subject"];
+                    assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
 
                     int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, assignmentId);
 
@@ -277,14 +324,27 @@ namespace webApi.Controllers
             }
         }
 
-        [Route("assignment/delete-assignment/{id}")]
+        /*can be accessed by everybody who 
+         * posted the assignment
+         * and only if the assignment is still active
+         */
+        [Route("assignment/delete-assignment/{assignmentId}")]
         [HttpDelete]
-        public ActionResult DeleteAssignment(int id)
+        public ActionResult DeleteAssignment(int assignmentId)
         {
             try
             {
+                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                //check if the user who is trying to access the delete page really posted the assignment and if the assignment is still active
+                if (!assignment.UserId.Equals(userId) || assignment.IsActive == false)
+                {
+                    return Redirect("assignment/display-assignment/" + assignmentId);
+                }
+
                 //the assignment is not deleted per se, it is just marked inactive so it is not visible in the FE
-                int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(id);
+                int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(assignmentId);
 
                 if (noOfRowsAffected > 0)
                 {
@@ -301,7 +361,7 @@ namespace webApi.Controllers
                     ViewBag.Message = "Assignment deletion failed";
                     ViewBag.ResponseStyleClass = "text-danger";
                     ViewBag.ButtonText = "Go back to the assignment form";
-                    ViewBag.ButtonLink = "/assignment/update-assignment/" + id;
+                    ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
                     ViewBag.PageTitle = "Assignment deletion failed!";
                     ViewBag.SubMessage = "There was a server error \ntry again later";
                     ViewBag.Image = "/assets/icons/error.svg";
@@ -315,6 +375,9 @@ namespace webApi.Controllers
             }
         }
 
+        /*can be accessed by everybody who 
+         * posted the assignment
+         */
         [Route("assignment/user")]
         [HttpGet]
         public ActionResult GetAllAssignmentsForLoggedInUser()
@@ -327,9 +390,6 @@ namespace webApi.Controllers
                 if (assignments.Count > 0)
                 {
                     ViewBag.Assignments = assignments;
-                    ViewData["ShowSolvedByUser"] = false;
-                    ViewData["AuthorOfAssignment"] = true;
-
                     return View("AllAssignments");
                 }
                 else
@@ -351,6 +411,9 @@ namespace webApi.Controllers
             }
         }
 
+        /*can be accessed by everybody who 
+         * solved the assignment
+         */
         [Route("assignment/solved-by-user")]
         [HttpGet]
         public ActionResult GetAllAssignmentsSolvedByLoggedInUser()
@@ -363,9 +426,6 @@ namespace webApi.Controllers
                 if (solvedAssignments.Count > 0)
                 {
                     ViewBag.Assignments = solvedAssignments;
-                    ViewData["ShowSolvedByUser"] = true;
-                    ViewData["AuthorOfAssignment"] = false;
-
                     return View("AllAssignments");
                 }
                 else
@@ -387,18 +447,34 @@ namespace webApi.Controllers
             }
         }
 
+        /*can be accessed by everybody who 
+         * posted the assignment
+         * and only if the assignment is still active
+         */
         [Route("assignment/close-assignment/{assignmentId}")]
         [HttpGet]
         public ActionResult CloseAssignment(int assignmentId)
         {
             try
             {
+                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                //check if the user who is trying to access the close page really posted the assignment and if the assignment is still active
+                if (!assignment.UserId.Equals(userId))
+                {
+                    return Redirect("assignment/display-assignment/" + assignmentId);
+                }
+                if (assignment.UserId.Equals(userId) && assignment.IsActive == false)
+                {
+                    return Redirect("/solution/solution-queue/" + assignmentId);
+                }
+
                 int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(assignmentId);
 
                 if(noOfRowsAffected == 1)
                 {
-                    string redirectUrl = "/solution/solution-queue/" + assignmentId;
-                    return Redirect(redirectUrl);
+                    return Redirect("/solution/solution-queue/" + assignmentId);
                 }
                 else
                 {
