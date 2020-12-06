@@ -94,13 +94,13 @@ namespace webApi.Controllers
                     int queueOrder;
 
                     /*
-                     * 1 = OK
-                     * -1 = authorUserId = currentUserId
-                     * -2 = solverId = currentUserId
+                     * 0 = hes neither author nor previous solver
+                     * 1 = authorUserId = currentUserId
+                     * 2 = solverId = currentUserId
                      */
                     switch (returnCode)
                     {
-                        case 1:
+                        case 0:
                             Solution solution;
                             if (files != null)
                             {
@@ -127,6 +127,7 @@ namespace webApi.Controllers
                                     User.FindFirstValue(ClaimTypes.NameIdentifier)
                                 );
                             }
+
                             queueOrder = solutionBusiness.CreateSolution(solution);
 
                             if (queueOrder > 0)
@@ -150,9 +151,9 @@ namespace webApi.Controllers
                                 ViewBag.Image = "/assets/icons/error.svg";
                             }
                             return View("UserFeedback");
-                        case -1:
+                        case 1:
                             return Redirect("/assignment/update-assignment/" + assignmentId);
-                        case -2:
+                        case 2:
                             return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
                         default:
                             throw new Exception("Internal server error");

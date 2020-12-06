@@ -2,6 +2,7 @@
 using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
@@ -9,13 +10,13 @@ namespace BusinessLayer
     public class AssignmentBusiness
     {
         private readonly IDbAssignment _dbAssignment;
-        private readonly IDbSolution _dbSolution;
+        private readonly SolutionBusiness _solutionBusiness;
         private readonly AssignmentInputValidation _assignmentValidation;
 
         public AssignmentBusiness()
         {
             _dbAssignment = new DbAssignment();
-            _dbSolution = new DbSolution();
+            _solutionBusiness = new SolutionBusiness();
             _assignmentValidation = new AssignmentInputValidation();
         }
 
@@ -86,7 +87,17 @@ namespace BusinessLayer
 
         public List<Assignment> GetAllAssignmentsForUser(string userId)
         {
-            return _dbAssignment.GetAllAssignmentsForUser(userId);
+            List<Assignment> assignments = _dbAssignment.GetAllAssignmentsForUser(userId);
+
+            for (int i = 0; i < assignments.Count; i++)
+            {
+                if (!assignments[i].UserId.Equals(userId))
+                {
+                    throw new Exception("Cannot access assignments posted by other users");
+                }
+            }
+
+            return assignments;
         }
 
         public List<Assignment> GetAllAssignmentsSolvedByUser(string userId)
@@ -97,7 +108,7 @@ namespace BusinessLayer
         public int CheckUserVsAssignment(int assignmentId, string userId)
         {
             string authorUserId = _dbAssignment.GetAuthorUserId(assignmentId);
-            List<string> allSolversForAssignment = _dbSolution.GetAllSolversForAssignment(assignmentId);
+            List<string> allSolversForAssignment = _solutionBusiness.GetAllSolversForAssignment(assignmentId);
 
             if (authorUserId.Equals(userId))
             {

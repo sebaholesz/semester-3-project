@@ -74,5 +74,10 @@ namespace BusinessLayer
                 throw new Exception("Could not find your solution");
             }
         }
+
+        internal List<string> GetAllSolversForAssignment(int assignmentId)
+        {
+            return _dbSolution.GetAllSolversForAssignment(assignmentId);
+        }
     }
 }

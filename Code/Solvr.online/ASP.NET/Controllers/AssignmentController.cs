@@ -98,7 +98,7 @@ namespace webApi.Controllers
                     //we will get the id once using the CreateAssignmentWithFile method
                     int assignmentId = assignmentBusiness.CreateAssignment(assignment);
 
-                    if (assignmentId >= 0)
+                    if (assignmentId >= 1)
                     {
                         ViewBag.Message = "Assignment created successfully";
                         ViewBag.ResponseStyleClass = "text-success";
@@ -149,34 +149,37 @@ namespace webApi.Controllers
         {
             try
             {
-                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
 
-                //check if the user that tries to access the assignment isnt the author
-                if (assignment.UserId.Equals(userId))
+                /*
+                 * 0 = hes neither author nor previous solver
+                 * 1 = authorUserId = currentUserId
+                 * 2 = solverId = currentUserId
+                 */
+                switch (returnCode)
                 {
-                    return Redirect("/assignment/update-assignment/" + assignment.AssignmentId);
+                    case 0:
+                        Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                        ViewBag.Assignment = assignment;
+                        ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
+                        ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
+                        if (assignment.Anonymous)
+                        {
+                            ViewBag.Name = "";
+                        }
+                        else
+                        {
+                            ViewBag.Name = userBusiness.GetUserName(assignment.UserId);
+                        }
+                        return View("DisplayAssignment");
+                    case 1:
+                        return Redirect("/assignment/update-assignment/" + assignmentId);
+                    case 2:
+                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                    default:
+                        throw new Exception("Internal server error");
                 }
-
-                //check if the user that tries to access the assignment hasnt already solved the assignment
-                if(assignmentBusiness.CheckIfUserAlreadySolvedThisAssignment(assignment.AssignmentId, userId))
-                {
-                    return Redirect("/solution/user-solution-for-assignment/" + assignment.AssignmentId);
-                }
-
-                //if the user isnt the author nor he solved the assignment, display it in normal way
-                ViewBag.Assignment = assignment;
-                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
-                ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
-                if (assignment.Anonymous)
-                {
-                    ViewBag.Name = "";
-                }
-                else
-                {
-                    ViewBag.Name = userBusiness.GetUserName(assignment.UserId);
-                }
-                return View("DisplayAssignment");
             }
             catch (Exception e)
             {
@@ -228,18 +231,35 @@ namespace webApi.Controllers
         {
             try
             {
-                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
 
-                //check if the user who is trying to access the update page really posted the assignment and if the assignment is still active
-                if (!assignment.UserId.Equals(userId) || assignment.IsActive == false)
+                /*
+                 * 0 = hes neither author nor previous solver
+                 * 1 = authorUserId = currentUserId
+                 * 2 = solverId = currentUserId
+                 */
+                switch (returnCode)
                 {
-                    return Redirect("assignment/display-assignment/" + assignmentId);
+                    case 0:
+                        return Redirect("/assignment/display-assignment/" + assignmentId);
+                    case 1:
+                        Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                        if (assignment.IsActive)
+                        {
+                            ViewBag.Assignment = assignment;
+                            ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
+                            return View("UpdateAssignment");
+                        }
+                        else
+                        {
+                            throw new Exception("Cannot update inactive assignment");
+                        }
+                    case 2:
+                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                    default:
+                        throw new Exception("Internal server error");
                 }
-
-                ViewBag.Assignment = assignment;
-                ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
-                return View("UpdateAssignment");
             }
             catch (Exception e)
             {
@@ -261,47 +281,65 @@ namespace webApi.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
 
-                    //check if the user who is trying to access the update page really posted the assignment and if the assignment is still active
-                    if (!assignment.UserId.Equals(userId) || assignment.IsActive == false)
+                    /*
+                     * 0 = hes neither author nor previous solver
+                     * 1 = authorUserId = currentUserId
+                     * 2 = solverId = currentUserId
+                     */
+                    switch (returnCode)
                     {
-                        return Redirect("assignment/display-assignment/" + assignmentId);
-                    }
+                        case 0:
+                            return Redirect("/assignment/display-assignment/" + assignmentId);
+                        case 1:
+                            Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                            if (assignment.IsActive)
+                            {
+                                assignment.Title = collection["Title"];
+                                assignment.Description = collection["Description"];
+                                assignment.Price = Convert.ToInt32(collection["Price"]);
+                                assignment.PostDate = DateTime.Now;
+                                assignment.Deadline = Convert.ToDateTime(collection["Deadline"]);
+                                assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
+                                assignment.AcademicLevel = collection["AcademicLevel"];
+                                assignment.Subject = collection["Subject"];
+                                assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
 
-                    //TODO notify all solvers of the changes
-                    assignment.Title = collection["Title"];
-                    assignment.Description = collection["Description"];
-                    assignment.Price = Convert.ToInt32(collection["Price"]);
-                    assignment.PostDate = DateTime.Now;
-                    assignment.Deadline = Convert.ToDateTime(collection["Deadline"]);
-                    assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
-                    assignment.AcademicLevel = collection["AcademicLevel"];
-                    assignment.Subject = collection["Subject"];
-                    assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
+                                int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, assignmentId);
 
-                    int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, assignmentId);
-
-                    if (noOfRowsAffected > 0)
-                    {
-                        ViewBag.Message = "Assignment updated successfully";
-                        ViewBag.ResponseStyleClass = "text-success";
-                        ViewBag.ButtonText = "Display your assignment";
-                        ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
-                        ViewBag.PageTitle = "Assignment updated!";
-                        ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-                        ViewBag.Image = "/assets/icons/success.svg";
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Assignment update failed";
-                        ViewBag.ResponseStyleClass = "text-danger";
-                        ViewBag.ButtonText = "Go back to the assignment form";
-                        ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-                        ViewBag.PageTitle = "Assignment update failed!";
-                        ViewBag.SubMessage = "There was a server error \ntry again later";
-                        ViewBag.Image = "/assets/icons/error.svg";
+                                //TODO notify all solvers of the changes
+                                if (noOfRowsAffected > 0)
+                                {
+                                    ViewBag.Message = "Assignment updated successfully";
+                                    ViewBag.ResponseStyleClass = "text-success";
+                                    ViewBag.ButtonText = "Display your assignment";
+                                    ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
+                                    ViewBag.PageTitle = "Assignment updated!";
+                                    ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
+                                    ViewBag.Image = "/assets/icons/success.svg";
+                                }
+                                else
+                                {
+                                    ViewBag.Message = "Assignment update failed";
+                                    ViewBag.ResponseStyleClass = "text-danger";
+                                    ViewBag.ButtonText = "Go back to the assignment form";
+                                    ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
+                                    ViewBag.PageTitle = "Assignment update failed!";
+                                    ViewBag.SubMessage = "There was a server error \ntry again later";
+                                    ViewBag.Image = "/assets/icons/error.svg";
+                                }
+                                return View("UserFeedback");
+                            }
+                            else
+                            {
+                                throw new Exception("Cannot update inactive assignment");
+                            }
+                        case 2:
+                            return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                        default:
+                            throw new Exception("Internal server error");
                     }
                 }
                 else
@@ -333,39 +371,55 @@ namespace webApi.Controllers
         {
             try
             {
-                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
 
-                //check if the user who is trying to access the delete page really posted the assignment and if the assignment is still active
-                if (!assignment.UserId.Equals(userId) || assignment.IsActive == false)
+                /*
+                 * 0 = hes neither author nor previous solver
+                 * 1 = authorUserId = currentUserId
+                 * 2 = solverId = currentUserId
+                 */
+                switch (returnCode)
                 {
-                    return Redirect("assignment/display-assignment/" + assignmentId);
-                }
+                    case 0:
+                        return Redirect("/assignment/display-assignment/" + assignmentId);
+                    case 1:
+                        Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                        if (assignment.IsActive)
+                        {
+                            int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(assignmentId);
 
-                //the assignment is not deleted per se, it is just marked inactive so it is not visible in the FE
-                int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(assignmentId);
-
-                if (noOfRowsAffected > 0)
-                {
-                    ViewBag.Message = "Assignment deleted successfully";
-                    ViewBag.ResponseStyleClass = "text-success";
-                    ViewBag.ButtonText = "Go back to homepage";
-                    ViewBag.ButtonLink = "/";
-                    ViewBag.PageTitle = "Assignment deleted!";
-                    ViewBag.SubMessage = "Your assignment is now deleted";
-                    ViewBag.Image = "/assets/icons/success.svg";
+                            if (noOfRowsAffected > 0)
+                            {
+                                ViewBag.Message = "Assignment deleted successfully";
+                                ViewBag.ResponseStyleClass = "text-success";
+                                ViewBag.ButtonText = "Go back to homepage";
+                                ViewBag.ButtonLink = "/";
+                                ViewBag.PageTitle = "Assignment deleted!";
+                                ViewBag.SubMessage = "Your assignment is now deleted";
+                                ViewBag.Image = "/assets/icons/success.svg";
+                            }
+                            else
+                            {
+                                ViewBag.Message = "Assignment deletion failed";
+                                ViewBag.ResponseStyleClass = "text-danger";
+                                ViewBag.ButtonText = "Go back to the assignment form";
+                                ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
+                                ViewBag.PageTitle = "Assignment deletion failed!";
+                                ViewBag.SubMessage = "There was a server error \ntry again later";
+                                ViewBag.Image = "/assets/icons/error.svg";
+                            }
+                            return View("UserFeedback");
+                        }
+                        else
+                        {
+                            throw new Exception("Cannot delete inactive assignment");
+                        }
+                    case 2:
+                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                    default:
+                        throw new Exception("Internal server error");
                 }
-                else
-                {
-                    ViewBag.Message = "Assignment deletion failed";
-                    ViewBag.ResponseStyleClass = "text-danger";
-                    ViewBag.ButtonText = "Go back to the assignment form";
-                    ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-                    ViewBag.PageTitle = "Assignment deletion failed!";
-                    ViewBag.SubMessage = "There was a server error \ntry again later";
-                    ViewBag.Image = "/assets/icons/error.svg";
-                }
-                return View("UserFeedback");
             }
             catch (Exception e)
             {
@@ -435,54 +489,6 @@ namespace webApi.Controllers
                     ViewBag.ButtonLink = "/";
                     ViewBag.PageTitle = "No soluitons found!";
                     ViewBag.SubMessage = "You have not solved \nany assignments yet!";
-                    ViewBag.Image = "/assets/icons/error.svg";
-                    return View("UserFeedback");
-                }
-            }
-            catch (Exception e)
-            {
-                TempData["ErrorMessage"] = e.Message;
-                return Redirect("/error");
-            }
-        }
-
-        /*can be accessed by everybody who 
-         * posted the assignment
-         * and only if the assignment is still active
-         */
-        [Route("assignment/close-assignment/{assignmentId}")]
-        [HttpGet]
-        public ActionResult CloseAssignment(int assignmentId)
-        {
-            try
-            {
-                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                //check if the user who is trying to access the close page really posted the assignment and if the assignment is still active
-                if (!assignment.UserId.Equals(userId))
-                {
-                    return Redirect("assignment/display-assignment/" + assignmentId);
-                }
-                if (assignment.UserId.Equals(userId) && assignment.IsActive == false)
-                {
-                    return Redirect("/solution/solution-queue/" + assignmentId);
-                }
-
-                int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(assignmentId);
-
-                if(noOfRowsAffected == 1)
-                {
-                    return Redirect("/solution/solution-queue/" + assignmentId);
-                }
-                else
-                {
-                    ViewBag.Message = "Could not close assignment";
-                    ViewBag.ResponseStyleClass = "text-danger";
-                    ViewBag.ButtonText = "Go back to homepage";
-                    ViewBag.ButtonLink = "/";
-                    ViewBag.PageTitle = "Could not close assignment!";
-                    ViewBag.SubMessage = "There was an error!\nThe assignment was not closed";
                     ViewBag.Image = "/assets/icons/error.svg";
                     return View("UserFeedback");
                 }
