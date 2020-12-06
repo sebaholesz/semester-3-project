@@ -18,47 +18,48 @@
                 <div class="row">
                     <div class="col-md-12">
       
-                            <div class="boxed-row">
-                                <div class="row create-solution-title-block">
+                        <div class="boxed-row">
+                            <div class="row create-solution-title-block">
                                     
-                                    <div class="col-md-12 d-flex align-items-center">
-                                        <h3 class="create-solution-page-title">
-                                            @assignment.Title
-                                        </h3>
-                                        <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
-                                    </div>
+                                <div class="col-md-12 d-flex align-items-center">
+                                    <h3 class="create-solution-page-title">
+                                        @assignment.Title
+                                    </h3>
+                                    <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
+                                </div>
 
-                                </div>
                             </div>
+                        </div>
 
-                            <div class="row ">
-                                <div class="col-md-7">
-                                    <div class="boxed-row d-flex align-items-center">
-                                        @if (solution.Anonymous)
-                                        {
-                                            <p>you posted this solution anonymously</p>
-                                        }
-                                        else
-                                        {
-                                            <p>you posted this solution publicly</p>
-                                        }
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="boxed-row">
-                                        download file
-                                    </div>
+                        <div class="row ">
+                            <div class="col-md-7">
+                                <div class="boxed-row d-flex align-items-center h-100">
+                                    @if (solution.Anonymous)
+                                    {
+                                        <p>you posted this solution anonymously</p>
+                                    }
+                                    else
+                                    {
+                                        <p>you posted this solution publicly</p>
+                                    }
                                 </div>
                             </div>
-                            <div class="boxed-row solution-description-detail-container">
-                                <div class="solution-description-detail-content height-max">
-                                    <div class="solution-description">
-                                        <p>
-                                            @solution.Description
-                                        </p>
-                                    </div>
+                            <div class="col-md-5">
+                                <div class="boxed-row">
+                                    download file
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="boxed-row solution-description-detail-container">
+                            <div class="solution-description-detail-content height-max">
+                                <div class="solution-description">
+                                    <p>
+                                        @solution.Description
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

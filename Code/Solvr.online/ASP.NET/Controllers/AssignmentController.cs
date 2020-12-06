@@ -150,9 +150,6 @@ namespace webApi.Controllers
             try
             {
                 Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
-                ViewBag.Assignment = assignment;
-                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
-
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 //check if the user that tries to access the assignment isnt the author
@@ -168,6 +165,8 @@ namespace webApi.Controllers
                 }
 
                 //if the user isnt the author nor he solved the assignment, display it in normal way
+                ViewBag.Assignment = assignment;
+                ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
                 ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
                 if (assignment.Anonymous)
                 {

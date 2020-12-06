@@ -23,7 +23,7 @@
                                 <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
                             </div>
                             <div class="col-md-3 d-flex align-items-center justify-content-end">
-                                <button type="submit" class="btn-publish-assignment">
+                                <button type="submit" class="btn btn-publish-assignment">
                                     Publish
                                 </button>
                             </div>
@@ -78,7 +78,7 @@
                                         Academic Level
                                     </label>
                                     <br />
-                                    <select asp-for="AcademicLevel" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
+                                    <select asp-for="AcademicLevel" class="form-control">
                                         <option value="" selected>Choose academical level</option>
                                         @foreach (var option in ViewBag.AcademicLevels)
                                         {
@@ -93,7 +93,7 @@
                                         Subject
                                     </label>
                                     <br />
-                                    <select asp-for="Subject" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
+                                    <select asp-for="Subject" class="form-control">
                                         <option value="" selected>Choose subject</option>
                                         @foreach (var option in ViewBag.Subjects)
                                         {

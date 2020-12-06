@@ -166,7 +166,6 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-
         public int UpdateAssignment(Assignment assignment, int id)
         {
             try

@@ -1,23 +1,7 @@
 ﻿@model ModelLayer.Assignment
 
 @{
-
     var solutions = ViewBag.Solutions;
-    var authorOfAssignment = (bool)ViewData["AuthorOfAssignment"];
-    var showSolvedByUser = (bool)ViewData["ShowSolvedByUser"];
-    //var actionLink = "";
-    //if (authorOfAssignment && Model.IsActive)
-    //{
-    //    actionLink = "/assignment/update-assignment/" + Model.AssignmentId;
-    //}
-    //else if (showSolvedByUser)
-    //{
-    //    actionLink = "/solution/user-solution-for-assignment/" + Model.AssignmentId;
-    //}
-    //else
-    //{
-    //    actionLink = "/assignment/display-assignment/" + Model.AssignmentId;
-    //}
 }
 
 <a href="/assignment/display-assignment/@Model.AssignmentId" class="assignment-card">
@@ -34,6 +18,7 @@
                 @Model.Title - Inactive
             </h5>
         }
+
         <div class="card-body d-inline-flex w-100 assignment-card">
             <div class="col-md-6 card-text">
                 <div class="card-academicLevel">
