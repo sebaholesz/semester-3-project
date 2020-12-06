@@ -21,6 +21,39 @@ namespace BusinessLayer
 
         }
 
+        public int CreateSolution(Solution solution)
+        {
+            if (_validateSolution.CheckInput(solution))
+            {
+                List<Solution> solutionsBefore = _dbSolution.GetSolutionsByAssignmentId(solution.AssignmentId);
+                int queueLengthBefore = solutionsBefore.Count;
+
+                //check if the last one that is in the queue was earlier than the current one
+                if (queueLengthBefore > 0)
+                {
+                    if (DateTime.Compare(solution.Timestamp, solutionsBefore[queueLengthBefore - 1].Timestamp) <= 0)
+                    {
+                        return -1;
+                    }
+                }
+
+                //check that the assignment is still active
+                if(!_assignmentBusiness.CheckIfAssignmentIsStillActive(solution.AssignmentId))
+                {
+                    throw new Exception("Cannot post solutions to inactive assignments");
+                }
+
+                List<Solution> solutionsAfter = _dbSolution.GetSolutionsByAssignmentId(solution.AssignmentId);
+                int queueLengthAfter = solutionsAfter.Count;
+
+                if (_dbSolution.CreateSolution(solution) > 0)
+                {
+                    return queueLengthAfter + 1;
+                }
+            }
+            return -1;
+        }
+
         public List<Solution> GetAllSolutions()
         {
             return _dbSolution.GetAllSolutions();
@@ -31,15 +64,6 @@ namespace BusinessLayer
             return _dbSolution.GetSolutionsByAssignmentId(id);
         }
 
-        public int CreateSolution(Solution solution)
-        {
-            if (_validateSolution.CheckInput(solution))
-            {
-                return _dbSolution.CreateSolution(solution);
-            }
-            return -1;
-
-        }
         public Solution GetBySolutionId(int id)
         {
             return _dbSolution.GetBySolutionId(id);
@@ -49,6 +73,7 @@ namespace BusinessLayer
         {
             return _dbSolution.UpdateSolution(solution, id);
         }
+        
         public int DeleteSolution(int id)
         {
             return _dbSolution.DeleteSolution(id);
@@ -75,7 +100,7 @@ namespace BusinessLayer
             }
         }
 
-        internal List<string> GetAllSolversForAssignment(int assignmentId)
+        public List<string> GetAllSolversForAssignment(int assignmentId)
         {
             return _dbSolution.GetAllSolversForAssignment(assignmentId);
         }

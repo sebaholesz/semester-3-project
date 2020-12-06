@@ -29,18 +29,22 @@ namespace BusinessLayer
         {
             return _dbAssignment.GetAllActiveAssignmentsNotSolvedByUser(userId);
         }
+       
         public List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId)
         {
             return _dbAssignment.GetAllInactiveAssignmentsNotSolvedByUser(userId);
         }
+        
         public List<Assignment> GetAllActiveAssignments()
         {
             return _dbAssignment.GetAllActiveAssignments();
         }
+        
         public List<Assignment> GetAllInactiveAssignments()
         {
             return _dbAssignment.GetAllInactiveAssignments();
         }
+        
         public int CreateAssignment(Assignment assignment)
         {
             if (_assignmentValidation.CheckInput(assignment))
@@ -50,6 +54,7 @@ namespace BusinessLayer
             return -1;
 
         }
+
         public Assignment GetByAssignmentId(int id)
         {
             return _dbAssignment.GetByAssignmentId(id);
@@ -58,6 +63,11 @@ namespace BusinessLayer
         public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)
         {
             return _dbAssignment.CheckIfUserAlreadySolvedThisAssignment(asignmentId, userId);
+        }
+
+        public bool CheckIfAssignmentIsStillActive(int assignmentId)
+        {
+            return _dbAssignment.CheckIfAssignmentIsStillActive(assignmentId);
         }
         public int UpdateAssignment(Assignment assignment, int id)
         {

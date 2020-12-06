@@ -108,7 +108,7 @@ namespace webApi.Controllers
                                 await files.CopyToAsync(dataStream);
 
                                 solution = new Solution(
-                                    Convert.ToInt32(collection["Solution.AssignmentId"]),
+                                    assignmentId,
                                     collection["Solution.Description"],
                                     DateTime.Now,
                                     Convert.ToBoolean(collection["Solution.Anonymous"][0]),
@@ -120,7 +120,7 @@ namespace webApi.Controllers
                             else
                             {
                                 solution = new Solution(
-                                    Convert.ToInt32(collection["Solution.AssignmentId"]),
+                                    assignmentId,
                                     collection["Solution.Description"],
                                     DateTime.Now,
                                     Convert.ToBoolean(collection["Solution.Anonymous"][0]),
@@ -145,7 +145,7 @@ namespace webApi.Controllers
                                 ViewBag.Message = "Solution creation failed";
                                 ViewBag.ResponseStyleClass = "text-danger";
                                 ViewBag.ButtonText = "Go back to the solution form";
-                                ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
+                                ViewBag.ButtonLink = "/solution/assignment/" + assignmentId;
                                 ViewBag.PageTitle = "Solution creation failed!";
                                 ViewBag.SubMessage = "You are not in the queue";
                                 ViewBag.Image = "/assets/icons/error.svg";

@@ -61,10 +61,10 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public void GetFileFromDB(int id)
+        public void GetFileFromDB(int assignmentId)
         {
             //TODO create a default path for users to download file
-            byte[] fileData = _db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = id });
+            byte[] fileData = _db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
 
             using (MemoryStream ms = new MemoryStream(fileData))
             {
@@ -140,19 +140,31 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public Assignment GetByAssignmentId(int id)
+        public Assignment GetByAssignmentId(int assignmentId)
         {
             try
             {
                 // TODO handle getting "empty" ids
-                return _db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return _db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (SqlException e)
             {
                 throw e;
             }
         }
-
+        
+        public bool CheckIfAssignmentIsStillActive(int assignmentId)
+        {
+            try
+            {
+                return _db.QueryFirst<bool>("Select [isActive]) from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        
         public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId) 
         {
             try
@@ -166,13 +178,12 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public int UpdateAssignment(Assignment assignment, int id)
+        public int UpdateAssignment(Assignment assignment, int assignmentId)
         {
             try
             {
-                int numberOfRowsAffected = _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
-                    new { title = assignment.Title, assignmentId = id, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
-                return numberOfRowsAffected;
+                return = _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
+                    new { title = assignment.Title, assignmentId = assignmentId, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
             }
             catch (SqlException e)
             {
@@ -180,11 +191,11 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public int MakeAssignmentInactive(int id)
+        public int MakeAssignmentInactive(int assignmentId)
         {
             try
             {
-                return _db.Execute("Update [dbo].[Assignment] set isActive=0 where assignmentId=@assignmentId", new { assignmentId = id });
+                return _db.Execute("Update [dbo].[Assignment] set isActive=0 where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (SqlException e)
             {
@@ -216,11 +227,11 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public int DeleteAssignment(int id)
+        public int DeleteAssignment(int assignmentId)
         {
             try
             {
-                return _db.Execute("DELETE * FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return _db.Execute("DELETE * FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (SqlException e)
             {

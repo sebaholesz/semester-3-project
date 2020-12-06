@@ -5,14 +5,14 @@ namespace DatabaseLayer.RepositoryLayer
 {
     public interface IDbSolution
     {
-        List<Solution> GetAllSolutions();
         int CreateSolution(Solution solution);
+        List<Solution> GetAllSolutions();
+        List<Solution> GetSolutionsByAssignmentId(int id);
         Solution GetBySolutionId(int id);
+        Solution GetSolutionByAssignmentId(int assignmentId);
         int UpdateSolution(Solution solution, int id);
         int DeleteSolution(int id);
-        List<Solution> GetSolutionsByAssignmentId(int id);
         int ChooseSolution(int solutionId);
-        Solution GetSolutionByAssignmentId(int assignmentId);
         List<string> GetAllSolversForAssignment(int assignmentId);
     }
 }
