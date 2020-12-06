@@ -10,7 +10,7 @@ namespace Solvr.online_desktop.AppWindow
         public MainWindow()
         {
             InitializeComponent();
-            FrameDefault.Content = new HomePage();
+            FrameDefault.Content = new LoginPage();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Solvr.online_desktop.AppWindow
 
         private void ButtonGoBack_Click(object sender, RoutedEventArgs e)
         {
-            mw.FrameDefault.Content = new AssignmentWindow();
+            mw.FrameDefault.Content = new HomePage();
         }
 
         private void ButtonUpdateAssignment_Click(object sender, RoutedEventArgs e)

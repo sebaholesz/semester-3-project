@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
 namespace Solvr.online_desktop.LoginWindow
 {
@@ -16,9 +15,7 @@ namespace Solvr.online_desktop.LoginWindow
         private void ButtonLogin_Click(object sender, RoutedEventArgs e)
         {
             AppWindow.MainWindow mw = new AppWindow.MainWindow();
-            object content = mw.Content;
-
-            mw.Content = null;
+            mw.Show();
         }
     }
 }
