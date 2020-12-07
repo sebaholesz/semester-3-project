@@ -325,11 +325,14 @@ namespace webApi.Controllers
                                 assignment.Title = collection["Title"];
                                 assignment.Description = collection["Description"];
                                 assignment.Price = Convert.ToInt32(collection["Price"]);
-                                assignment.Deadline = Convert.ToDateTime(collection["Deadline"]);
+                                //maybe the parse not needed?
+                                assignment.Deadline = DateTime.Parse(collection["Deadline"]);
                                 assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
                                 assignment.AcademicLevel = collection["AcademicLevel"];
                                 assignment.Subject = collection["Subject"];
-                                assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
+
+                                //TODO check if the file should be updated
+                                //assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
 
                                 int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, assignmentId);
 
