@@ -29,7 +29,7 @@ namespace DatabaseLayer.DataAccessLayer
                 {
                     try
                     {
-                        int lastUsedId = _db.ExecuteScalar<int>(
+                        lastUsedId = _db.ExecuteScalar<int>(
                             @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous, accepted) " +
                             "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0); SELECT SCOPE_IDENTITY()",
                             new

@@ -27,7 +27,6 @@ namespace ModelLayer
         public string Subject { get; set; }
         public bool IsActive { get; set; }
         public byte[] AssignmentFile { get; set; }
-        public bool IsActive { get; set; }
 
         public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] assignmentFile, string userId)
         {

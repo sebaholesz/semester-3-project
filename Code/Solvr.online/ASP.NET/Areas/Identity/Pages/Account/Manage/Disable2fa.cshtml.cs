@@ -10,11 +10,19 @@ namespace ASP.NET.Areas.Identity.Pages.Account.Manage
 {
     public class Disable2faModel : PageModel
     {
+        private readonly UserManager<User> _userManager;
+        private readonly ILogger<Disable2faModel> _logger;
+
+        public Disable2faModel(
+            UserManager<User> userManager,
+            ILogger<Disable2faModel> logger)
+        {
             _userManager = userManager;
             _logger = logger;
         }
 
         [TempData]
+        public string StatusMessage { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
