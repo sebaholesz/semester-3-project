@@ -22,8 +22,8 @@ namespace Solvr.online_desktop.AppWindow
             TextBoxDescription.Text = description;
             //TextBoxAuthor.Text = author;
             TextBoxPrice.Text = price.ToString();
-            DateTimeDeadline.DateTime = deadline;
             TextBoxPostDate.Text = postDate.ToString();
+            DatePickerDeadline.Text = deadline.ToString();
             CheckBoxAnonymous.IsChecked = anonymous;
             ComboBoxAcademicLevel.ItemsSource = academicLevel;
             ComboBoxSubject.ItemsSource = subject;
@@ -36,8 +36,8 @@ namespace Solvr.online_desktop.AppWindow
 
         private void ButtonUpdateAssignment_Click(object sender, RoutedEventArgs e)
         {
-            ApiAssignment.UpdateAssignment(id, TextBoxTitle.Text, TextBoxDescription.Text, Convert.ToInt32(TextBoxPrice.Text),
-                (DateTime)DateTimeDeadline.DateTime, (bool)CheckBoxAnonymous.IsChecked, ComboBoxAcademicLevel.Text, ComboBoxSubject.Text);
+            ApiAssignment.UpdateAssignment(id, TextBoxTitle.Text, TextBoxDescription.Text, Convert.ToInt32(TextBoxPrice.Text), DateTime.Parse(TextBoxPostDate.Text),
+                DatePickerDeadline.DisplayDate, (bool)CheckBoxAnonymous.IsChecked, ComboBoxAcademicLevel.Text, ComboBoxSubject.Text);
         }
     }
 }

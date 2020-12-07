@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Solvr.online_desktop.AppWindow"
       mc:Ignorable="d"       
-      Title="LoginPage" MaxHeight="400" MaxWidth="600" d:DesignWidth="245.343" d:DesignHeight="104.02" FontSize="20">
+      Title="LoginPage" MaxHeight="400" MaxWidth="600" d:DesignWidth="369.343" d:DesignHeight="222.02" FontSize="20">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
             <RowDefinition Height="*"/>

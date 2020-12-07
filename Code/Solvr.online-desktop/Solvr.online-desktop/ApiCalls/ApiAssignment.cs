@@ -26,13 +26,13 @@ namespace Solvr.online_desktop.ApiCalls
             }
         }
 
-        public static HttpResponseMessage UpdateAssignment(int assignmentId, string title, string description, int price, DateTime deadline, Boolean anonymous, string academicLevel, string subject)
+        public static HttpResponseMessage UpdateAssignment(int assignmentId, string title, string description, int price, DateTime postDate, DateTime deadline, Boolean anonymous, string academicLevel, string subject)
         {
             HttpClient client = new HttpClient
             {
                 BaseAddress = new Uri("https://localhost:44395/")
             };
-            Assignment assignment = new Assignment(title, description, price, deadline, anonymous, academicLevel, subject);
+            Assignment assignment = new Assignment(title, description, price, postDate, deadline, anonymous, academicLevel, subject);
 
             string url = "apiV1/assignment/" + assignmentId;
             HttpResponseMessage response = client.PutAsJsonAsync(url, assignment).Result;

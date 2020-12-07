@@ -5,6 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Solvr.online_desktop"
         mc:Ignorable="d"
-        Title="MainWindow" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="300" Width="550">
+        Title="Solvr.online" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="300" Width="550" WindowStyle="ToolWindow">
     <Frame x:Name="FrameDefault" Background="LightBlue" NavigationUIVisibility="Hidden"/>
 </Window>

@@ -69,6 +69,7 @@
                 </Style>
             </Button.Style>
         </Button>
+        
 
         <!--Main Window-->       
         <Button Name="ButtonUpdate" Grid.Row="1" Grid.Column="6" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonUpdate_Click">Update</Button>
@@ -80,7 +81,7 @@
                     <Setter Property="Background" Value="LightBlue" />
                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                     <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                    <Setter Property="BorderThickness" Value="0,1,1,1"/>
                 </Style>
             </DataGrid.Resources>
         </DataGrid>

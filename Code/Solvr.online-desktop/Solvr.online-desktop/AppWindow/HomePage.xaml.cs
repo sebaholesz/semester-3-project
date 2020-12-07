@@ -29,6 +29,7 @@ namespace Solvr.online_desktop.AppWindow
             if (ApiAssignment.GetAllAssignments() != null)
             {
                 DataGridAssignments.ItemsSource = ApiAssignment.GetAllAssignments();
+                DataGridAssignments.Columns[2].Width = 300;
                 DataGridAssignments.Visibility = Visibility.Visible;
                 ButtonUpdate.Visibility = Visibility.Visible;
                 ButtonMakeActive.Visibility = Visibility.Visible;
