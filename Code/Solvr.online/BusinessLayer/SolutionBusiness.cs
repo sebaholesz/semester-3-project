@@ -7,18 +7,21 @@ using System.Collections.Generic;
 
 namespace BusinessLayer
 {
-    public class SolutionBusiness
+    public sealed class SolutionBusiness
     {
+        private static readonly SolutionBusiness _solutionBusinessInstance = new SolutionBusiness();
         private readonly IDbSolution _dbSolution;
-        private readonly AssignmentBusiness _assignmentBusiness;
         private readonly SolutionInputValidation _validateSolution;
 
-        public SolutionBusiness()
+        private SolutionBusiness()
         {
             _dbSolution = new DbSolution();
-            _assignmentBusiness = new AssignmentBusiness();
             _validateSolution = new SolutionInputValidation();
+        }
 
+        public static SolutionBusiness GetSolutionBusiness()
+        {
+            return _solutionBusinessInstance;
         }
 
         public int CreateSolution(Solution solution)
@@ -38,7 +41,7 @@ namespace BusinessLayer
                 }
 
                 //check that the assignment is still active
-                if(!_assignmentBusiness.CheckIfAssignmentIsStillActive(solution.AssignmentId))
+                if(!AssignmentBusiness.GetAssignmentBusiness().CheckIfAssignmentIsStillActive(solution.AssignmentId))
                 {
                     throw new Exception("Cannot post solutions to inactive assignments");
                 }
@@ -71,6 +74,7 @@ namespace BusinessLayer
 
         public int UpdateSolution(Solution solution, int id)
         {
+
             return _dbSolution.UpdateSolution(solution, id);
         }
         
@@ -82,7 +86,7 @@ namespace BusinessLayer
         public bool ChooseSolution(int solutionId, int assignmentId)
         {
             bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1 ? true : false; ;
-            bool successfulyMadeInactive = _assignmentBusiness.MakeAssignmentInactive(assignmentId) == 1 ? true : false;
+            bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeAssignmentInactive(assignmentId) == 1 ? true : false;
             return successfulyAccepted && successfulyMadeInactive;
         }
 

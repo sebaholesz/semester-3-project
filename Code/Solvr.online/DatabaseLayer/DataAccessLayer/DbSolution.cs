@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Utility.HildurConnection;
 
 namespace DatabaseLayer.DataAccessLayer
 {
@@ -29,7 +30,7 @@ namespace DatabaseLayer.DataAccessLayer
                     try
                     {
                         lastUsedId = _db.ExecuteScalar<int>(
-                            @"INSERT INTO [dbo].[Solution](assignmentId, description, timestamp, solutionRating, anonymous, accepted, userId) " +
+                            @"INSERT INTO [dbo].[Solution] (assignmentId, description, timestamp, solutionRating, anonymous, accepted, userId) " +
                             "VALUES (@assignmentId, @description, @timestamp, @solutionRating, @anonymous, 0, @userId); SELECT SCOPE_IDENTITY()",
                             new
                             {

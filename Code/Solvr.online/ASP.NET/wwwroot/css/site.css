@@ -74,9 +74,7 @@ button:focus {
         color: #aeb4b5;
     }
 
-    .btn-default-style:visited,
     .btn-default-style:hover,
-    .btn-default-style:active,
     .btn-default-style:focus {
         color: #ffffff;
         background-color: #025266;
@@ -342,10 +340,19 @@ a:hover {
     }
 
 .user-sidebar-username {
+    margin-top: 10px;
     text-align: center;
+}
+
+.user-sidebar-username a
+{
     font-size: 1.3em;
     color: #FFFFFF;
 }
+
+    .user-sidebar-username a:hover {
+        color: #bebebe;
+    }
 
 .user-sidebar-bio {
     margin-bottom: 40px;

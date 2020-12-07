@@ -2,6 +2,7 @@
 using DatabaseLayer.RepositoryLayer;
 using System.Data;
 using System.Data.SqlClient;
+using Utility.HildurConnection;
 
 namespace DatabaseLayer.DataAccessLayer
 {

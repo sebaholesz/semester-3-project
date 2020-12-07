@@ -1,4 +1,4 @@
-﻿namespace DatabaseLayer
+﻿namespace Utility.HildurConnection
 {
     public static class HildurConnectionString
     {

@@ -4,7 +4,7 @@
  
 	  [userId] NVARCHAR(450) NOT NULL,
 
-      [levelOfPriviliges] VARCHAR(50) NOT NULL,
+      [levelOfPriviliges] NVARCHAR(50) NOT NULL,
 
 	  constraint fkMuserId foreign key(userId) references [User](userId),
 
@@ -16,11 +16,11 @@ CREATE TABLE [dbo].[Customer]
 
    	 [userId] NVARCHAR(450) NOT NULL,
 
-     [title] VARCHAR(50) NOT NULL, 
+     [title] NVARCHAR(50) NOT NULL, 
 
      [rating] FLOAT NOT NULL, 
 
-     [facebookAccountUrl] VARCHAR(50) NOT NULL, 
+     [facebookAccountUrl] NVARCHAR(150) NOT NULL, 
 
      [credit] FLOAT NOT NULL
 
@@ -34,7 +34,7 @@ CREATE TABLE [dbo].[Customer]
  (
 	 [userId] NVARCHAR(450) NOT NULL,
 
-     [watchlistType] VARCHAR(50) NOT NULL, 
+     [watchlistType] NVARCHAR(50) NOT NULL, 
 
 	 [noOfItems] INT NOT NULL, 
 
@@ -48,7 +48,7 @@ CREATE TABLE [dbo].[Customer]
 
  	 [userId] NVARCHAR(450) NOT NULL,
 
-     [interest] VARCHAR(50) NOT NULL,
+     [interest] NVARCHAR(50) NOT NULL,
 
 	 constraint fkCIcustomerId foreign key(userId) references [User](userId),
 
@@ -60,45 +60,43 @@ CREATE TABLE [dbo].[Customer]
 
   	 [userId] NVARCHAR(450) NOT NULL,
 
-     [educationProgram] VARCHAR(50) NOT NULL,
+     [educationProgram] NVARCHAR(50) NOT NULL,
 
-	 [institution] VARCHAR(50) NOT NULL,
+	 [institution] NVARCHAR(50) NOT NULL,
 
-	 [duration] VARCHAR(50) NOT NULL,
+	 [duration] NVARCHAR(50) NOT NULL,
 
 	 constraint fkCEcustomerId foreign key(userId) references [User](userId),
  )
 
- CREATE TABLE [dbo].[Assignment]
+CREATE TABLE [dbo].[Assignment] (
 
- (
-
-     [assignmentId] INT NOT NULL PRIMARY KEY IDENTITY(1,1), 
-
-     [title] VARCHAR(50) NOT NULL, 
-
-     [description] VARCHAR(50) NOT NULL, 
-
-     [price] INT NOT NULL, 
-	 
-     [postDate] DATETIME NOT NULL,
-
-     [deadline] DATETIME NOT NULL, 
-
-     [anonymous] BIT NOT NULL, 
-	 
-	 [academicLevel] VARCHAR(50) NOT NULL DEFAULT 'None',
-	 
-	 [subject] VARCHAR(50) NOT NULL DEFAULT 'None' ,
-
-	 [isActive] BIT NOT NULL,
-	 
-	 [userId] NVARCHAR(450) NOT NULL
-
-     constraint fkAcademicLevel foreign key(academicLevel) references [AcademicLevel](academicLevelName)  ON DELETE SET DEFAULT ON UPDATE CASCADE,
-	 constraint fkSubject foreign key([subject]) references [Subject](subjectName)  ON DELETE SET DEFAULT ON UPDATE CASCADE,
-
- )
+    [assignmentId]  INT            IDENTITY (1, 1) NOT NULL,
+    
+	[title]         NVARCHAR(75)   NOT NULL,
+    
+	[description]   NVARCHAR(1200)   NOT NULL,
+    
+	[price]         INT CHECK (price > 0 AND price <10000) NOT NULL,
+    
+	[postDate]      DATETIME       NOT NULL,
+    
+	[deadline]      DATETIME       NOT NULL,
+    
+	[anonymous]     BIT            NOT NULL,
+    
+	[academicLevel] NVARCHAR(50)   DEFAULT ('None') NOT NULL,
+    
+	[subject]       NVARCHAR(50)   DEFAULT ('None') NOT NULL,
+    
+	[isActive]      BIT            NOT NULL,
+    
+	[userId]        NVARCHAR (450) NOT NULL,
+    
+	PRIMARY KEY CLUSTERED ([assignmentId] ASC),
+    CONSTRAINT [fkAcademicLevel] FOREIGN KEY ([academicLevel]) REFERENCES [dbo].[AcademicLevel] ([academicLevelName]) ON DELETE SET DEFAULT ON UPDATE CASCADE,
+    CONSTRAINT [fkSubject] FOREIGN KEY ([subject]) REFERENCES [dbo].[Subject] ([subjectName]) ON DELETE SET DEFAULT ON UPDATE CASCADE
+);
 
    CREATE TABLE [dbo].[StickyNote]
 
@@ -106,7 +104,7 @@ CREATE TABLE [dbo].[Customer]
 
      [assignmentId] INT NOT NULL,
 
-     [text] VARCHAR(50) NOT NULL,
+     [text] NVARCHAR(50) NOT NULL,
 
 	 constraint fkSNassignmentId foreign key(assignmentId) references [Assignment](assignmentId),
  )
@@ -117,7 +115,7 @@ CREATE TABLE [dbo].[Customer]
 
      [assignmentId] INT NOT NULL ,
 
-     [text] VARCHAR(50) NOT NULL,
+     [text] NVARCHAR(50) NOT NULL,
 
 	 constraint fkACassignmentId foreign key(assignmentId) references [Assignment](assignmentId),
  )
@@ -132,7 +130,7 @@ CREATE TABLE [dbo].[Customer]
 
  	 [userId] NVARCHAR(450) NOT NULL,
 
-     [description] VARCHAR(50) NOT NULL,
+     [description] NVARCHAR(1200) NOT NULL,
 
      [timestamp] DATETIME NOT NULL,
 
@@ -178,7 +176,7 @@ CREATE TABLE [dbo].[Customer]
 
      [forumId] INT NOT NULL,
 
-     [title] VARCHAR(50) NOT NULL,
+     [title] NVARCHAR(50) NOT NULL,
 
  	 [userId] NVARCHAR(450) NOT NULL,
 
@@ -198,7 +196,7 @@ CREATE TABLE [dbo].[Comment]
 
  	 [userId] NVARCHAR(450) NOT NULL,
 
-     [text] VARCHAR(50) NOT NULL,
+     [text] NVARCHAR(50) NOT NULL,
 
      [anonymous] BIT NOT NULL,
 
@@ -208,12 +206,12 @@ CREATE TABLE [dbo].[Comment]
 
 CREATE TABLE [dbo].[AcademicLevel]
  (
-	academicLevelName VARCHAR(50) NOT NULL PRIMARY KEY
+	academicLevelName NVARCHAR(50) NOT NULL PRIMARY KEY
  )
 
 CREATE TABLE [dbo].[Subjects]
  (
-	subjectName VARCHAR(50) NOT NULL PRIMARY KEY
+	subjectName NVARCHAR(50) NOT NULL PRIMARY KEY
  )
 
 create table [dbo].[AssignmentFile] (

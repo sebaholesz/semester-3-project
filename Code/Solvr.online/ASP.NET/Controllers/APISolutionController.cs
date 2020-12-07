@@ -15,7 +15,7 @@ namespace WebApi.Controllers
 
         public APISolutionController()
         {
-            solutionBusiness = new SolutionBusiness();
+            solutionBusiness = SolutionBusiness.GetSolutionBusiness();
         }
 
         [Route("solution")]

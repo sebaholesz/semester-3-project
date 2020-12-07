@@ -20,8 +20,8 @@ namespace webApi.Controllers
 
         public SolutionController()
         {
-            assignmentBusiness = new AssignmentBusiness();
-            solutionBusiness = new SolutionBusiness();
+            assignmentBusiness = AssignmentBusiness.GetAssignmentBusiness();
+            solutionBusiness = SolutionBusiness.GetSolutionBusiness();
             userBusiness = new UserBusiness();
         }
 
@@ -63,7 +63,7 @@ namespace webApi.Controllers
                     case 1:
                         return Redirect("/assignment/update-assignment/" + assignmentId);
                     case 2:
-                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                     default:
                         throw new Exception("Internal server error");
                 }
@@ -80,17 +80,16 @@ namespace webApi.Controllers
          * and hasnt solved it yet 
          * and is logged in
          */
-        [Route("solution/assignment")]
+        [Route("solution/assignment/{assignmentId}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateSolution(IFormCollection collection, IFormFile files)
+        public async Task<ActionResult> CreateSolution(IFormCollection collection, IFormFile files, int assignmentId)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    int assignmentId = Convert.ToInt32(collection["Solution.AssignmentId"]);
                     int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId , userId);
                     int queueOrder;
 
@@ -155,7 +154,7 @@ namespace webApi.Controllers
                         case 1:
                             return Redirect("/assignment/update-assignment/" + assignmentId);
                         case 2:
-                            return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                            return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                         default:
                             throw new Exception("Internal server error");
                     }
@@ -220,14 +219,15 @@ namespace webApi.Controllers
                             return View("UserFeedback");
                         }
                     case 2:
-                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                     default:
                         throw new Exception("Internal server error");
                 }
             }
             catch (Exception e)
             {
-                throw e;
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
         }
 
@@ -273,7 +273,7 @@ namespace webApi.Controllers
                         }
                         return View("UserFeedback");
                     case 2:
-                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                     default:
                         throw new Exception("Internal server error");
                 }
@@ -306,7 +306,7 @@ namespace webApi.Controllers
          * posted the assignment  
          * and is logged in
          */
-        [Route("solution/user-solution-for-assignment/{assignmentId}")]
+        [Route("solution/solution-for-assignment/{assignmentId}")]
         [HttpGet]
         public ActionResult DisplayAcceptedSolutionByAssignmentId(int assignmentId)
         {
@@ -314,28 +314,95 @@ namespace webApi.Controllers
             {
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 Solution solution = solutionBusiness.GetSolutionByAssignmentId(assignmentId);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
 
-                Assignment solvedAssignment = assignmentBusiness.GetByAssignmentId(assignmentId);
-                if (!solvedAssignment.IsActive)
+                /*
+                 * 0 = hes neither author nor previous solver
+                 * 1 = authorUserId = currentUserId
+                 * 2 = solverId = currentUserId
+                 */
+                switch (returnCode)
                 {
-                    ViewBag.Assignment = solvedAssignment;
-                    ViewBag.Solution = solution;
+                    case 0:
+                        return Redirect("/assignment/display-assignment/" + assignmentId);
+                    case 1:
+                        Assignment solvedAssignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+                        if (!solvedAssignment.IsActive)
+                        {
+                            ViewBag.Assignment = solvedAssignment;
+                            ViewBag.Solution = solution;
 
-                    ViewBag.Username = userBusiness.GetUserUsername(solvedAssignment.UserId);
-                    if (solvedAssignment.Anonymous)
-                    {
-                        ViewBag.Name = "";
-                    }
-                    else
-                    {
-                        ViewBag.Name = userBusiness.GetUserName(solvedAssignment.UserId);
-                    }
-
-                    return View("DisplaySolution");
+                            ViewBag.Username = userBusiness.GetUserUsername(solvedAssignment.UserId);
+                            if (solvedAssignment.Anonymous)
+                            {
+                                ViewBag.Name = "";
+                            }
+                            else
+                            {
+                                ViewBag.Name = userBusiness.GetUserName(solvedAssignment.UserId);
+                            }
+                            return View("DisplaySolution");
+                        }
+                        else
+                        {
+                            throw new Exception("The assignment is not closed yet");
+                        }
+                    case 2:
+                        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                    default:
+                        throw new Exception("Internal server error");
                 }
-                else
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        /*can be accessed by everybody who 
+        * posted the solution  
+        * and is logged in
+        */
+        [Route("solution/my-solution-for-assignment/{assignmentId}")]
+        [HttpGet]
+        public ActionResult DisplayMySolutionByAssignmentId(int assignmentId)
+        {
+            try
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                Solution solution = solutionBusiness.GetSolutionByAssignmentId(assignmentId);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
+                Assignment solvedAssignment = assignmentBusiness.GetByAssignmentId(assignmentId);
+
+                /*
+                 * 0 = hes neither author nor previous solver
+                 * 1 = authorUserId = currentUserId
+                 * 2 = solverId = currentUserId
+                 */
+                switch (returnCode)
                 {
-                    throw new Exception("The assignment is not closed yet");
+                    case 0:
+                        return Redirect("/assignment/display-assignment/" + assignmentId);
+                    case 1:
+                        return Redirect("/assignment/display-assignment/" + assignmentId);
+                    case 2:
+                        ViewBag.Assignment = solvedAssignment;
+                        ViewBag.Solution = solution;
+
+                        ViewBag.Username = userBusiness.GetUserUsername(solvedAssignment.UserId);
+                        if (solvedAssignment.Anonymous)
+                        {
+                            ViewBag.Name = "";
+                        }
+                        else
+                        {
+                            ViewBag.Name = userBusiness.GetUserName(solvedAssignment.UserId);
+                        }
+
+                        return View("DisplaySolution");
+                    default:
+                        throw new Exception("Internal server error");
                 }
             }
             catch (Exception e)

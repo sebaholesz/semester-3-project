@@ -5,13 +5,13 @@ using System.ComponentModel.DataAnnotations;
 namespace ModelLayer
 {
     public class Assignment
-    {
+    {       
         public int AssignmentId { get; set; }
         [Required]
-        [StringLength(30)]
+        [StringLength(75)]
         public string Title { get; set; }
         [Required]
-        [StringLength(500)]
+        [StringLength(1200)]
         public string Description { get; set; }
         public string UserId { get; set; }
         [Required]
@@ -54,6 +54,7 @@ namespace ModelLayer
             this.Subject = subject;
             this.UserId = userId;
         }
+        
         public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] assignmentFile, string userId, bool isActive)
         {
             this.Title = title;
@@ -68,6 +69,7 @@ namespace ModelLayer
             this.UserId = userId;
             this.IsActive = isActive;
         }
+        
         public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject, string userId, bool isActive)
         {
             this.Title = title;
@@ -81,6 +83,7 @@ namespace ModelLayer
             this.UserId = userId;
             this.IsActive = isActive;
         }
+        
         public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] assignmentFile)
         {
             this.Title = title;
@@ -93,6 +96,7 @@ namespace ModelLayer
             this.Subject = subject;
             this.AssignmentFile = assignmentFile;
         }
+        
         public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject)
         {
             this.Title = title;
@@ -104,9 +108,11 @@ namespace ModelLayer
             this.AcademicLevel = academicLevel;
             this.Subject = subject;
         }
+        
         public Assignment()
         {
         }
+        
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Deadline <= DateTime.Now)

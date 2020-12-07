@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelLayer;
+using Utility.HildurConnection;
 
 namespace ASP.NET
 {

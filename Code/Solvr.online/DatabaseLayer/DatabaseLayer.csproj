@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ModelLayer\ModelLayer.csproj" />
+    <ProjectReference Include="..\Utility\Utility.csproj" />
   </ItemGroup>
 
 </Project>

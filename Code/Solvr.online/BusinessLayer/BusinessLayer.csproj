@@ -5,12 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Validation\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DatabaseLayer\DatabaseLayer.csproj" />
     <ProjectReference Include="..\ModelLayer\ModelLayer.csproj" />
+    <ProjectReference Include="..\Utility\Utility.csproj" />
   </ItemGroup>
 
 </Project>

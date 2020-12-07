@@ -21,8 +21,8 @@ namespace webApi.Controllers
 
         public AssignmentController()
         {
-            assignmentBusiness = new AssignmentBusiness();
-            solutionBusiness = new SolutionBusiness();
+            assignmentBusiness = AssignmentBusiness.GetAssignmentBusiness();
+            solutionBusiness = SolutionBusiness.GetSolutionBusiness();
             userBusiness = new UserBusiness();
         }
 
@@ -176,7 +176,7 @@ namespace webApi.Controllers
                     case 1:
                         return Redirect("/assignment/update-assignment/" + assignmentId);
                     case 2:
-                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                     default:
                         throw new Exception("Internal server error");
                 }
@@ -196,22 +196,45 @@ namespace webApi.Controllers
         {
             try
             {
-                List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotSolvedByUser(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                if (assignments.Count > 0)
+                if (User.Identity.IsAuthenticated)
                 {
-                    ViewBag.Assignments = assignments;
-                    return View("AllAssignments");
+                    List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotSolvedByUser(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                    if (assignments.Count > 0)
+                    {
+                        ViewBag.Assignments = assignments;
+                        return View("AllAssignments");
+                    }
+                    else
+                    {
+                        ViewBag.Message = "No assignment found";
+                        ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to homepage";
+                        ViewBag.ButtonLink = "/";
+                        ViewBag.PageTitle = "No assignments found!";
+                        ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                        ViewBag.Image = "/assets/icons/error.svg";
+                        return View("UserFeedback");
+                    }
                 }
-                else
+                else 
                 {
-                    ViewBag.Message = "No assignment found";
-                    ViewBag.ResponseStyleClass = "text-danger";
-                    ViewBag.ButtonText = "Go back to homepage";
-                    ViewBag.ButtonLink = "/";
-                    ViewBag.PageTitle = "No assignments found!";
-                    ViewBag.SubMessage = "There were no assignments \nfor the given query";
-                    ViewBag.Image = "/assets/icons/error.svg";
-                    return View("UserFeedback");
+                    List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignments();
+                    if (assignments.Count > 0)
+                    {
+                        ViewBag.Assignments = assignments;
+                        return View("AllAssignments");
+                    }
+                    else
+                    {
+                        ViewBag.Message = "No assignment found";
+                        ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to homepage";
+                        ViewBag.ButtonLink = "/";
+                        ViewBag.PageTitle = "No assignments found!";
+                        ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                        ViewBag.Image = "/assets/icons/error.svg";
+                        return View("UserFeedback");
+                    }
                 }
             }
             catch (Exception e)
@@ -256,7 +279,7 @@ namespace webApi.Controllers
                             throw new Exception("Cannot update inactive assignment");
                         }
                     case 2:
-                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                     default:
                         throw new Exception("Internal server error");
                 }
@@ -336,7 +359,7 @@ namespace webApi.Controllers
                                 throw new Exception("Cannot update inactive assignment");
                             }
                         case 2:
-                            return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                            return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                         default:
                             throw new Exception("Internal server error");
                     }
@@ -415,7 +438,7 @@ namespace webApi.Controllers
                             throw new Exception("Cannot delete inactive assignment");
                         }
                     case 2:
-                        return Redirect("/solution/user-solution-for-assignment/" + assignmentId);
+                        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                     default:
                         throw new Exception("Internal server error");
                 }

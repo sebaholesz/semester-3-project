@@ -17,7 +17,7 @@ namespace WebApi.Controllers
 
         public APIAssignmentController()
         {
-            assignmentBusiness = new AssignmentBusiness();
+            assignmentBusiness = AssignmentBusiness.GetAssignmentBusiness();
         }
 
         [Route("assignment")]

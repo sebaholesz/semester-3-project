@@ -7,17 +7,21 @@ using System.Collections.Generic;
 
 namespace BusinessLayer
 {
-    public class AssignmentBusiness
+    public sealed class AssignmentBusiness
     {
+        private static readonly AssignmentBusiness _assignmentBusinessInstance = new AssignmentBusiness();
         private readonly IDbAssignment _dbAssignment;
-        private readonly SolutionBusiness _solutionBusiness;
         private readonly AssignmentInputValidation _assignmentValidation;
 
-        public AssignmentBusiness()
+        private AssignmentBusiness()
         {
             _dbAssignment = new DbAssignment();
-            _solutionBusiness = new SolutionBusiness();
             _assignmentValidation = new AssignmentInputValidation();
+        }
+
+        public static AssignmentBusiness GetAssignmentBusiness()
+        {
+            return _assignmentBusinessInstance;
         }
 
         public List<Assignment> GetAllAssignments()
@@ -69,6 +73,7 @@ namespace BusinessLayer
         {
             return _dbAssignment.CheckIfAssignmentIsStillActive(assignmentId);
         }
+       
         public int UpdateAssignment(Assignment assignment, int id)
         {
             //TODO validators 
@@ -118,7 +123,7 @@ namespace BusinessLayer
         public int CheckUserVsAssignment(int assignmentId, string userId)
         {
             string authorUserId = _dbAssignment.GetAuthorUserId(assignmentId);
-            List<string> allSolversForAssignment = _solutionBusiness.GetAllSolversForAssignment(assignmentId);
+            List<string> allSolversForAssignment = SolutionBusiness.GetSolutionBusiness().GetAllSolversForAssignment(assignmentId);
 
             if (authorUserId.Equals(userId))
             {

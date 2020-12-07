@@ -8,20 +8,17 @@ namespace BusinessLayer.Validation
     public class AssignmentInputValidation
     {
         private IDbAssignment dbA;
+        private readonly int _titleMinLength = 1;
+        private readonly int _titleMaxLength = 75;
+        private readonly int _descriptionMinLength = 1;
+        private readonly int _descriptionMaxLength = 1200;
+        private readonly int _priceMinValue = 0;
+        private readonly int _priceMaxValue = 10000;
 
         public AssignmentInputValidation()
         {
             dbA = new DbAssignment();
         }
-
-        private const int _titleMinLength = 5;
-        private const int _titleMaxLength = 30;
-
-        private const int _descriptionMinLength = 1;
-        private const int _descriptionMaxLength = 500;
-
-        private const int _priceMinValue = 0;
-        private const int _priceMaxValue = 10000;
 
         public bool CheckInput(Assignment assignment)
         {

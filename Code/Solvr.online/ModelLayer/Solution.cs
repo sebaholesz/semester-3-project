@@ -8,7 +8,7 @@ namespace ModelLayer
         public int SolutionId { get; set; }
         public int AssignmentId { get; set; }
         [Required]
-        [MaxLength(500)]
+        [MaxLength(1200)]
         public string Description { get; set; }
         public DateTime Timestamp { get; set; }
         public decimal SolutionRating { get; set; }

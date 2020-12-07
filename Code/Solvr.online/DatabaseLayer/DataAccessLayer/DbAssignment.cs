@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using Utility.HildurConnection;
 
 namespace DatabaseLayer.DataAccessLayer
 {
@@ -157,7 +158,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.QueryFirst<bool>("Select [isActive]) from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
+                return _db.QueryFirst<bool>("Select [isActive] from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (Exception e)
             {
