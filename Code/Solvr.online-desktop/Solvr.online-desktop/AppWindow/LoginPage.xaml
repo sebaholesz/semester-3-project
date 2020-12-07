@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Solvr.online_desktop.AppWindow"
       mc:Ignorable="d"       
-      Title="LoginPage" MaxHeight="400" MaxWidth="600">
+      Title="LoginPage" MaxHeight="400" MaxWidth="600" d:DesignWidth="245.343" d:DesignHeight="104.02" FontSize="20">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -21,19 +21,62 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
 
-        <TextBox Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
-        <PasswordBox Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
+        <TextBox Name="TextBoxUsername" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
+        <PasswordBox Name="PasswordBoxPassword" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
         <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
             Email or Username
         </TextBlock>
         <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             Password
         </TextBlock>
-        <Button Name="ButtonLogin" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonLogin_Click">
-            Login
+        <Button Name="ButtonClear" Content="Clear" Grid.Row="3" Grid.Column="2" HorizontalContentAlignment="Center" Click="ButtonClear_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="Red"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" CornerRadius="20">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
         </Button>
+        <Button Name="ButtonLogin" Content="Log In" Grid.Row="3" Grid.Column="3" HorizontalContentAlignment="Center" Click="ButtonLogin_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="LightGreen"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" CornerRadius="20">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <TextBlock Name="TextBlockLogOut" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Visibility="Hidden">
+            You have been successfully logged out!
+        </TextBlock>
     </Grid>
 </Page>

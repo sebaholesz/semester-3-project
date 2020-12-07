@@ -9,7 +9,7 @@ namespace Solvr.online_desktop.ApiCalls
 {
     public class ApiAssignment
     {
-        public IEnumerable<Assignment> GetAllAssignments()
+        public static IEnumerable<Assignment> GetAllAssignments()
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -88,6 +88,40 @@ namespace Solvr.online_desktop.ApiCalls
                 client.Dispose();
                 response.StatusCode = HttpStatusCode.BadRequest;
                 return response;
+            }
+        }
+
+        public static IEnumerable<string> GetAllAcademicLevels()
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = client.GetAsync("https://localhost:44395/apiV1/academiclevel").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                client.Dispose();
+                return response.Content.ReadAsAsync<IEnumerable<string>>().Result;
+            }
+            else
+            {
+                client.Dispose();
+                return null;
+            }
+        }
+
+        public static IEnumerable<string> GetAllSubjects()
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = client.GetAsync("https://localhost:44395/apiV1/subject").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                client.Dispose();
+                return response.Content.ReadAsAsync<IEnumerable<string>>().Result;
+            }
+            else
+            {
+                client.Dispose();
+                return null;
             }
         }
     }

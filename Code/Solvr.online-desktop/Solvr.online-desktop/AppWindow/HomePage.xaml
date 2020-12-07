@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Solvr.online_desktop"
       mc:Ignorable="d" 
-      Title="HomePage" MinHeight="650" MinWidth="1100" FontSize="20" FontFamily="Poppins">
+      Title="HomePage" MinHeight="650" MinWidth="1100" FontSize="20" FontFamily="Poppins" d:DesignWidth="1298.697" d:DesignHeight="751.351">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -48,8 +48,29 @@
         <Button Name="ButtonAllUsers" Grid.Row="4" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" HorizontalContentAlignment="Left">
             Users
         </Button>
+        <Button Name="ButtonSignOut" Content="Log Out" Grid.Row="8" Grid.Column="1" HorizontalContentAlignment="Left" Click="ButtonSignOut_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="Red"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" CornerRadius="20">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
-            <!--Main Window-->       
+        <!--Main Window-->       
         <Button Name="ButtonUpdate" Grid.Row="1" Grid.Column="6" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonUpdate_Click">Update</Button>
         <Button Name="ButtonMakeActive" Grid.Row="1" Grid.Column="7" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonMakeActive_Click">Make Active</Button>
         <Button Name="ButtonMakeInactive" Grid.Row="1" Grid.Column="8" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonMakeInactive_Click">Make Inactive</Button>
@@ -62,6 +83,9 @@
                     <Setter Property="BorderThickness" Value="0,0,1,0"/>
                 </Style>
             </DataGrid.Resources>
-        </DataGrid>        
+        </DataGrid>
+        <TextBlock Name="TextBlockNoAssignments" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="7" FontSize="55" Visibility="Hidden">
+            There are no assignments yet!
+        </TextBlock>
     </Grid>
 </Page>

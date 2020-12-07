@@ -21,5 +21,11 @@ namespace Solvr.online_desktop.AppWindow
             mw.Width = 1280;
             mw.Height = 720;
         }
+
+        private void ButtonClear_Click(object sender, RoutedEventArgs e)
+        {
+            TextBoxUsername.Clear();
+            PasswordBoxPassword.Clear();
+        }
     }
 }

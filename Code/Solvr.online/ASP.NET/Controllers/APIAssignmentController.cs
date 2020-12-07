@@ -147,44 +147,44 @@ namespace webApi.Controllers
             }
         }
 
-        //[Route("academiclevel")]
-        //[HttpGet]
-        //public HttpResponseMessage GetAllAcademicLevels()
-        //{
-        //    //Get the List<AcademicLevel>
-        //    List<string> levels = assignmentBusiness.GetAllAcademicLevels();
+        [Route("academiclevel")]
+        [HttpGet]
+        public IActionResult GetAllAcademicLevels()
+        {
+            //Get the List<AcademicLevel>
+            List<string> levels = assignmentBusiness.GetAllAcademicLevels();
 
-        //    //Check if the List<AcademicLevel> is not empty
-        //    if (levels.Count() > 0)
-        //    {
-        //        //Return 200 + levels
-        //        return Request.CreateResponse(HttpStatusCode.OK, levels);
-        //    }
-        //    else
-        //    {
-        //        //Return 404 + string with message
-        //        return Request.CreateResponse(HttpStatusCode.NotFound, "No Academic levels Found!");
-        //    }
-        //}
+            //Check if the List<AcademicLevel> is not empty
+            if (levels.Count() > 0)
+            {
+                //Return 200 + levels
+                return Ok(levels);
+            }
+            else
+            {
+                //Return 404 + string with message
+                return NotFound("No Academic levels Found!");
+            }
+        }
 
-        //[Route("subject")]
-        //[HttpGet]
-        //public HttpResponseMessage GetAllSubjects()
-        //{
-        //    //Get the List<Subject>
-        //    List<string> subjects = assignmentBusiness.GetAllSubjects();
+        [Route("subject")]
+        [HttpGet]
+        public IActionResult GetAllSubjects()
+        {
+            //Get the List<Subject>
+            List<string> subjects = assignmentBusiness.GetAllSubjects();
 
-        //    //Check if the List<Subject> is not empty
-        //    if (subjects.Count() > 0)
-        //    {
-        //        //Return 200 + subjects
-        //        return Request.CreateResponse(HttpStatusCode.OK, subjects);
-        //    }
-        //    else
-        //    {
-        //        //Return 404 + string with message
-        //        return Request.CreateResponse(HttpStatusCode.NotFound, "No Subjects Found!");
-        //    }
-        //}
+            //Check if the List<Subject> is not empty
+            if (subjects.Count() > 0)
+            {
+                //Return 200 + subjects
+                return Ok(subjects);
+            }
+            else
+            {
+                //Return 404 + string with message
+                return NotFound("No Subjects Found!");
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Solvr.online_desktop.ApiCalls;
 using Solvr.online_desktop.Models;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,20 +15,29 @@ namespace Solvr.online_desktop.AppWindow
     {
         private readonly MainWindow mw;
         private readonly ApiAssignment _apiAssignment;
+        private readonly LoginPage loginPage;
         public HomePage()
         {
             InitializeComponent();
             _apiAssignment = new ApiAssignment();
             mw = (MainWindow)Application.Current.MainWindow;
+            loginPage = new LoginPage();
         }
 
         private void ButtonAllAssignments_Click(object sender, RoutedEventArgs e)
         {
-            DataGridAssignments.ItemsSource = _apiAssignment.GetAllAssignments();
-            DataGridAssignments.Visibility = Visibility.Visible;
-            ButtonUpdate.Visibility = Visibility.Visible;
-            ButtonMakeActive.Visibility = Visibility.Visible;
-            ButtonMakeInactive.Visibility = Visibility.Visible;
+            if (ApiAssignment.GetAllAssignments() != null)
+            {
+                DataGridAssignments.ItemsSource = ApiAssignment.GetAllAssignments();
+                DataGridAssignments.Visibility = Visibility.Visible;
+                ButtonUpdate.Visibility = Visibility.Visible;
+                ButtonMakeActive.Visibility = Visibility.Visible;
+                ButtonMakeInactive.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TextBlockNoAssignments.Visibility = Visibility.Visible;
+            }
         }
 
         private void ButtonMakeInactive_Click(object sender, RoutedEventArgs e)
@@ -80,8 +90,8 @@ namespace Solvr.online_desktop.AppWindow
                 DateTime postDate = assignment.PostDate;
                 DateTime deadline = assignment.Deadline;
                 Boolean anonymous = assignment.Anonymous;
-                string academicLevel = assignment.AcademicLevel;
-                string subject = assignment.Subject;
+                IEnumerable<string> academicLevel = ApiAssignment.GetAllAcademicLevels();
+                IEnumerable<string> subject = ApiAssignment.GetAllSubjects();
                 mw.FrameDefault.Content = new UpdateAssignmentPage(assignmentId, title, description, price, postDate, deadline, anonymous, academicLevel, subject);
             }
         }
@@ -89,6 +99,14 @@ namespace Solvr.online_desktop.AppWindow
         private void DataGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             (sender as DataGrid).SelectedItem = null;
+        }
+
+        private void ButtonSignOut_Click(object sender, RoutedEventArgs e)
+        {
+            mw.FrameDefault.Content = loginPage;
+            mw.Width = 550;
+            mw.Height = 300;
+            loginPage.TextBlockLogOut.Visibility = Visibility.Visible;
         }
     }
 }
