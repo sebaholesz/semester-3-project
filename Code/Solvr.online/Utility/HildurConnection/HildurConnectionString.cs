@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DatabaseLayer
+﻿namespace Utility.HildurConnection
 {
     public static class HildurConnectionString
     {

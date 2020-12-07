@@ -2,33 +2,53 @@
 using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 
 namespace BusinessLayer
 {
-    public class AssignmentBusiness
+    public sealed class AssignmentBusiness
     {
+        private static readonly AssignmentBusiness _assignmentBusinessInstance = new AssignmentBusiness();
         private readonly IDbAssignment _dbAssignment;
         private readonly AssignmentInputValidation _assignmentValidation;
 
-        public AssignmentBusiness()
+        private AssignmentBusiness()
         {
             _dbAssignment = new DbAssignment();
             _assignmentValidation = new AssignmentInputValidation();
+        }
+
+        public static AssignmentBusiness GetAssignmentBusiness()
+        {
+            return _assignmentBusinessInstance;
         }
 
         public List<Assignment> GetAllAssignments()
         {
             return _dbAssignment.GetAllAssignments();
         }
+
+        public List<Assignment> GetAllActiveAssignmentsNotSolvedByUser(string userId)
+        {
+            return _dbAssignment.GetAllActiveAssignmentsNotSolvedByUser(userId);
+        }
+       
+        public List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId)
+        {
+            return _dbAssignment.GetAllInactiveAssignmentsNotSolvedByUser(userId);
+        }
+        
         public List<Assignment> GetAllActiveAssignments()
         {
             return _dbAssignment.GetAllActiveAssignments();
         }
+        
         public List<Assignment> GetAllInactiveAssignments()
         {
             return _dbAssignment.GetAllInactiveAssignments();
         }
+        
         public int CreateAssignment(Assignment assignment)
         {
             if (_assignmentValidation.CheckInput(assignment))
@@ -43,6 +63,16 @@ namespace BusinessLayer
             return _dbAssignment.GetByAssignmentId(id);
         }
 
+        public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)
+        {
+            return _dbAssignment.CheckIfUserAlreadySolvedThisAssignment(asignmentId, userId);
+        }
+
+        public bool CheckIfAssignmentIsStillActive(int assignmentId)
+        {
+            return _dbAssignment.CheckIfAssignmentIsStillActive(assignmentId);
+        }
+       
         public int UpdateAssignment(Assignment assignment, int id)
         {
             //TODO validators 
@@ -72,6 +102,45 @@ namespace BusinessLayer
         public List<string> GetAllSubjects()
         {
             return _dbAssignment.GetAllSubjects();
+        }
+
+        public List<Assignment> GetAllAssignmentsForUser(string userId)
+        {
+            List<Assignment> assignments = _dbAssignment.GetAllAssignmentsForUser(userId);
+
+            for (int i = 0; i < assignments.Count; i++)
+            {
+                if (!assignments[i].UserId.Equals(userId))
+                {
+                    throw new Exception("Cannot access assignments posted by other users");
+                }
+            }
+
+            return assignments;
+        }
+
+        public List<Assignment> GetAllAssignmentsSolvedByUser(string userId)
+        {
+            return _dbAssignment.GetAllAssignmentsSolvedByUser(userId);
+        }
+
+        public int CheckUserVsAssignment(int assignmentId, string userId)
+        {
+            string authorUserId = _dbAssignment.GetAuthorUserId(assignmentId);
+            List<string> allSolversForAssignment = SolutionBusiness.GetSolutionBusiness().GetAllSolversForAssignment(assignmentId);
+
+            if (authorUserId.Equals(userId))
+            {
+                return 1;
+            }
+            else if (allSolversForAssignment.Contains(userId))
+            {
+                return 2;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

@@ -1,40 +1,50 @@
-﻿//using DatabaseLayer.DataAccessLayer;
-//using System.Collections.Generic;
+﻿using DatabaseLayer.DataAccessLayer;
+using DatabaseLayer.RepositoryLayer;
 
-//namespace BusinessLayer
-//{
-//    public class UserBusiness
-//    {
-//        private readonly IDbUser dbUser;
+namespace BusinessLayer
+{
+    public class UserBusiness
+    {
+        private readonly IDbUser _dbUser;
 
-//        public UserBusiness()
-//        {
-//            dbUser = new DbUser();
-//        }
 
-//        public List<User> GetAllUsers()
-//        {
-//            return dbUser.GetAllUsers();
-//        }
+        public UserBusiness()
+        {
+            _dbUser = new DbUser();
+        }
 
-//        public int InsertUser(User user)
-//        {
-//            return dbUser.InsertUser(user);
-//        }
+        public string GetUserUsername(string userId)
+        {
+            return _dbUser.GetUserUsername(userId);
+        }
+        public string GetUserName(string userId)
+        {
+            return _dbUser.GetUserName(userId);
+        }
 
-//        public int UpdateUser(User user, int id)
-//        {
-//            return dbUser.UpdateUser(user, id);
-//        }
+        //public List<User> GetAllUsers()
+        //{
+        //    return dbUser.GetAllUsers();
+        //}
 
-//        public User GetUserById(int id)
-//        {
-//            return dbUser.GetUserById(id);
-//        }
+        //public int InsertUser(User user)
+        //{
+        //    return dbUser.InsertUser(user);
+        //}
 
-//        public int DeleteUser(int id)
-//        {
-//            return dbUser.DeleteUser(id);
-//        }
-//    }
-//}
+        //public int UpdateUser(User user, int id)
+        //{
+        //    return dbUser.UpdateUser(user, id);
+        //}
+
+        //public User GetUserById(int id)
+        //{
+        //    return dbUser.GetUserById(id);
+        //}
+
+        //public int DeleteUser(int id)
+        //{
+        //    return dbUser.DeleteUser(id);
+        //}
+    }
+}

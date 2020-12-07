@@ -1,148 +1,195 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string columnLayoutClass = "col-md-12";
+    @if (SignInManager.IsSignedIn(User))
+    {
+        columnLayoutClass = "col-md-10";
+    }
+}
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApplicationCore</title>
+    <title>@ViewData["Title"] - Solvr.Online</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Stylesheets", required: false)
+    @RenderSection("HeaderScripts", required: false)
 </head>
 
 <body>
-    <header>
-        <div class="container-fluid navbar-fluid">
-            <nav class="navbar navbar-expand-xl">
-                <div>
-                    <a class="nav-so" asp-area="" asp-controller="Home" asp-action="Index">
-                        <span class="solvr">solvr.</span>
-                        <span class="online">online</span>
-                    </a>
-                </div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <header>
+            <div class="container-fluid navbar-fluid">
+                <nav class="navbar navbar-expand-xl">
+                    <div>
+                        <a class="nav-so" asp-area="" asp-controller="Home" asp-action="Index">
+                            <span class="solvr">solvr.</span>
+                            <span class="online">online</span>
+                        </a>
+                    </div>
 
-                <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggleDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                    <img src="/assets/icons/hamburger.svg">
-                </button>
+                    <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggleDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                        <img src="/assets/icons/hamburger.svg">
+                    </button>
 
-                <div class="collapse navbar-collapse" id="navbarToggler">
+                    <div class="collapse navbar-collapse" id="navbarToggler">
 
-                    <ul class="nav navigation-list">
-                        <li class="navigation-list-item"><a class="nav-dashboard" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                        <li class="navigation-list-item"><a class="nav-assignments" asp-controller="assignment" asp-action="display-assignments">Assignments</a></li>
-                        <li class="navigation-list-item"><a class="nav-solved" asp-controller="Home" asp-action="Index">Solved</a></li>
-                        <li class="navigation-list-item"><a class="nav-forum" asp-controller="Home" asp-action="Index">Forum</a></li>
-                        <li class="navigation-list-item"><a class="nav-faq" asp-controller="Home" asp-action="Index">FAQ</a></li>
-                    </ul>
+                        <ul class="nav navigation-list">
+                            <li class="navigation-list-item"><a class="nav-dashboard" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                            <li class="navigation-list-item"><a class="nav-assignments" asp-controller="assignment" asp-action="display-assignments">Assignments</a></li>
+                            <li class="navigation-list-item"><a class="nav-solved" asp-controller="Home" asp-action="Index">Solved</a></li>
+                            <li class="navigation-list-item"><a class="nav-forum" asp-controller="Home" asp-action="Index">Forum</a></li>
+                            <li class="navigation-list-item"><a class="nav-faq" asp-controller="Home" asp-action="Index">FAQ</a></li>
+                        </ul>
 
-                    <div class="navbar-button-search-block">
+                        <div class="navbar-button-search-block">
 
-                        <div class="navbar-mobile-line">
-                            <a href="/assignment/create-assignment" class="btn-post-assignment">
-                                <img class="btn-post-assignment-icon" src="/assets/icons/add.svg">
-                                Post Assignment
+                            <div class="navbar-mobile-line">
+                                <a href="/assignment/create-assignment" class="btn btn-post-assignment">
+                                    <img class="btn-post-assignment-icon" src="/assets/icons/add.svg">
+                                    Post Assignment
+                                </a>
+                            </div>
+
+                            <div class="navbar-mobile-line">
+                                <form class="form-inline search-bar">
+                                    <input class="search-input" type="search" placeholder="search" aria-label="search" />
+                                    <Button class="search-bar-button my-2 my-sm-0" type="submit">Go</Button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    }
+    else
+    {
+        <header>
+            <div class="container-fluid navbar-fluid">
+                <nav class="navbar navbar-expand-xl">
+                    <div>
+                        <a class="nav-so" asp-area="" asp-controller="Home" asp-action="Index">
+                            <span class="solvr">solvr.</span>
+                            <span class="online">online</span>
+                        </a>
+                    </div>
+
+                    <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggleDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                        <img src="/assets/icons/hamburger.svg">
+                    </button>
+
+                    <div class="collapse navbar-collapse flex-sm-row-reverse" id="navbarToggler">
+
+                        <partial name="_LoginPartial" />
+                            
+                        <ul class="nav navigation-list">
+                            <li class="navigation-list-item"><a class="nav-dashboard" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                            <li class="navigation-list-item"><a class="nav-assignments" asp-controller="assignment" asp-action="display-assignments">Assignments</a></li>
+                        </ul>
+
+                    </div>
+                </nav>
+            </div>
+        </header>
+    }
+
+
+
+    @using Microsoft.AspNetCore.Identity
+    @inject SignInManager<User> SignInManager
+    @inject UserManager<User> UserManager
+
+    <div class="container-fluid">
+        <div class="row">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <div class="col-md-2 user-sidebar mobile-invisible">
+                    <div class="user-sidebar-content">
+
+                        <div class="user-sidebar-bio">
+                            <div class="user-sidebar-profile-image">
+                                @* Some conditional logic where if there is no image URL, we go to the fallback *@
+                                @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
+                                <img alt="Default user avatar" src="/assets/images/hunterek.png" />
+                            </div>
+                            <div class="user-sidebar-username">
+                                <a class="mt-1" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
+                            </div>
+                        </div>
+
+                        <div class="user-sidebar-meta">
+                            <div class="user-sidebar-meta-name-rank">Rank</div>
+                            <div class="user-sidebar-meta-value-rank"><img src="/assets/icons/star.svg"></div>
+                            <div class="user-sidebar-meta-name-score">Score</div>
+                            <div class="user-sidebar-meta-value-score">15000</div>
+                            <div class="user-sidebar-meta-name-credits">Credits</div>
+                            <div class="user-sidebar-meta-value-credits">450</div>
+                        </div>
+
+                        <div class="user-sidebar-add-credit">
+                            <a class="btn-add-credit"
+                               href="#">
+                                <img class="btn-add-credit-icon"
+                                     src="/assets/icons/dollar.svg">Add Credit
                             </a>
                         </div>
 
-                        <div class="navbar-mobile-line">
-                            <form class="form-inline search-bar">
-                                <input class="search-input" type="search" placeholder="search" aria-label="search" />
-                                <Button class="search-bar-button my-2 my-sm-0" type="submit">Go</Button>
+                        <div class="user-sidebar-block">
+                            <h4 class="user-sidebar-block-title">Assignments</h4>
+                            <div>
+                                <a class="user-sidebar-block-link" asp-controller="Assignment" asp-action="GetAllAssignmentsForLoggedInUser">My Assignments</a>
+                            </div>
+                        </div>
+
+                        <div class="user-sidebar-block">
+                            <h4 class="user-sidebar-block-title">Solutions</h4>
+                            <div>
+                                <a class="user-sidebar-block-link" href="#">
+                                    <a class="user-sidebar-block-link" asp-controller="Assignment" asp-action="GetAllAssignmentsSolvedByLoggedInUser">My Solutions</a>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="user-sidebar-block">
+                            <h4 class="user-sidebar-block-title">
+                                Forum
+                            </h4>
+                            <div>
+                                <a class="user-sidebar-block-link" href="#">
+                                    My Topics
+                                </a>
+                            </div>
+                            <div>
+                                <a class="user-sidebar-block-link" href="#">My Comments</a>
+                            </div>
+                        </div>
+
+                        <div class="user-sidebar-block">
+                            <h4 class="user-sidebar-block-title">My Profile</h4>
+                            <div>
+                                <a class="user-sidebar-block-link" asp-area="Identity" asp-page="/Account/Manage/Index">Settings</a>
+                            </div>
+                        </div>
+
+                        <div class="user-sidebar-log-out">
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="btn-log-out">
+                                    <img class="btn-log-out-icon"
+                                         src="/assets/icons/logout.svg">Log Out
+                                </button>
                             </form>
                         </div>
 
                     </div>
                 </div>
-            </nav>
-        </div>
-    </header>
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2 user-sidebar mobile-invisible">
-                <div class="user-sidebar-content">
-
-                    <div class="user-sidebar-bio">
-                        <div class="user-sidebar-profile-image">
-                            @* Some conditional logic where if there is no image URL, we go to the fallback *@
-                            @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
-                            <img alt="Default user avatar" src="/assets/images/default-avatar.png" />
-                        </div>
-                        <div class="user-sidebar-username">
-                            <h3>
-                                Username
-                            </h3>
-                        </div>
-                    </div>
-
-                    <div class="user-sidebar-meta">
-                        <div class="user-sidebar-meta-name-rank">Rank</div>
-                        <div class="user-sidebar-meta-value-rank"><img src="/assets/icons/star.svg"></div>
-                        <div class="user-sidebar-meta-name-score">Score</div>
-                        <div class="user-sidebar-meta-value-score">15000</div>
-                        <div class="user-sidebar-meta-name-credits">Credits</div>
-                        <div class="user-sidebar-meta-value-credits">450</div>
-                    </div>
-
-                    <div class="user-sidebar-add-credit">
-                        <a class="btn-add-credit"
-                           href="#">
-                            <img class="btn-add-credit-icon"
-                                 src="/assets/icons/dollar.svg">Add Credit
-                        </a>
-                    </div>
-
-                    <div class="user-sidebar-block">
-                        <h4 class="user-sidebar-block-title">Assignments</h4>
-                        <div>
-                            <a class="user-sidebar-block-link" href="#">
-                                Posted Assignments
-                            </a>
-                        </div>
-                        <div>
-                            <a class="user-sidebar-block-link" href="#">
-                                Solved Assignments
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="user-sidebar-block">
-                        <h4 class="user-sidebar-block-title">
-                            Forum
-                        </h4>
-                        <div>
-                            <a class="user-sidebar-block-link" href="#">
-                                Posted Topics
-                            </a>
-                        </div>
-                        <div>
-                            <a class="user-sidebar-block-link" href="#">My Comments</a>
-                        </div>
-                    </div>
-
-                    <div class="user-sidebar-block">
-                        <h4 class="user-sidebar-block-title">My Profile</h4>
-                        <div>
-                            <a class="user-sidebar-block-link" href="#">Change Info</a>
-                        </div>
-                        <div>
-                            <a class="user-sidebar-block-link" href="#">Settings</a>
-                        </div>
-                    </div>
-
-                    <div class="user-sidebar-log-out">
-                        <a class="btn-log-out"
-                           href="#">
-                            <img class="btn-log-out-icon"
-                                 src="/assets/icons/logout.svg">Log Out
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-md-8 mobile-full">
+            }
+            <div class="@columnLayoutClass mobile-full screen-1500-full-with-sidebar">
                 @RenderBody()
-            </div>
-            <div class="col-md-2 mobile-invisible">
             </div>
         </div>
     </div>

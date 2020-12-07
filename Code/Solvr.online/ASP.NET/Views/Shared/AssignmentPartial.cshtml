@@ -19,15 +19,15 @@
         </div>
     </div>
     <div class="col-md-4 assignment-profile d-inline-block align-items-stretch">
-        <div class="boxed-row">
-            <div class="col-md-5 assignment-profile-image">
+        <div class="boxed-row display-author-details">
+            <div class="col-md-2 assignment-profile-image">
                 @* Some conditional logic where if there is no image URL, we go to the fallback *@
                 @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
                 <img alt="Default user avatar" src="/assets/images/default-avatar.png" />
             </div>
-            <div class="col-md-7">
-                <p>UserName</p>
-                <p>score 163428</p>
+            <div class="col-md-10">
+                <p>@ViewBag.Username</p>
+                <p>@ViewBag.Name</p>
             </div>
         </div>
     </div>

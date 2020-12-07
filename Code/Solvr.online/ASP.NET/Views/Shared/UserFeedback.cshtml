@@ -1,15 +1,13 @@
 ﻿
 @{
     ViewData["Title"] = @ViewBag.PageTitle;
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
 }
 
 <main>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2 screen-1300-invisible">
-            </div>
-            <div class="col-md-8 screen-1300-full">
+            <div class="col-md-12 screen-1300-full">
                 <div class="d-block boxed-row h-100 w-100">
                     <div class="w-100 text-center">
                         <h2>@ViewBag.Message</h2>
@@ -19,11 +17,9 @@
                         <img class="feedback-view-image" src="@ViewBag.Image" />
                     </div>
                     <div class="w-100 text-center">
-                        <a class="btn-lrg btn-info feedback-back-to-home-btn" href="@ViewBag.ButtonLink">@ViewBag.ButtonText</a>
+                        <a class="btn-lrg btn-default-style feedback-back-to-home-btn" href="@ViewBag.ButtonLink">@ViewBag.ButtonText</a>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2 screen-1300-invisible">
             </div>
         </div>
     </div>

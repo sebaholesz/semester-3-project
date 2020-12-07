@@ -7,6 +7,7 @@ using System.Linq;
 namespace webApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("apiV1/")]
     public class APIAssignmentController : ControllerBase
     {
@@ -14,7 +15,7 @@ namespace webApi.Controllers
 
         public APIAssignmentController()
         {
-            assignmentBusiness = new AssignmentBusiness();
+            assignmentBusiness = AssignmentBusiness.GetAssignmentBusiness();
         }
 
         [Route("assignment")]
@@ -35,14 +36,16 @@ namespace webApi.Controllers
             }
         }
 
+        [Route("assignment/{id}")]
+        [HttpGet]
+        public HttpResponseMessage Get(int id)
+        {
+            //assignmentInterface get
+            //return in HttpResonseMessage body Assignment
 
-        ////[Route("assignment/{id}")]
-        //[HttpGet]
-        //public Assignment GetByAssignmentId(int id)
-        //{
-        //    Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
-        //    return assignment != null ? assignment : null;
-        //}
+            Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
+            return assignment != null ? Request.CreateResponse(HttpStatusCode.OK, assignment) : Request.CreateResponse(HttpStatusCode.NotFound);
+        }
 
 
         [Route("assignment")]

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [Route("apiV1/")]
     public class APISolutionController : ControllerBase
     {
@@ -12,7 +13,7 @@ namespace WebApi.Controllers
 
         public APISolutionController()
         {
-            solutionBusiness = new SolutionBusiness();
+            solutionBusiness = SolutionBusiness.GetSolutionBusiness();
         }
 
         [Route("solution")]

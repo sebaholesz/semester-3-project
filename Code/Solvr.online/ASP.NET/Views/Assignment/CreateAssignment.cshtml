@@ -1,7 +1,7 @@
 ﻿@model ModelLayer.Assignment;
 @{
     ViewData["Title"] = "Create Assignment";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
 }
 
 @section Stylesheets {
@@ -13,9 +13,7 @@
         <form asp-controller="Assignment" enctype="multipart/form-data" asp-action="CreateAssignment" method="post">
             @Html.AntiForgeryToken()
             <div class="row">
-                <div class="col-md-2 screen-1300-invisible">
-                </div>
-                <div class="col-md-8 screen-1300-full">
+                <div class="col-md-12 screen-1300-full">
                     <div class="boxed-row">
                         <div class="row create-assignment-title-block">
                             <div class="col-md-9">
@@ -25,7 +23,7 @@
                                 <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
                             </div>
                             <div class="col-md-3 d-flex align-items-center justify-content-end">
-                                <button type="submit" class="btn-publish-assignment">
+                                <button type="submit" class="btn btn-publish-assignment">
                                     Publish
                                 </button>
                             </div>
@@ -80,7 +78,7 @@
                                         Academic Level
                                     </label>
                                     <br />
-                                    <select asp-for="AcademicLevel" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
+                                    <select asp-for="AcademicLevel" class="form-control">
                                         <option value="" selected>Choose academical level</option>
                                         @foreach (var option in ViewBag.AcademicLevels)
                                         {
@@ -95,7 +93,7 @@
                                         Subject
                                     </label>
                                     <br />
-                                    <select asp-for="Subject" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
+                                    <select asp-for="Subject" class="form-control">
                                         <option value="" selected>Choose subject</option>
                                         @foreach (var option in ViewBag.Subjects)
                                         {
@@ -118,8 +116,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-2 screen-1300-invisible">
                 </div>
             </div>
         </form>

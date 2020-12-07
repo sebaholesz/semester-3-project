@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using Utility.HildurConnection;
 
 namespace DatabaseLayer.DataAccessLayer
 {
@@ -26,7 +27,7 @@ namespace DatabaseLayer.DataAccessLayer
                 try
                 {
                     int lastUsedId = _db.ExecuteScalar<int>(
-                        @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive) values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive); SELECT SCOPE_IDENTITY()",
+                        @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive, userId) values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive, @userId); SELECT SCOPE_IDENTITY()",
                         new
                         {
                             title = assignment.Title,
@@ -37,7 +38,8 @@ namespace DatabaseLayer.DataAccessLayer
                             anonymous = assignment.Anonymous,
                             academicLevel = assignment.AcademicLevel,
                             subject = assignment.Subject,
-                            isActive = true
+                            isActive = true,
+                            userId = assignment.UserId
                         }, transaction);
                     if (assignment.AssignmentFile != null)
                     {
@@ -54,8 +56,7 @@ namespace DatabaseLayer.DataAccessLayer
                 {
                     transaction.Rollback();
                     _db.Close();
-                    System.Console.WriteLine(e.Message);
-                    return -1;
+                throw e;
                 }
             }
         }
@@ -78,12 +79,34 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment]").ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] Order By [postDate] Desc").ToList();
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
+            }
+        }
+
+        public List<Assignment> GetAllActiveAssignmentsNotSolvedByUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1 and not userId=@userId Order By [postDate] Desc", new {userId = userId}).ToList();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0 and not userId=@userId Order By [postDate] Desc", new {userId = userId}).ToList();
+            } catch (SqlException e)
+            {
+                throw e;
             }
         }
 
@@ -91,12 +114,11 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1").ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=1 Order By [postDate] Desc").ToList();
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
@@ -104,54 +126,74 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0").ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where isActive=0 Order By [postDate] Desc").ToList();
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
-        public Assignment GetByAssignmentId(int id)
+        public Assignment GetByAssignmentId(int assignmentId)
         {
             try
             {
                 // TODO handle getting "empty" ids
-                return _db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return _db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
-
-        public int UpdateAssignment(Assignment assignment, int id)
+        
+        public bool CheckIfAssignmentIsStillActive(int assignmentId)
         {
             try
             {
-                int numberOfRowsAffected = _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
-                    new { title = assignment.Title, assignmentId = id, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
-                return numberOfRowsAffected;
+                return _db.QueryFirst<bool>("Select [isActive] from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
-            catch (SqlException e)
+            catch (Exception e)
             {
-                System.Console.WriteLine(e.Message);
-                return -1;
+                throw e;
             }
         }
-
-        public int MakeAssignmentInactive(int id)
+        
+        public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId) 
         {
             try
             {
-                return _db.Execute("Update [dbo].[Assignment] set isActive=0 where assignmentId=@assignmentId", new { assignmentId = id });
+                List<string> allSolversForAssignment =_db.Query<string>("Select [userId] from [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = asignmentId }).ToList();
+                return allSolversForAssignment.Contains(userId);
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return -1;
+                throw e;
+            }
+        }
+
+        public int UpdateAssignment(Assignment assignment, int assignmentId)
+        {
+            try
+            {
+                return _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
+                    new { title = assignment.Title, assignmentId = assignmentId, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public int MakeAssignmentInactive(int assignmentId)
+        {
+            try
+            {
+                return _db.Execute("Update [dbo].[Assignment] set isActive=0 where assignmentId=@assignmentId", new { assignmentId = assignmentId });
+            }
+            catch (SqlException e)
+            {
+                throw e;
             }
         }
 
@@ -176,8 +218,7 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                Console.WriteLine(e.Message);
-                return null;
+                throw e;
             }
         }
 
@@ -189,21 +230,55 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
-                Console.WriteLine(e);
-                return null;
+                throw e;
             }
         }
 
-        public int DeleteAssignment(int id)
+        public int DeleteAssignment(int assignmentId)
         {
             try
             {
-                return _db.Execute("DELETE FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = id });
+                return _db.Execute("DELETE * FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (SqlException e)
             {
-                System.Console.WriteLine(e.Message);
-                return 0;
+                throw e;
+            }
+        }
+
+        public List<Assignment> GetAllAssignmentsForUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where userId=@userId Order By [postDate] Desc", new { userid = userId }).ToList();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public List<Assignment> GetAllAssignmentsSolvedByUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where assignmentId = (Select assignmentId from [dbo].[Solution] where userId=@userId) Order By [postDate] Desc", new { userId = userId }).ToList();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public string GetAuthorUserId(int assignmentId)
+        {
+            try
+            {
+                return _db.QueryFirst<string>("Select userId from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }

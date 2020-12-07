@@ -1,0 +1,74 @@
+﻿@model ModelLayer.AssignmentSolution
+
+@{
+    ViewData["Title"] = "Display Assignment";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
+    var assignment = ViewBag.Assignment;
+    var solution = ViewBag.Solution;
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="/css/display-assignment.css" />
+}
+
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 screen-1300-full">
+                <div class="row">
+                    <div class="col-md-12">
+      
+                        <div class="boxed-row">
+                            <div class="row create-solution-title-block">
+                                    
+                                <div class="col-md-12 d-flex align-items-center">
+                                    <h3 class="create-solution-page-title">
+                                        @assignment.Title
+                                    </h3>
+                                    <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row ">
+                            <div class="col-md-7">
+                                <div class="boxed-row d-flex align-items-center">
+                                    @if (solution.Anonymous)
+                                    {
+                                        <p>This solution was posted anonymously</p>
+                                    }
+                                    else
+                                    {
+                                        <p>This solution was posted publicly</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="boxed-row">
+                                    download file
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="boxed-row solution-description-detail-container">
+                            <div class="solution-description-detail-content height-max">
+                                <div class="solution-description">
+                                    <p>
+                                        @solution.Description
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

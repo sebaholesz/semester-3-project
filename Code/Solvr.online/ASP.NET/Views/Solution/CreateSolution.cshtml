@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Display Assignment";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
     var assignment = ViewBag.Assignment;
 }
 
@@ -14,9 +14,7 @@
 <main>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2 screen-1300-invisible">
-            </div>
-            <div class="col-md-8 screen-1300-full">
+            <div class="col-md-12 screen-1300-full">
                 <div class="row">
                     <div class="col-md-12">
                         <form asp-controller="Solution" enctype="multipart/form-data" asp-action="CreateSolution" method="post">
@@ -47,7 +45,6 @@
                                             <input asp-for="Solution.Anonymous" type="checkbox" value="true" checked>
                                             <span class="slider round"></span>
                                         </label>
-                                        @*<input asp-for="Solution.Anonymous" type="checkbox" data-toggle="toggle" class="toggle-make-anonymous" value="true" checked />*@
                                     </div>
                                 </div>
                                 <div class="col-md-5">
@@ -72,10 +69,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="row"></div>
                 @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
-            </div>
-            <div class="col-md-2 screen-1300-invisible">
             </div>
         </div>
     </div>

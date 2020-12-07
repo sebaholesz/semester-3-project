@@ -7,36 +7,36 @@ namespace ModelLayer
     {
         public int SolutionId { get; set; }
         public int AssignmentId { get; set; }
-        public int UserId { get; set; }
         [Required]
-        [MaxLength(500)]
+        [MaxLength(1200)]
         public string Description { get; set; }
         public DateTime Timestamp { get; set; }
         public decimal SolutionRating { get; set; }
         public bool Anonymous { get; set; }
         public byte[] SolutionFile { get; set; }
-        
-        public Solution(int assignmentId, int userId, string description, DateTime timestamp, bool anonymous, byte[] solutionFile,decimal solutionRating = 0)
+        public string UserId { get; set; }
+
+        public Solution(int assignmentId, string description, DateTime timestamp, bool anonymous, byte[] solutionFile, string userId, decimal solutionRating = 0)
         {
             this.AssignmentId = assignmentId;
-            this.UserId = userId;
             this.Description = description;
             this.Timestamp = timestamp;
             this.Anonymous = anonymous;
-            this.SolutionRating = solutionRating;
             this.SolutionFile = solutionFile;
+            this.UserId = userId;
+            this.SolutionRating = solutionRating;
         }
-        
-        public Solution(int assignmentId, int userId, string description, DateTime timestamp, bool anonymous, decimal solutionRating = 0)
+
+        public Solution(int assignmentId, string description, DateTime timestamp, bool anonymous, string userId, decimal solutionRating = 0)
         {
             this.AssignmentId = assignmentId;
-            this.UserId = userId;
             this.Description = description;
             this.Timestamp = timestamp;
             this.Anonymous = anonymous;
+            this.UserId = userId;
             this.SolutionRating = solutionRating;
         }
-        
+
         public Solution()
         {
         }

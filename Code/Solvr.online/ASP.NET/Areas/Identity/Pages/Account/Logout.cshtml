@@ -4,7 +4,20 @@
     ViewData["Title"] = "Log out";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
-    <p>You have successfully logged out of the application.</p>
-</header>
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 screen-1300-invisible">
+            </div>
+            <div class="col-md-8 screen-1300-full">
+                <div class="d-block boxed-row h-100 w-100">
+                    <h1 class="text-center">@ViewData["Title"]</h1>
+                    <hr />
+                    <p>You have successfully logged out of the application.</p>
+                </div>
+            </div>
+            <div class="col-md-2 screen-1300-invisible">
+            </div>
+        </div>
+    </div>
+</main>
