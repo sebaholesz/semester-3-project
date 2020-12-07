@@ -276,7 +276,9 @@ namespace webApi.Controllers
                         }
                         else
                         {
-                            throw new Exception("Cannot update inactive assignment");
+                            ViewBag.Assignment = assignment;
+                            ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
+                            return Redirect("/solution/solution-for-assignment/" + assignmentId);
                         }
                     case 2:
                         return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
