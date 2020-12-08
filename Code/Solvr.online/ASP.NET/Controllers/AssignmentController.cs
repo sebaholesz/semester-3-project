@@ -25,22 +25,21 @@ namespace webApi.Controllers
         [Route("assignment/create-assignment")]
         [HttpGet]
         public ActionResult CreateAssignment()
-        {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-         
+        {   
             try
             {
-                ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>(
-                    (client.GetAsync("https://localhost:44316/apiV1/academiclevel").Result).Content.ReadAsStringAsync().Result);
-                ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>(
-                    (client.GetAsync("https://localhost:44316/apiV1/subject").Result).Content.ReadAsStringAsync().Result);
-                client.Dispose();
-                return View("CreateAssignment");
+                using (HttpClient client = new HttpClient())
+                {
+                    ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>(
+                        (client.GetAsync("https://localhost:44316/apiV1/academiclevel").Result).Content.ReadAsStringAsync().Result);
+                    ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>(
+                        (client.GetAsync("https://localhost:44316/apiV1/subject").Result).Content.ReadAsStringAsync().Result);
+                    client.Dispose();
+                    return View("CreateAssignment");
+                }
             }
             catch (Exception e)
             {
-                client.Dispose();
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
@@ -58,76 +57,74 @@ namespace webApi.Controllers
         {
             try
             {
-
-                if (ModelState.IsValid)
+                using (HttpClient client = new HttpClient())
                 {
-                    Assignment assignment;
-                    if (files != null)
+                    if (ModelState.IsValid)
                     {
-                        var dataStream = new MemoryStream();
-                        await files.CopyToAsync(dataStream);
+                        Assignment assignment;
+                        if (files != null)
+                        {
+                            var dataStream = new MemoryStream();
+                            await files.CopyToAsync(dataStream);
 
-                        assignment = new Assignment(
-                            collection["Title"],
-                            collection["Description"],
-                            Convert.ToInt32(collection["Price"]),
-                            DateTime.Now,
-                            Convert.ToDateTime(collection["Deadline"]),
-                            Convert.ToBoolean(collection["Anonymous"][0]),
-                            collection["AcademicLevel"],
-                            collection["Subject"],
-                            dataStream.ToArray(),
-                            "MMArtin"
-                            //User.FindFirstValue(ClaimTypes.NameIdentifier)
-                        );
+                            assignment = new Assignment(
+                                collection["Title"],
+                                collection["Description"],
+                                Convert.ToInt32(collection["Price"]),
+                                DateTime.Now,
+                                Convert.ToDateTime(collection["Deadline"]),
+                                Convert.ToBoolean(collection["Anonymous"][0]),
+                                collection["AcademicLevel"],
+                                collection["Subject"],
+                                dataStream.ToArray(),
+                                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                            );
+                            dataStream.Close();
+                        }
+                        else
+                        {
+                            assignment = new Assignment(
+                               collection["Title"],
+                               collection["Description"],
+                               Convert.ToInt32(collection["Price"]),
+                               DateTime.Now,
+                               Convert.ToDateTime(collection["Deadline"]),
+                               Convert.ToBoolean(collection["Anonymous"][0]),
+                               collection["AcademicLevel"],
+                               collection["Subject"],
+                               User.FindFirstValue(ClaimTypes.NameIdentifier)
+                           );
+                        }
 
-                        dataStream.Close();
-                    }
-                    else
-                    {
-                        assignment = new Assignment(
-                           collection["Title"],
-                           collection["Description"],
-                           Convert.ToInt32(collection["Price"]),
-                           DateTime.Now,
-                           Convert.ToDateTime(collection["Deadline"]),
-                           Convert.ToBoolean(collection["Anonymous"][0]),
-                           collection["AcademicLevel"],
-                           collection["Subject"],
-                           "MMArtin"
-                       //User.FindFirstValue(ClaimTypes.NameIdentifier)
-                       );
-                    }
-                    //int assignmentId = assignmentBusiness.CreateAssignment(assignment);
+                        string urlCreateAssignment = "https://localhost:44316/apiV1/assignment";
+                        string urlGetAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
+                        string urlGetSubjects = "https://localhost:44316/apiV1/subject";
 
-                    string strAssignment = JsonConvert.SerializeObject(assignment);
-                    HttpContent content = new StringContent(strAssignment, Encoding.UTF8, "application/json");
+                        //add checks
+                        int assignmentId = Convert.ToInt32(JsonConvert.DeserializeObject<int>((client.PostAsync(urlCreateAssignment, new StringContent(JsonConvert.SerializeObject(assignment))).Result).Content.ReadAsStringAsync().Result));
+                        ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>((client.GetAsync(urlGetAcademicLevels).Result).Content.ReadAsStringAsync().Result);
+                        ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>((client.GetAsync(urlGetSubjects).Result).Content.ReadAsStringAsync().Result);
 
-                    string url = "https://localhost:44316/apiV1/assignment";
-
-                    int assignmentId;
-
-                    using (HttpClient client = new HttpClient())
-                    {
-                        HttpResponseMessage message = client.PostAsync(url, content).Result;
-                        var responseContent = message.Content.ReadAsStringAsync().Result;
-                        assignmentId = Convert.ToInt32(responseContent.Trim('\"'));
-                        ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>(
-                            (client.GetAsync("https://localhost:44316/apiV1/academiclevel").Result).Content.ReadAsStringAsync().Result);
-                        ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>(
-                            (client.GetAsync("https://localhost:44316/apiV1/subject").Result).Content.ReadAsStringAsync().Result);
-                    }
-
-
-                    if (assignmentId >= 1)
-                    {
-                        ViewBag.Message = "Assignment created successfully";
-                        ViewBag.ResponseStyleClass = "text-success";
-                        ViewBag.ButtonText = "Display your assignment";
-                        ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
-                        ViewBag.PageTitle = "Assignment created!";
-                        ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-                        ViewBag.Image = "/assets/icons/success.svg";
+                        if (assignmentId >= 1)
+                        {
+                            ViewBag.Message = "Assignment created successfully";
+                            ViewBag.ResponseStyleClass = "text-success";
+                            ViewBag.ButtonText = "Display your assignment";
+                            ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
+                            ViewBag.PageTitle = "Assignment created!";
+                            ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
+                            ViewBag.Image = "/assets/icons/success.svg";
+                        }
+                        else
+                        {
+                            ViewBag.Message = "Assignment creation failed";
+                            ViewBag.ResponseStyleClass = "text-danger";
+                            ViewBag.ButtonText = "Go back to the assignment form";
+                            ViewBag.ButtonLink = "/assignment/create-assignment/";
+                            ViewBag.PageTitle = "Assignment creation failed!";
+                            ViewBag.SubMessage = "There was a server error \ntry again later";
+                            ViewBag.Image = "/assets/icons/error.svg";
+                        }
                     }
                     else
                     {
@@ -136,21 +133,11 @@ namespace webApi.Controllers
                         ViewBag.ButtonText = "Go back to the assignment form";
                         ViewBag.ButtonLink = "/assignment/create-assignment/";
                         ViewBag.PageTitle = "Assignment creation failed!";
-                        ViewBag.SubMessage = "There was a server error \ntry again later";
+                        ViewBag.SubMessage = "Invalid data inserted";
                         ViewBag.Image = "/assets/icons/error.svg";
                     }
+                    return View("UserFeedback");
                 }
-                else
-                {
-                    ViewBag.Message = "Assignment creation failed";
-                    ViewBag.ResponseStyleClass = "text-danger";
-                    ViewBag.ButtonText = "Go back to the assignment form";
-                    ViewBag.ButtonLink = "/assignment/create-assignment/";
-                    ViewBag.PageTitle = "Assignment creation failed!";
-                    ViewBag.SubMessage = "Invalid data inserted";
-                    ViewBag.Image = "/assets/icons/error.svg";
-                }
-                return View("UserFeedback");
             }
             catch (Exception e)
             {
@@ -168,65 +155,46 @@ namespace webApi.Controllers
         [HttpGet]
         public ActionResult DisplayAssignment(int assignmentId)
         {
-            
-                //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                //int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
-
-                /*
-                 * 0 = hes neither author nor previous solver
-                 * 1 = authorUserId = currentUserId
-                 * 2 = solverId = currentUserId
-                 */
-                string url = "https://localhost:44316/apiV1/assignment/" + assignmentId;
+            try
+            {
                 using (HttpClient client = new HttpClient())
                 {
-                    try
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    int returnCode;
+                    string baseUrl = "http://localhost:44316/apiV1/";
+                    string urlCheckUser = baseUrl + "check-user-vs-assignment/" + assignmentId;
+
+                    returnCode = Convert.ToInt32((client.PostAsync(urlCheckUser, new StringContent(userId)).Result).Content.ReadAsStringAsync().Result);
+
+                    /*
+                     * 0 = hes neither author nor previous solver
+                     * 1 = authorUserId = currentUserId
+                     * 2 = solverId = currentUserId
+                     */
+                    switch (returnCode)
                     {
-                        HttpResponseMessage message = client.GetAsync(url).Result;
-                        string responseContent = message.Content.ReadAsStringAsync().Result;
-                        Assignment assignment = JsonConvert.DeserializeObject<Assignment>(responseContent);
-                        ViewBag.Assignment = assignment;
-                        ViewBag.Name = "";
-                        ViewBag.Solutions = 6;
-                        ViewBag.Username = "Peder";
-                        return View("DisplayAssignment");
-                    }
-                    catch (Exception e)
-                    {
-                        TempData["ErrorMessage"] = e.Message;
-                        return Redirect("/error");
+                        case 0:
+                            string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
+                            AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
+                            ViewBag.Assignment = asu.Assingment;
+                            //TODO get number of solutions we could parse to front end
+                            //ViewBag.SolutionCount = JsonConvert.DeserializeObject<int>((client.GetAsync(url).Result).Content.ReadAsStringAsync().Result);
+                            ViewBag.User = asu.User;
+                            return View("DisplayAssignment");
+                        case 1:
+                            return Redirect("/assignment/update-assignment/" + assignmentId);
+                        case 2:
+                            return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                        default:
+                            throw new Exception("Internal server error");
                     }
                 }
-
-                //switch (returnCode)
-                //{
-                //    case 0:
-                //        //Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
-                //        //ViewBag.Assignment = assignment;
-                //        //ViewBag.Solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
-                //        //ViewBag.Username = userBusiness.GetUserUsername(assignment.UserId);
-                //        //if (assignment.Anonymous)
-                //        {
-                //            ViewBag.Name = "";
-                //        }
-                //        else
-                //        {
-                //            //ViewBag.Name = userBusiness.GetUserName(assignment.UserId);
-                //        }
-                //        return View("DisplayAssignment");
-                //    case 1:
-                //        return Redirect("/assignment/update-assignment/" + assignmentId);
-                //    case 2:
-                //        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
-                //    default:
-                //        throw new Exception("Internal server error");
-                //}
-            //}
-            //catch (Exception e)
-            //{
-            //    TempData["ErrorMessage"] = e.Message;
-            //    return Redirect("/error");
-            //}
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
         }
 
         //can be accessed by everybody
@@ -235,14 +203,290 @@ namespace webApi.Controllers
         [HttpGet]
         public ActionResult DisplayAllAssignments()
         {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync("https://localhost:44316/apiV1/assignment").Result;
-            if (response.IsSuccessStatusCode)
+            try
             {
-                try
+                using (HttpClient client = new HttpClient())
                 {
-                    List<Assignment> assignments = response.Content.ReadAsAsync<List<Assignment>>().Result;
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        throw new NotImplementedException("we need to get all active not solved by this user");
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("we need to get all active");
+
+                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment";
+                        List<Assignment> assignments = client.GetAsync(urlGetAllAssignments).Result.Content.ReadAsAsync<List<Assignment>>().Result;
+
+                        if (assignments.Count > 0)
+                        {
+                            ViewBag.Assignments = assignments;
+                            return View("AllAssignments");
+                        }
+                        else
+                        {
+                            ViewBag.Message = "No assignment found";
+                            ViewBag.ResponseStyleClass = "text-danger";
+                            ViewBag.ButtonText = "Go back to homepage";
+                            ViewBag.ButtonLink = "/";
+                            ViewBag.PageTitle = "No assignments found!";
+                            ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                            ViewBag.Image = "/assets/icons/error.svg";
+                            return View("UserFeedback");
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        /*can be accessed by everybody who 
+         * posted the assignment
+         * and only if the assignment is still active
+         */
+        [Route("assignment/update-assignment/{assignmentId}")]
+        [HttpGet]
+        public ActionResult UpdateAssignment(int assignmentId)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    int returnCode;
+                    string baseUrl = "http://localhost:44316/apiV1/";
+                    string urlCheckUser = baseUrl + "check-user-vs-assignment/" + assignmentId;
+
+                    returnCode = Convert.ToInt32((client.PostAsync(urlCheckUser, new StringContent(userId)).Result).Content.ReadAsStringAsync().Result);
+
+                    /*
+                     * 0 = hes neither author nor previous solver
+                     * 1 = authorUserId = currentUserId
+                     * 2 = solverId = currentUserId
+                     */
+                    switch (returnCode)
+                    {
+                        case 0:
+                            return Redirect("/assignment/display-assignment/" + assignmentId);
+                        case 1:
+                            string urlGetAssignment = "https://www.localhost:44316/apiV1/assignment/" + assignmentId;
+                            Assignment assignment = JsonConvert.DeserializeObject<Assignment>((client.GetAsync(urlGetAssignment).Result).Content.ReadAsStringAsync().Result);
+                            if (assignment.IsActive)
+                            {
+                                ViewBag.Assignment = assignment;
+                                ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
+                                return View("UpdateAssignment");
+                            }
+                            else
+                            {
+                                return Redirect("/solution/solution-for-assignment/" + assignmentId);
+                            }
+                        case 2:
+                            return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                        default:
+                            throw new Exception("Internal server error");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        /*can be accessed by everybody who 
+         * posted the assignment
+         * and only if the assignment is still active
+         */
+        [Route("assignment/update-assignment/{assignmentId}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateAssignment(IFormCollection collection, int assignmentId)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        int returnCode;
+                        string baseUrl = "http://localhost:44316/apiV1/";
+                        string urlCheckUser = baseUrl + "check-user-vs-assignment/" + assignmentId;
+
+                        returnCode = Convert.ToInt32((client.PostAsync(urlCheckUser, new StringContent(userId)).Result).Content.ReadAsStringAsync().Result);
+
+                        /*
+                         * 0 = hes neither author nor previous solver
+                         * 1 = authorUserId = currentUserId
+                         * 2 = solverId = currentUserId
+                         */
+                        switch (returnCode)
+                        {
+                            case 0:
+                                return Redirect("/assignment/display-assignment/" + assignmentId);
+                            case 1:
+                                string urlGetAssignment = "https://www.localhost:44316/apiV1/assignment/" + assignmentId;
+                                Assignment assignment = JsonConvert.DeserializeObject<Assignment>((client.GetAsync(urlGetAssignment).Result).Content.ReadAsStringAsync().Result);
+                                if (assignment.IsActive)
+                                {
+                                    assignment.Title = collection["Title"];
+                                    assignment.Description = collection["Description"];
+                                    assignment.Price = Convert.ToInt32(collection["Price"]);
+                                    //maybe the parse not needed?
+                                    assignment.Deadline = DateTime.Parse(collection["Deadline"]);
+                                    assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
+                                    assignment.AcademicLevel = collection["AcademicLevel"];
+                                    assignment.Subject = collection["Subject"];
+
+                                    //TODO check if the file should be updated
+                                    //assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
+
+                                    string urlUpdateAssignment = "https://www.localhost:44316/apiV1/assignment/" + assignmentId;
+                                    int noOfRowsAffected = JsonConvert.DeserializeObject<int>((client.PutAsync(urlUpdateAssignment, new StringContent(JsonConvert.SerializeObject(assignment))).Result).Content.ReadAsStringAsync().Result);
+
+                                    //TODO notify all solvers of the changes
+                                    if (noOfRowsAffected > 0)
+                                    {
+                                        ViewBag.Message = "Assignment updated successfully";
+                                        ViewBag.ResponseStyleClass = "text-success";
+                                        ViewBag.ButtonText = "Display your assignment";
+                                        ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
+                                        ViewBag.PageTitle = "Assignment updated!";
+                                        ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
+                                        ViewBag.Image = "/assets/icons/success.svg";
+                                    }
+                                    else
+                                    {
+                                        ViewBag.Message = "Assignment update failed";
+                                        ViewBag.ResponseStyleClass = "text-danger";
+                                        ViewBag.ButtonText = "Go back to the assignment form";
+                                        ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
+                                        ViewBag.PageTitle = "Assignment update failed!";
+                                        ViewBag.SubMessage = "There was a server error \ntry again later";
+                                        ViewBag.Image = "/assets/icons/error.svg";
+                                    }
+                                    return View("UserFeedback");
+                                }
+                                else
+                                {
+                                    throw new Exception("Cannot update inactive assignment");
+                                }
+                            case 2:
+                                return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                            default:
+                                throw new Exception("Internal server error");
+                        }
+                    }
+                }
+                else
+                {
+                    ViewBag.Message = "Assignment update failed";
+                    ViewBag.ResponseStyleClass = "text-danger";
+                    ViewBag.ButtonText = "Go back to the assignment form";
+                    ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
+                    ViewBag.PageTitle = "Assignment update failed!";
+                    ViewBag.SubMessage = "Invalid data inserted";
+                    ViewBag.Image = "/assets/icons/error.svg";
+                }
+                return View("UserFeedback");
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        ///*can be accessed by everybody who 
+        // * posted the assignment
+        // * and only if the assignment is still active
+        // */
+        [Route("assignment/delete-assignment/{assignmentId}")]
+        [HttpDelete]
+        public ActionResult DeleteAssignment(int assignmentId)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    int returnCode;
+                    string baseUrl = "http://localhost:44316/apiV1/";
+                    string urlCheckUser = baseUrl + "check-user-vs-assignment/" + assignmentId;
+
+                    returnCode = Convert.ToInt32((client.PostAsync(urlCheckUser, new StringContent(userId)).Result).Content.ReadAsStringAsync().Result);
+
+                    /*
+                     * 0 = hes neither author nor previous solver
+                     * 1 = authorUserId = currentUserId
+                     * 2 = solverId = currentUserId
+                     */
+                    switch (returnCode)
+                    {
+                        case 0:
+                            return Redirect("/assignment/display-assignment/" + assignmentId);
+                        case 1:
+                            string urlMakeInactive = "https://www.localhost:44316/apiV1/assignment/inactive" + assignmentId;
+                            int noOfRowsAffected = Convert.ToInt32((client.PutAsync(urlMakeInactive, null).Result).Content.ReadAsStringAsync().Result);
+
+                            if (noOfRowsAffected == 1)
+                            {
+                                ViewBag.Message = "Assignment deleted successfully";
+                                ViewBag.ResponseStyleClass = "text-success";
+                                ViewBag.ButtonText = "Go back to homepage";
+                                ViewBag.ButtonLink = "/";
+                                ViewBag.PageTitle = "Assignment deleted!";
+                                ViewBag.SubMessage = "Your assignment is now deleted";
+                                ViewBag.Image = "/assets/icons/success.svg";
+                            }
+                            else
+                            {
+                                ViewBag.Message = "Assignment deletion failed";
+                                ViewBag.ResponseStyleClass = "text-danger";
+                                ViewBag.ButtonText = "Go back to the assignment form";
+                                ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
+                                ViewBag.PageTitle = "Assignment deletion failed!";
+                                ViewBag.SubMessage = "There was a server error \ntry again later";
+                                ViewBag.Image = "/assets/icons/error.svg";
+                            }
+                            return View("UserFeedback");
+                        case 2:
+                            return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                        default:
+                            throw new Exception("Internal server error");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        /*can be accessed by everybody who 
+         * posted the assignment
+         */
+        [Route("assignment/user")]
+        [HttpGet]
+        public ActionResult GetAllAssignmentsForLoggedInUser()
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                    throw new NotImplementedException("we need to get all for user");
+
+                    string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment";
+                    List<Assignment> assignments = client.GetAsync(urlGetAllAssignments).Result.Content.ReadAsAsync<List<Assignment>>().Result;
 
                     if (assignments.Count > 0)
                     {
@@ -259,300 +503,8 @@ namespace webApi.Controllers
                         ViewBag.SubMessage = "There were no assignments \nfor the given query";
                         ViewBag.Image = "/assets/icons/error.svg";
                         return View("UserFeedback");
-                    }
-
+                    } 
                 }
-                catch (Exception e)
-                {
-                    TempData["ErrorMessage"] = e.Message;
-                    return Redirect("/error");
-                }
-            }
-            else
-            { 
-                return null;
-            }
-            //try
-            //{
-            //    if (User.Identity.IsAuthenticated)
-            //    {
-            //        List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotSolvedByUser(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            //        if (assignments.Count > 0)
-            //        {
-            //            ViewBag.Assignments = assignments;
-            //            return View("AllAssignments");
-            //        }
-            //        else
-            //        {
-            //            ViewBag.Message = "No assignment found";
-            //            ViewBag.ResponseStyleClass = "text-danger";
-            //            ViewBag.ButtonText = "Go back to homepage";
-            //            ViewBag.ButtonLink = "/";
-            //            ViewBag.PageTitle = "No assignments found!";
-            //            ViewBag.SubMessage = "There were no assignments \nfor the given query";
-            //            ViewBag.Image = "/assets/icons/error.svg";
-            //            return View("UserFeedback");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignments();
-            //        if (assignments.Count > 0)
-            //        {
-            //            ViewBag.Assignments = assignments;
-            //            return View("AllAssignments");
-            //        }
-            //        else
-            //        {
-            //            ViewBag.Message = "No assignment found";
-            //            ViewBag.ResponseStyleClass = "text-danger";
-            //            ViewBag.ButtonText = "Go back to homepage";
-            //            ViewBag.ButtonLink = "/";
-            //            ViewBag.PageTitle = "No assignments found!";
-            //            ViewBag.SubMessage = "There were no assignments \nfor the given query";
-            //            ViewBag.Image = "/assets/icons/error.svg";
-            //            return View("UserFeedback");
-            //        }
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    TempData["ErrorMessage"] = e.Message;
-            //    return Redirect("/error");
-            //}
-        }
-
-        ///*can be accessed by everybody who 
-        // * posted the assignment
-        // * and only if the assignment is still active
-        // */
-        //[Route("assignment/update-assignment/{assignmentId}")]
-        //[HttpGet]
-        //public ActionResult UpdateAssignment(int assignmentId)
-        //{
-        //    try
-        //    {
-        //        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //        int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
-
-        //        /*
-        //         * 0 = hes neither author nor previous solver
-        //         * 1 = authorUserId = currentUserId
-        //         * 2 = solverId = currentUserId
-        //         */
-        //        switch (returnCode)
-        //        {
-        //            case 0:
-        //                return Redirect("/assignment/display-assignment/" + assignmentId);
-        //            case 1:
-        //                Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
-        //                if (assignment.IsActive)
-        //                {
-        //                    ViewBag.Assignment = assignment;
-        //                    ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
-        //                    return View("UpdateAssignment");
-        //                }
-        //                else
-        //                {
-        //                    ViewBag.Assignment = assignment;
-        //                    ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
-        //                    return Redirect("/solution/solution-for-assignment/" + assignmentId);
-        //                }
-        //            case 2:
-        //                return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
-        //            default:
-        //                throw new Exception("Internal server error");
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        TempData["ErrorMessage"] = e.Message;
-        //        return Redirect("/error");
-        //    }
-        //}
-
-        ///*can be accessed by everybody who 
-        // * posted the assignment
-        // * and only if the assignment is still active
-        // */
-        //[Route("assignment/update-assignment/{assignmentId}")]
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult UpdateAssignment(IFormCollection collection, int assignmentId)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //            int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
-
-        //            /*
-        //             * 0 = hes neither author nor previous solver
-        //             * 1 = authorUserId = currentUserId
-        //             * 2 = solverId = currentUserId
-        //             */
-        //            switch (returnCode)
-        //            {
-        //                case 0:
-        //                    return Redirect("/assignment/display-assignment/" + assignmentId);
-        //                case 1:
-        //                    Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
-        //                    if (assignment.IsActive)
-        //                    {
-        //                        assignment.Title = collection["Title"];
-        //                        assignment.Description = collection["Description"];
-        //                        assignment.Price = Convert.ToInt32(collection["Price"]);
-        //                        //maybe the parse not needed?
-        //                        assignment.Deadline = DateTime.Parse(collection["Deadline"]);
-        //                        assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
-        //                        assignment.AcademicLevel = collection["AcademicLevel"];
-        //                        assignment.Subject = collection["Subject"];
-
-        //                        //TODO check if the file should be updated
-        //                        //assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
-
-        //                        int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, assignmentId);
-
-        //                        //TODO notify all solvers of the changes
-        //                        if (noOfRowsAffected > 0)
-        //                        {
-        //                            ViewBag.Message = "Assignment updated successfully";
-        //                            ViewBag.ResponseStyleClass = "text-success";
-        //                            ViewBag.ButtonText = "Display your assignment";
-        //                            ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
-        //                            ViewBag.PageTitle = "Assignment updated!";
-        //                            ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-        //                            ViewBag.Image = "/assets/icons/success.svg";
-        //                        }
-        //                        else
-        //                        {
-        //                            ViewBag.Message = "Assignment update failed";
-        //                            ViewBag.ResponseStyleClass = "text-danger";
-        //                            ViewBag.ButtonText = "Go back to the assignment form";
-        //                            ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-        //                            ViewBag.PageTitle = "Assignment update failed!";
-        //                            ViewBag.SubMessage = "There was a server error \ntry again later";
-        //                            ViewBag.Image = "/assets/icons/error.svg";
-        //                        }
-        //                        return View("UserFeedback");
-        //                    }
-        //                    else
-        //                    {
-        //                        throw new Exception("Cannot update inactive assignment");
-        //                    }
-        //                case 2:
-        //                    return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
-        //                default:
-        //                    throw new Exception("Internal server error");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            ViewBag.Message = "Assignment update failed";
-        //            ViewBag.ResponseStyleClass = "text-danger";
-        //            ViewBag.ButtonText = "Go back to the assignment form";
-        //            ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-        //            ViewBag.PageTitle = "Assignment update failed!";
-        //            ViewBag.SubMessage = "Invalid data inserted";
-        //            ViewBag.Image = "/assets/icons/error.svg";
-        //        }
-        //        return View("UserFeedback");
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        TempData["ErrorMessage"] = e.Message;
-        //        return Redirect("/error");
-        //    }
-        //}
-
-        ///*can be accessed by everybody who 
-        // * posted the assignment
-        // * and only if the assignment is still active
-        // */
-        [Route("assignment/delete-assignment/{assignmentId}")]
-        [HttpDelete]
-        public ActionResult DeleteAssignment(int assignmentId)
-        {
-            try
-            {
-                HttpClient client = new HttpClient
-                {
-                    BaseAddress = new Uri("https://localhost:44316/")
-                };
-                var url = "apiV1/assignment/inactive/" + assignmentId;
-                HttpResponseMessage response = client.PutAsJsonAsync(url, assignmentId).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-
-
-
-
-                    client.Dispose();
-                    return View("UserFeedback");
-                }
-                else
-                {
-                    return Redirect("/error"); ;
-                }
-                //else
-                //{
-                //    client.Dispose();
-                //    response.StatusCode = HttpStatusCode.BadRequest;
-                //    return response;
-                //}
-
-
-                //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                //int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
-
-                ///*
-                // * 0 = hes neither author nor previous solver
-                // * 1 = authorUserId = currentUserId
-                // * 2 = solverId = currentUserId
-                // */
-                //switch (returnCode)
-                //{
-                //    case 0:
-                //        return Redirect("/assignment/display-assignment/" + assignmentId);
-                //    case 1:
-                //        Assignment assignment = assignmentBusiness.GetByAssignmentId(assignmentId);
-                //        if (assignment.IsActive)
-                //        {
-                //            int noOfRowsAffected = assignmentBusiness.MakeAssignmentInactive(assignmentId);
-
-                //            if (noOfRowsAffected > 0)
-                //            {
-                //                ViewBag.Message = "Assignment deleted successfully";
-                //                ViewBag.ResponseStyleClass = "text-success";
-                //                ViewBag.ButtonText = "Go back to homepage";
-                //                ViewBag.ButtonLink = "/";
-                //                ViewBag.PageTitle = "Assignment deleted!";
-                //                ViewBag.SubMessage = "Your assignment is now deleted";
-                //                ViewBag.Image = "/assets/icons/success.svg";
-                //            }
-                //            else
-                //            {
-                //                ViewBag.Message = "Assignment deletion failed";
-                //                ViewBag.ResponseStyleClass = "text-danger";
-                //                ViewBag.ButtonText = "Go back to the assignment form";
-                //                ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-                //                ViewBag.PageTitle = "Assignment deletion failed!";
-                //                ViewBag.SubMessage = "There was a server error \ntry again later";
-                //                ViewBag.Image = "/assets/icons/error.svg";
-                //            }
-                //            return View("UserFeedback");
-                //        }
-                //        else
-                //        {
-                //            throw new Exception("Cannot delete inactive assignment");
-                //        }
-                //    case 2:
-                //        return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
-                //    default:
-                //        throw new Exception("Internal server error");
-                //}
             }
             catch (Exception e)
             {
@@ -561,76 +513,47 @@ namespace webApi.Controllers
             }
         }
 
-        ///*can be accessed by everybody who 
-        // * posted the assignment
-        // */
-        //[Route("assignment/user")]
-        //[HttpGet]
-        //public ActionResult GetAllAssignmentsForLoggedInUser()
-        //{
-        //    try
-        //    {
-        //        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //        List<Assignment> assignments = assignmentBusiness.GetAllAssignmentsForUser(userId);
+        /*can be accessed by everybody who 
+         * solved the assignment
+         */
+        [Route("assignment/solved-by-user")]
+        [HttpGet]
+        public ActionResult GetAllAssignmentsSolvedByLoggedInUser()
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //        if (assignments.Count > 0)
-        //        {
-        //            ViewBag.Assignments = assignments;
-        //            return View("AllAssignments");
-        //        }
-        //        else
-        //        {
-        //            ViewBag.Message = "No assignment found";
-        //            ViewBag.ResponseStyleClass = "text-danger";
-        //            ViewBag.ButtonText = "Go back to homepage";
-        //            ViewBag.ButtonLink = "/";
-        //            ViewBag.PageTitle = "No assignments found!";
-        //            ViewBag.SubMessage = "There were no assignments \nfor the given query";
-        //            ViewBag.Image = "/assets/icons/error.svg";
-        //            return View("UserFeedback");
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        TempData["ErrorMessage"] = e.Message;
-        //        return Redirect("/error");
-        //    }
-        //}
+                    throw new NotImplementedException("we need to get all solved by user");
 
-        ///*can be accessed by everybody who 
-        // * solved the assignment
-        // */
-        //[Route("assignment/solved-by-user")]
-        //[HttpGet]
-        //public ActionResult GetAllAssignmentsSolvedByLoggedInUser()
-        //{
-        //    try
-        //    {
-        //        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //        List<Assignment> solvedAssignments = assignmentBusiness.GetAllAssignmentsSolvedByUser(userId);
+                    string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment";
+                    List<Assignment> solvedAssignments = client.GetAsync(urlGetAllAssignments).Result.Content.ReadAsAsync<List<Assignment>>().Result;
 
-        //        if (solvedAssignments.Count > 0)
-        //        {
-        //            ViewBag.Assignments = solvedAssignments;
-        //            return View("AllAssignments");
-        //        }
-        //        else
-        //        {
-        //            ViewBag.Message = "No solutions found";
-        //            ViewBag.ResponseStyleClass = "text-danger";
-        //            ViewBag.ButtonText = "Go back to homepage";
-        //            ViewBag.ButtonLink = "/";
-        //            ViewBag.PageTitle = "No soluitons found!";
-        //            ViewBag.SubMessage = "You have not solved \nany assignments yet!";
-        //            ViewBag.Image = "/assets/icons/error.svg";
-        //            return View("UserFeedback");
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        TempData["ErrorMessage"] = e.Message;
-        //        return Redirect("/error");
-        //    }
-        //}
+                    if (solvedAssignments.Count > 0)
+                    {
+                        ViewBag.Assignments = solvedAssignments;
+                        return View("AllAssignments");
+                    }
+                    else
+                    {
+                        ViewBag.Message = "No solutions found";
+                        ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to homepage";
+                        ViewBag.ButtonLink = "/";
+                        ViewBag.PageTitle = "No soluitons found!";
+                        ViewBag.SubMessage = "You have not solved \nany assignments yet!";
+                        ViewBag.Image = "/assets/icons/error.svg";
+                        return View("UserFeedback");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
     }
 }

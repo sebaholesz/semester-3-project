@@ -6,10 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
 using Models;
-using System.Configuration;
-
+    
 namespace ASP.NET
 {
     public class Startup
@@ -25,7 +23,7 @@ namespace ASP.NET
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer("Data Source=hildur.ucn.dk;Initial Catalog=dmaj0919_1081479;User ID=dmaj0919_1081479;Password=Password1!"));
             services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultUI()

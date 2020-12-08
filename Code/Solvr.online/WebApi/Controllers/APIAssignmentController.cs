@@ -1,6 +1,7 @@
 ﻿using BusinessLayer;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -184,6 +185,32 @@ namespace WebApi.Controllers
             {
                 //Return 404 + string with message
                 return NotFound("No Subjects Found!");
+            }
+        }
+
+        [Route("check-user-vs-assignment/{assignmentId}")]
+        [HttpPost]
+        public IActionResult CheckUserVsAssignment([FromBody] string userId, int assignmentId)
+        {
+            try
+            {
+                //Get the List<Subject>
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
+
+                //Check if the List<Subject> is not empty
+                if (new[] { 0, 1, 2 }.Contains(returnCode))
+                {
+                    //Return 200 + subjects
+                    return Ok(returnCode);
+                }
+                else
+                {
+                    return NotFound("This user is not associated with the assignment!");
+                }
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
             }
         }
     }
