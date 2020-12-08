@@ -36,13 +36,13 @@ namespace WebApi.Controllers
         }
 
 
-        ////[Route("assignment/{id}")]
-        //[HttpGet]
-        //public Assignment GetByAssignmentId(int id)
-        //{
-        //    Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
-        //    return assignment != null ? assignment : null;
-        //}
+        [Route("assignment/{id}")]
+        [HttpGet]
+        public Assignment GetByAssignmentId(int id)
+        {
+            Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
+            return assignment ?? null;
+        }
 
 
         [Route("assignment")]

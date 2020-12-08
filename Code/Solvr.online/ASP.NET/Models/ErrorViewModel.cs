@@ -1,4 +1,4 @@
-namespace ModelLayer
+namespace Models
 {
     public class ErrorViewModel
     {

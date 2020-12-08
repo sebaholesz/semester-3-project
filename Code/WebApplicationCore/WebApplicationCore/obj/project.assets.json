@@ -6128,19 +6128,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\samla\\.nuget\\packages\\": {}
+    "C:\\Users\\Painful\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\samla\\Desktop\\skoolgit\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
+      "projectUniqueName": "C:\\Users\\Painful\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
       "projectName": "WebApplicationCore",
-      "projectPath": "C:\\Users\\samla\\Desktop\\skoolgit\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
-      "packagesPath": "C:\\Users\\samla\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\samla\\Desktop\\skoolgit\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\obj\\",
+      "projectPath": "C:\\Users\\Painful\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\WebApplicationCore.csproj",
+      "packagesPath": "C:\\Users\\Painful\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Painful\\semester-3-project\\Code\\WebApplicationCore\\WebApplicationCore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\samla\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Painful\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6191,7 +6191,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
       }
     }
   }

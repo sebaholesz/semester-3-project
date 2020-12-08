@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ModelLayer;
+using Models;
+using Models;
 using System.Diagnostics;
 
 namespace ASP.NET.Controllers

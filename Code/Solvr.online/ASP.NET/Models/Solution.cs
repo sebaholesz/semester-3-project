@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ModelLayer
+namespace Models
 {
     public class Solution
     {

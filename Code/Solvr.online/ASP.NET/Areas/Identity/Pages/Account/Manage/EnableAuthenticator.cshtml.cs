@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using ModelLayer;
+using Models;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
