@@ -23,7 +23,7 @@ namespace SolvrOnlineUnitTests
             solution.Description = "";
             solution.SolutionRating = 3.4m;
             solution.Timestamp = DateTime.Now;
-            solution.UserId = 12;
+            solution.UserId = "12";
             solution.AssignmentId = 7;
 
             Assert.IsFalse(solutionInputValidation.CheckInput(solution));
@@ -43,7 +43,7 @@ namespace SolvrOnlineUnitTests
             solution.Description = tooLongDescription;
             solution.SolutionRating = 3.4m;
             solution.Timestamp = DateTime.Now;
-            solution.UserId = 12;
+            solution.UserId = "12";
             solution.AssignmentId = 7;
 
             Assert.IsFalse(solutionInputValidation.CheckInput(solution));

@@ -24,31 +24,71 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 int lastUsedId;
+                _db.Close();
                 _db.Open();
                 using (var transaction = _db.BeginTransaction())
                 {
                     try
                     {
+                        //try if creation was successful
                         lastUsedId = _db.ExecuteScalar<int>(
-                            @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous, accepted) " +
-                            "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0); SELECT SCOPE_IDENTITY()",
-                            new
-                            {
-                                assignmentId = solution.AssignmentId,
-                                userId = solution.UserId,
-                                description = solution.Description,
-                                timestamp = solution.Timestamp,
-                                solutionRating = solution.SolutionRating,
-                                anonymous = solution.Anonymous
-                            }, transaction);
-                            
+                                                        @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous, accepted) " +
+                                                        "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0); SELECT SCOPE_IDENTITY()",
+                                                        new
+                                                        {
+                                                            assignmentId = solution.AssignmentId,
+                                                            userId = solution.UserId,
+                                                            description = solution.Description,
+                                                            timestamp = solution.Timestamp,
+                                                            solutionRating = solution.SolutionRating,
+                                                            anonymous = solution.Anonymous
+                                                        }, transaction: transaction);
+
+
+
                         if (solution.SolutionFile != null)
                         {
                             _db.Execute(@"INSERT INTO [dbo].[SolutionFile](solutionId, solutionFile) values (@solutionId, @solutionFile)",
-                                new { solutionId = lastUsedId, solutionFile = solution.SolutionFile }, transaction);
+                                new { solutionId = lastUsedId, solutionFile = solution.SolutionFile }, transaction: transaction);
                         }
-                        transaction.Commit();
+
+
+
+
+                        //doesn't actually check if the input was successful
+                        if (lastUsedId > 0)
+                        {
+                            int noOfSolutions = _db.QueryFirst<int>("SELECT COUNT(*) FROM [dbo].[Solution]", transaction: transaction);
+                            //check if solution is the first in the queue
+                            if (noOfSolutions==0)
+                            {
+                                transaction.Commit();
+                                _db.Close();
+                                return lastUsedId;
+                            }
+                            
+                            if (noOfSolutions>0)
+                            {
+                                Solution lastPostedSolution = _db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] order by timestamp DESC", transaction: transaction);
+                                //checks if the Id put into the DB really is last
+                                if (lastPostedSolution.SolutionId == lastUsedId)
+                                {
+                                    bool isAssignmentActive = _db.QueryFirst<bool>("Select [isActive] from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = solution.AssignmentId }, transaction: transaction);
+                                    //check if assignment of the solution is active
+                                    if (isAssignmentActive)
+                                    {
+                                        transaction.Commit();
+                                        _db.Close();
+                                        return lastUsedId;
+                                    }
+                                }
+                            }
+                        }
+                            
+                        transaction.Rollback();
                         _db.Close();
+                        return -1;
+
                     }
                     catch (SqlException e)
                     {
@@ -57,7 +97,7 @@ namespace DatabaseLayer.DataAccessLayer
                         throw e;
                     }
                 }
-                return lastUsedId;
+                
             }
             catch (SqlException e)
             {
@@ -102,7 +142,7 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
-        
+
         public Solution GetSolutionByAssignmentId(int assignmentId)
         {
             try
@@ -114,7 +154,7 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
-        
+
         public int UpdateSolution(Solution solution, int solutionId)
         {
             try
@@ -152,12 +192,12 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
-       
+
         public List<string> GetAllSolversForAssignment(int assignmentId)
         {
             try
             {
-                return _db.Query<string>("Select userId from [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = assignmentId}).ToList();
+                return _db.Query<string>("Select userId from [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = assignmentId }).ToList();
             }
             catch (SqlException e)
             {

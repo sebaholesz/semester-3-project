@@ -28,31 +28,40 @@ namespace BusinessLayer
         {
             if (_validateSolution.CheckInput(solution))
             {
-                List<Solution> solutionsBefore = _dbSolution.GetSolutionsByAssignmentId(solution.AssignmentId);
-                int queueLengthBefore = solutionsBefore.Count;
-
-                //check if the last one that is in the queue was earlier than the current one
-                if (queueLengthBefore > 0)
-                {
-                    if (DateTime.Compare(solution.Timestamp, solutionsBefore[queueLengthBefore - 1].Timestamp) <= 0)
-                    {
-                        return -1;
-                    }
-                }
-
-                //check that the assignment is still active
-                if(!AssignmentBusiness.GetAssignmentBusiness().CheckIfAssignmentIsStillActive(solution.AssignmentId))
-                {
-                    throw new Exception("Cannot post solutions to inactive assignments");
-                }
-
-                List<Solution> solutionsAfter = _dbSolution.GetSolutionsByAssignmentId(solution.AssignmentId);
-                int queueLengthAfter = solutionsAfter.Count;
 
                 if (_dbSolution.CreateSolution(solution) > 0)
                 {
+                    List<Solution> solutionsAfterCreate = _dbSolution.GetSolutionsByAssignmentId(solution.AssignmentId);
+                    int queueLengthAfter = solutionsAfterCreate.Count;
                     return queueLengthAfter + 1;
                 }
+
+
+                //List<Solution> solutionsBefore = _dbSolution.GetSolutionsByAssignmentId(solution.AssignmentId);
+                //int queueLengthBefore = solutionsBefore.Count;
+
+                ////check if the last one that is in the queue was earlier than the current one
+                //if (queueLengthBefore > 0)
+                //{
+                //    if (DateTime.Compare(solution.Timestamp, solutionsBefore[queueLengthBefore - 1].Timestamp) <= 0)
+                //    {
+                //        return -1;
+                //    }
+                //}
+
+                ////check that the assignment is still active
+                //if(!AssignmentBusiness.GetAssignmentBusiness().CheckIfAssignmentIsStillActive(solution.AssignmentId))
+                //{
+                //    throw new Exception("Cannot post solutions to inactive assignments");
+                //}
+
+                //List<Solution> solutionsAfter = _dbSolution.GetSolutionsByAssignmentId(solution.AssignmentId);
+                //int queueLengthAfter = solutionsAfter.Count;
+
+                //if (_dbSolution.CreateSolution(solution) > 0)
+                //{
+                //    return queueLengthAfter + 1;
+                //}
             }
             return -1;
         }

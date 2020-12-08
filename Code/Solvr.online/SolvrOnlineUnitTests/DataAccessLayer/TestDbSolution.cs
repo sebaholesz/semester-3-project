@@ -7,6 +7,7 @@ using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
 using NUnit.Framework;
+using Utility.HildurConnection;
 
 namespace SolvrOnlineUnitTests
 {
@@ -39,16 +40,19 @@ namespace SolvrOnlineUnitTests
             assignment.Deadline = now.AddDays(5);
             assignment.Anonymous = true;
             assignment.AcademicLevel = "University";
-            assignment.Subject = "History";
+            assignment.Subject = "Computer Science";
+            assignment.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
 
             assignmentForTestingId = dba.CreateAssignment(assignment);
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            dba.DeleteAssignment(assignmentForTestingId);
-        }
+        //TODO change DB on cascade
+
+        //[TearDown]
+        //public void TearDown()
+        //{
+        //    dba.DeleteAssignment(assignmentForTestingId);
+        //}
 
         [Test]
         public void TestConnection()
@@ -71,7 +75,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution = new Solution();
             solution.AssignmentId = assignmentForTestingId;
-            solution.UserId = 12;
+            solution.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
             solution.Description = "Test description";
             solution.Timestamp = DateTime.Now;
             solution.SolutionRating = 3.6M;
@@ -101,13 +105,14 @@ namespace SolvrOnlineUnitTests
                 assignment.Deadline = now.AddDays(5);
                 assignment.Anonymous = true;
                 assignment.AcademicLevel = "University";
-                assignment.Subject = "History";
+                assignment.Subject = "Computer Science";
+                assignment.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
 
                 assignmentForTestingId2 = dba.CreateAssignment(assignment);
 
                 Solution solution = new Solution();
                 solution.AssignmentId = assignmentForTestingId;
-                solution.UserId = 12;
+                solution.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
                 solution.Description = "Test description 1";
                 solution.Timestamp = new DateTime(2017, 1, 18);
                 solution.SolutionRating = 3.6M;
@@ -115,7 +120,7 @@ namespace SolvrOnlineUnitTests
 
                 Solution solutionEarlyDateTime = new Solution();
                 solutionEarlyDateTime.AssignmentId = assignmentForTestingId;
-                solutionEarlyDateTime.UserId = 12;
+                solutionEarlyDateTime.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
                 solutionEarlyDateTime.Description = "Test description 3";
                 solutionEarlyDateTime.Timestamp = new DateTime(2017, 1, 17);
                 solutionEarlyDateTime.SolutionRating = 3.6M;
@@ -159,7 +164,7 @@ namespace SolvrOnlineUnitTests
             #region Arrange
             Solution solution = new Solution();
             solution.AssignmentId = assignmentForTestingId;
-            solution.UserId = 12;
+            solution.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
             solution.Description = "Test description 1";
             solution.Timestamp = DateTime.Now;
             solution.SolutionRating = 3.6M;
@@ -167,7 +172,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution2 = new Solution();
             solution2.AssignmentId = assignmentForTestingId;
-            solution2.UserId = 12;
+            solution2.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
             solution2.Description = "Test description 2";
             solution2.Timestamp = DateTime.Now.AddMinutes(1);
             solution2.SolutionRating = 3.6M;
@@ -175,7 +180,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution3 = new Solution();
             solution3.AssignmentId = assignmentForTestingId;
-            solution3.UserId = 12;
+            solution3.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
             solution3.Description = "Test description 3";
             solution3.Timestamp = DateTime.Now.AddMinutes(2);
             solution3.SolutionRating = 3.6M;
@@ -203,7 +208,7 @@ namespace SolvrOnlineUnitTests
             #region Arrange
             Solution solution = new Solution();
             solution.AssignmentId = assignmentForTestingId;
-            solution.UserId = 12;
+            solution.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
             solution.Description = "Test description 1";
             solution.Timestamp = DateTime.Now;
             solution.SolutionRating = 3.6M;
@@ -211,7 +216,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution2 = new Solution();
             solution2.AssignmentId = assignmentForTestingId;
-            solution2.UserId = 12;
+            solution2.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
             solution2.Description = "Test description 2";
             solution2.Timestamp = DateTime.Now.AddMinutes(1);
             solution2.SolutionRating = 3.6M;
@@ -219,7 +224,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution3 = new Solution();
             solution3.AssignmentId = assignmentForTestingId;
-            solution3.UserId = 12;
+            solution3.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
             solution3.Description = "Test description 3";
             solution3.Timestamp = DateTime.Now.AddMinutes(2);
             solution3.SolutionRating = 3.6M;

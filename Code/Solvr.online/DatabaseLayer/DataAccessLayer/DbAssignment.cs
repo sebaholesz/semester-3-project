@@ -56,7 +56,7 @@ namespace DatabaseLayer.DataAccessLayer
                 {
                     transaction.Rollback();
                     _db.Close();
-                throw e;
+                    throw e;
                 }
             }
         }
@@ -238,7 +238,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Execute("DELETE * FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
+                return _db.Execute("DELETE FROM [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (SqlException e)
             {
