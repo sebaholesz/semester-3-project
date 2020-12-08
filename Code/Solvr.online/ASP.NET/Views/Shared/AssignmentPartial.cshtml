@@ -1,8 +1,9 @@
-﻿@model Models.Assignment
+﻿@model Models.AssignmentSolutionUser
 
 @{
     var assignment = ViewBag.Assignment;
-    var solutions = ViewBag.Solutions;
+    var user = ViewBag.User;
+    //var solutions = ViewBag.Solutions;
 }
 
 <div class="row d-flex align-items-stretch">
@@ -13,7 +14,7 @@
                 <span class="details-text-format grid-area-price">Credits: @assignment.Price</span>
                 <span class="details-text-format grid-area-academic-level">Academic Level: @assignment.AcademicLevel</span>
                 <span class="details-text-format grid-area-deadline">Deadline: @assignment.Deadline</span>
-                <span class="details-text-format grid-area-answers">Answers: @solutions</span>
+                @*<span class="details-text-format grid-area-answers">Answers: @solutions</span>*@
                 <span class="details-text-format grid-area-subject">Subject: @assignment.Subject</span>
             </div>
         </div>
@@ -26,8 +27,11 @@
                 <img alt="Default user avatar" src="/assets/images/default-avatar.png" />
             </div>
             <div class="col-md-10">
-                <p>@ViewBag.Username</p>
-                <p>@ViewBag.Name</p>
+                <p>@user.Username</p>
+                @if (!assignment.Anonymous)
+                {
+                    <p>@user.FirstName @user.LastName</p>
+                }
             </div>
         </div>
     </div>

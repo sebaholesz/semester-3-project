@@ -105,11 +105,13 @@ namespace webApi.Controllers
 
                     string url = "https://localhost:44316/apiV1/assignment";
 
+                    int assignmentId;
+
                     using (HttpClient client = new HttpClient())
                     {
                         HttpResponseMessage message = client.PostAsync(url, content).Result;
                         var responseContent = message.Content.ReadAsStringAsync().Result;
-                        var responseContentTrimmed = responseContent.Trim('\"');
+                        assignmentId = Convert.ToInt32(responseContent.Trim('\"'));
                         ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>(
                             (client.GetAsync("https://localhost:44316/apiV1/academiclevel").Result).Content.ReadAsStringAsync().Result);
                         ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>(
@@ -117,26 +119,26 @@ namespace webApi.Controllers
                     }
 
 
-                    //if (assignmentId >= 1)
-                    //{
-                    //    ViewBag.Message = "Assignment created successfully";
-                    //    ViewBag.ResponseStyleClass = "text-success";
-                    //    ViewBag.ButtonText = "Display your assignment";
-                    //    ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
-                    //    ViewBag.PageTitle = "Assignment created!";
-                    //    ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-                    //    ViewBag.Image = "/assets/icons/success.svg";
-                    //}
-                    //else
-                    //{
-                    //    ViewBag.Message = "Assignment creation failed";
-                    //    ViewBag.ResponseStyleClass = "text-danger";
-                    //    ViewBag.ButtonText = "Go back to the assignment form";
-                    //    ViewBag.ButtonLink = "/assignment/create-assignment/";
-                    //    ViewBag.PageTitle = "Assignment creation failed!";
-                    //    ViewBag.SubMessage = "There was a server error \ntry again later";
-                    //    ViewBag.Image = "/assets/icons/error.svg";
-                    //}
+                    if (assignmentId >= 1)
+                    {
+                        ViewBag.Message = "Assignment created successfully";
+                        ViewBag.ResponseStyleClass = "text-success";
+                        ViewBag.ButtonText = "Display your assignment";
+                        ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
+                        ViewBag.PageTitle = "Assignment created!";
+                        ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
+                        ViewBag.Image = "/assets/icons/success.svg";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Assignment creation failed";
+                        ViewBag.ResponseStyleClass = "text-danger";
+                        ViewBag.ButtonText = "Go back to the assignment form";
+                        ViewBag.ButtonLink = "/assignment/create-assignment/";
+                        ViewBag.PageTitle = "Assignment creation failed!";
+                        ViewBag.SubMessage = "There was a server error \ntry again later";
+                        ViewBag.Image = "/assets/icons/error.svg";
+                    }
                 }
                 else
                 {
