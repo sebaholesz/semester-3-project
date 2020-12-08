@@ -4,7 +4,7 @@ using ModelLayer;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace webApi.Controllers
+namespace WebApi.Controllers
 {
     [ApiController]
     [Route("apiV1/")]
