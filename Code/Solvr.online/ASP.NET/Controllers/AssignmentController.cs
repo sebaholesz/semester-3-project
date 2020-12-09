@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,11 +29,10 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>(
-                        (client.GetAsync("https://localhost:44316/apiV1/academiclevel").Result).Content.ReadAsStringAsync().Result);
-                    ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>(
-                        (client.GetAsync("https://localhost:44316/apiV1/subject").Result).Content.ReadAsStringAsync().Result);
-                    client.Dispose();
+                    string urlGetAllAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
+                    string urlGetAllSubjects = "https://localhost:44316/apiV1/subject";
+                    ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>((client.GetAsync(urlGetAllAcademicLevels).Result).Content.ReadAsStringAsync().Result);
+                    ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>( (client.GetAsync(urlGetAllSubjects).Result).Content.ReadAsStringAsync().Result);
                     return View("CreateAssignment");
                 }
             }
@@ -61,49 +59,29 @@ namespace webApi.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        Assignment assignment;
+                        Assignment assignment = new Assignment();
+                        assignment.Title = collection["Title"];
+                        assignment.Description = collection["Description"];
+                        assignment.Price = Convert.ToInt32(collection["Price"]);
+                        assignment.Deadline = Convert.ToDateTime(collection["Deadline"]);
+                        assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
+                        assignment.AcademicLevel = collection["AcademicLevel"];
+                        assignment.Subject = collection["Subject"];
+                        assignment.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                         if (files != null)
                         {
                             var dataStream = new MemoryStream();
                             await files.CopyToAsync(dataStream);
-
-                            assignment = new Assignment(
-                                collection["Title"],
-                                collection["Description"],
-                                Convert.ToInt32(collection["Price"]),
-                                DateTime.Now,
-                                Convert.ToDateTime(collection["Deadline"]),
-                                Convert.ToBoolean(collection["Anonymous"][0]),
-                                collection["AcademicLevel"],
-                                collection["Subject"],
-                                dataStream.ToArray(),
-                                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                            );
+                            assignment.AssignmentFile = dataStream.ToArray();
                             dataStream.Close();
-                        }
-                        else
-                        {
-                            assignment = new Assignment(
-                               collection["Title"],
-                               collection["Description"],
-                               Convert.ToInt32(collection["Price"]),
-                               DateTime.Now,
-                               Convert.ToDateTime(collection["Deadline"]),
-                               Convert.ToBoolean(collection["Anonymous"][0]),
-                               collection["AcademicLevel"],
-                               collection["Subject"],
-                               User.FindFirstValue(ClaimTypes.NameIdentifier)
-                           );
                         }
 
                         string urlCreateAssignment = "https://localhost:44316/apiV1/assignment";
-                        string urlGetAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
-                        string urlGetSubjects = "https://localhost:44316/apiV1/subject";
-
-                        //add checks
-                        int assignmentId = Convert.ToInt32(JsonConvert.DeserializeObject<int>((client.PostAsync(urlCreateAssignment, new StringContent(JsonConvert.SerializeObject(assignment))).Result).Content.ReadAsStringAsync().Result));
-                        ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>((client.GetAsync(urlGetAcademicLevels).Result).Content.ReadAsStringAsync().Result);
-                        ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>((client.GetAsync(urlGetSubjects).Result).Content.ReadAsStringAsync().Result);
+                        int returnCode = (client.PostAsync(
+                            urlCreateAssignment,
+                            new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")
+                            ).Result).Content.ReadAsAsync<int>().Result;
 
                         if (assignmentId >= 1)
                         {

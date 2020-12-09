@@ -56,7 +56,6 @@ namespace BusinessLayer
                 return _dbAssignment.CreateAssignment(assignment);
             }
             return -1;
-
         }
         public Assignment GetByAssignmentId(int id)
         {

@@ -22,12 +22,12 @@ namespace DatabaseLayer.DataAccessLayer
         public int CreateAssignment(Assignment assignment)
         {
             _db.Open();
-            using (var transaction = _db.BeginTransaction())
+            using (var transaction = _db.BeginTransaction(IsolationLevel.ReadCommitted))
             {
                 try
                 {
                     int lastUsedId = _db.ExecuteScalar<int>(
-                        @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive, userId) values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive, @userId); SELECT SCOPE_IDENTITY()",
+                        @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive, userId) output inserted.assignmentId values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive, @userId)",
                         new
                         {
                             title = assignment.Title,
@@ -40,23 +40,45 @@ namespace DatabaseLayer.DataAccessLayer
                             subject = assignment.Subject,
                             isActive = true,
                             userId = assignment.UserId
-                        }, transaction);
-                    if (assignment.AssignmentFile != null)
+                        }, transaction: transaction);
+
+                    if (assignment.AssignmentFile != null && lastUsedId > 0)
                     {
-                        _db.Execute(
-                            @"Insert into [dbo].[AssignmentFile](assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)",
-                            new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile }, transaction);
+                        int noOfRowsAffectedForFileInsert = _db.Execute(
+                            @"Insert into [dbo].[AssignmentFile] (assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)",
+                            new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile }, transaction: transaction);
+
+                        if (lastUsedId > 0 && noOfRowsAffectedForFileInsert == 1)
+                        {
+                            transaction.Commit();
+                            _db.Close();
+                            return lastUsedId;
+                        }
+                        else 
+                        {
+                            transaction.Rollback();
+                            _db.Close();
+                            return 0;
+                        }
                     }
 
-                    transaction.Commit();
-                    _db.Close();
-                    return lastUsedId;
+                    if (lastUsedId > 0)
+                    {
+                        transaction.Commit();
+                        _db.Close();
+                        return lastUsedId;
+                    }
+                    {
+                        transaction.Rollback();
+                        _db.Close();
+                        return 0;
+                    }
                 }
                 catch (SqlException e)
                 {
                     transaction.Rollback();
                     _db.Close();
-                throw e;
+                    throw e;
                 }
             }
         }

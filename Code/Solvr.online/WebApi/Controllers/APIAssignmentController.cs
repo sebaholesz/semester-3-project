@@ -4,6 +4,7 @@ using ModelLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace WebApi.Controllers
 {
@@ -19,13 +20,38 @@ namespace WebApi.Controllers
         }
 
         [Route("assignment")]
+        [HttpPost]
+        public IActionResult CreateAssignment([FromBody] Assignment assignment)
+        {
+            try
+            {
+                assignment.PostDate = DateTime.Now;
+                int insertedAssignmentId = assignmentBusiness.CreateAssignment(assignment);
+
+                //200 OK = if everything went well
+                //417 Expected value is not the same as the actual value = if noOfRowsAffected is not 1
+                //400 Bad Request = if invalid data was used for the post request
+                //500 Server Error = if an exception was thrown
+                switch (insertedAssignmentId)
+                {
+                    case 1  : return Ok(insertedAssignmentId);
+                    case 0  : return StatusCode(417);
+                    case -1 : return BadRequest("Invalid data inserted");
+                    default: throw new HttpRequestException();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment")]
         [HttpGet]
         public IActionResult Get()
         {
-            //Get the List<Assignments>
             List<Assignment> assignments = assignmentBusiness.GetAllAssignments();
 
-            //Check if the List<Assignments> is not empty
             if (assignments.Count() > 0)
             {
                 return Ok(assignments);
@@ -45,43 +71,6 @@ namespace WebApi.Controllers
             return assignment ?? null;
         }
 
-
-        [Route("assignment")]
-        [HttpPost]
-        public int CreateAssignment([FromBody] Assignment assignment)
-        {
-            int rowsAffected = assignmentBusiness.CreateAssignment(assignment);
-
-            //Check if the creation was successful
-            if (rowsAffected > 0)
-            {
-                return 1;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-
-
-        //[Route("assignment/{id}")]
-        //[HttpPost]
-        //public HttpResponseMessage PostCreateAssignmentWithId(int id)
-        //{
-        //    //Invalid request which returns 400
-        //    return 
-        //}
-
-
-        [Route("assignment")]
-        [HttpPut]
-        public IActionResult Put()
-        {
-            //Invalid request which returns 400
-            return BadRequest("The URL Is Invalid - Bad Request!");
-        }
-
-
         [Route("assignment/{id}")]
         [HttpPut]
         public IActionResult Put([FromBody] Assignment assignment, int id)
@@ -100,16 +89,6 @@ namespace WebApi.Controllers
             }
         }
 
-
-        [Route("assignment/inactive")]
-        [HttpPut]
-        public IActionResult MakeInactive()
-        {
-            //Invalid request which returns 400
-            return BadRequest("The URL Is Invalid - Bad Request!");
-        }
-
-
         [Route("assignment/inactive/{id}")]
         [HttpPut]
         public IActionResult MakeInactive(int id)
@@ -123,14 +102,6 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-        }
-
-        [Route("assignment/active")]
-        [HttpPut]
-        public IActionResult MakeActive()
-        {
-            //Invalid request which returns 400
-            return BadRequest("The URL Is Invalid - Bad Request!");
         }
 
         [Route("assignment/active/{id}")]
