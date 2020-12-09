@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 
 namespace WebApi.Controllers
 {
-    [Authorize]
     [Route("apiV1/")]
     public class APISolutionController : ControllerBase
     {
@@ -53,6 +53,9 @@ namespace WebApi.Controllers
             }
         }
 
+
+
+
         [Route("solution/byAssignmentId/{assignmentId}")]
         [HttpGet]
         public IActionResult GetSolutionsByAssignmentId(int assignmentId)
@@ -70,20 +73,26 @@ namespace WebApi.Controllers
             }
         }
         
-        [Route("solution/CountByAssignmentId/{assignmentId}")]
+        [Route("solution/count-by-assignmentId/{assignmentId}")]
         [HttpGet]
         public IActionResult GetSolutionsCountByAssignmentId(int assignmentId)
         {
-            //the list is oredered by timestamp
+            try
+            {
+                int numberOfSolutions = solutionBusiness.GetSolutionsCountByAssignmentId(assignmentId);
 
-            int numberOfSolutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
-            if (numberOfSolutions >= 0)
-            {
-                return Ok(numberOfSolutions);
+                if (numberOfSolutions >= 0)
+                {
+                    return Ok(numberOfSolutions);
+                }
+                else
+                {
+                    return NotFound("Solutions with that AssignmentID not found!");
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound("Solutions with that AssignmentID not found!");
+                return StatusCode(500);
             }
         }
         

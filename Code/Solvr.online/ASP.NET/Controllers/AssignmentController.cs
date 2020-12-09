@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -17,11 +18,12 @@ namespace webApi.Controllers
     [Authorize]
     public class AssignmentController : Controller
     {
-    
 
+        #region REFACTORED
         /*can be accessed by everybody who 
          * is logged in
          */
+        //REFACTORED
         [Route("assignment/create-assignment")]
         [HttpGet]
         public ActionResult CreateAssignment()
@@ -32,9 +34,18 @@ namespace webApi.Controllers
                 {
                     string urlGetAllAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
                     string urlGetAllSubjects = "https://localhost:44316/apiV1/subject";
-                    ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>((client.GetAsync(urlGetAllAcademicLevels).Result).Content.ReadAsStringAsync().Result);
-                    ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>( (client.GetAsync(urlGetAllSubjects).Result).Content.ReadAsStringAsync().Result);
-                    return View("CreateAssignment");
+                    HttpResponseMessage academicLevelsRM = (client.GetAsync(urlGetAllAcademicLevels).Result);
+                    HttpResponseMessage subjectsRM = (client.GetAsync(urlGetAllSubjects).Result);
+                    if (academicLevelsRM.IsSuccessStatusCode && subjectsRM.IsSuccessStatusCode)
+                    {
+                        ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>(academicLevelsRM.Content.ReadAsStringAsync().Result);
+                        ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>(subjectsRM.Content.ReadAsStringAsync().Result);
+                        return View("CreateAssignment");
+                    }
+                    else
+                    {
+                        throw new Exception("Internal server error");
+                    }
                 }
             }
             catch (Exception e)
@@ -49,6 +60,7 @@ namespace webApi.Controllers
         /*can be accessed by everybody who 
          * is logged in
          */
+        //REFACTORED
         [Route("assignment/create-assignment")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -79,41 +91,36 @@ namespace webApi.Controllers
                         }
 
                         string urlCreateAssignment = "https://localhost:44316/apiV1/assignment";
-                        int returnCode = (client.PostAsync(
-                            urlCreateAssignment,
-                            new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")
-                            ).Result).Content.ReadAsAsync<int>().Result;
+                        HttpResponseMessage createAssignmentRM = client.PostAsync(urlCreateAssignment, new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;
 
-                        if (returnCode >= 1)
-                        {
+                        if (createAssignmentRM.IsSuccessStatusCode) 
+                        { 
+                            int lastUsedId = createAssignmentRM.Content.ReadAsAsync<int>().Result;
                             ViewBag.Message = "Assignment created successfully";
                             ViewBag.ResponseStyleClass = "text-success";
                             ViewBag.ButtonText = "Display your assignment";
-                            ViewBag.ButtonLink = "/assignment/display-assignment/" + returnCode;
+                            ViewBag.ButtonLink = "/assignment/display-assignment/" + lastUsedId;
                             ViewBag.PageTitle = "Assignment created!";
                             ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
                             ViewBag.Image = "/assets/icons/success.svg";
                         }
                         else
-                        {
-                            ViewBag.Message = "Assignment creation failed";
+                        { 
+                            
                             ViewBag.ResponseStyleClass = "text-danger";
                             ViewBag.ButtonText = "Go back to the assignment form";
                             ViewBag.ButtonLink = "/assignment/create-assignment/";
                             ViewBag.PageTitle = "Assignment creation failed!";
-                            ViewBag.SubMessage = "There was a server error \ntry again later";
                             ViewBag.Image = "/assets/icons/error.svg";
+
+                            if ((int)createAssignmentRM.StatusCode == 400) ViewBag.SubMessage = " 400 - Bad Request";
+                            else if ((int)createAssignmentRM.StatusCode == 417) ViewBag.SubMessage = "417 - Expectation Failed";
+                            else if ((int)createAssignmentRM.StatusCode == 500) ViewBag.SubMessage = "500 - Internal Server Error";
                         }
                     }
                     else
                     {
-                        ViewBag.Message = "Assignment creation failed";
-                        ViewBag.ResponseStyleClass = "text-danger";
-                        ViewBag.ButtonText = "Go back to the assignment form";
-                        ViewBag.ButtonLink = "/assignment/create-assignment/";
-                        ViewBag.PageTitle = "Assignment creation failed!";
-                        ViewBag.SubMessage = "Invalid data inserted";
-                        ViewBag.Image = "/assets/icons/error.svg";
+                        throw new Exception("Invalid data inserted");
                     }
                     return View("UserFeedback");
                 }
@@ -124,9 +131,6 @@ namespace webApi.Controllers
                 return Redirect("/error");
             }
         }
-
-        
-
 
         /*can be accessed by everybody who 
          * hasnt posted the assignment  
@@ -143,32 +147,59 @@ namespace webApi.Controllers
                 {
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     int returnCode;
-                    string baseUrl = "http://localhost:44316/apiV1/";
-                    string urlCheckUser = baseUrl + "check-user-vs-assignment/" + assignmentId;
+                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                    User user = new User();
+                    user.Id = userId;
 
-                    returnCode = Convert.ToInt32((client.PostAsync(urlCheckUser, new StringContent(userId)).Result).Content.ReadAsStringAsync().Result);
+                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
-                    /*
-                     * 0 = hes neither author nor previous solver
-                     * 1 = authorUserId = currentUserId
-                     * 2 = solverId = currentUserId
-                     */
-                    switch (returnCode)
+                    if (returnCodeRM.IsSuccessStatusCode)
                     {
-                        case 0:
-                            string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
-                            AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
-                            ViewBag.Assignment = asu.Assingment;
-                            string urlCountOfSolutions = "https://www.localhost:44316/apiV1/solution/CountByAssignmentId/" + assignmentId;
-                            ViewBag.SolutionCount = JsonConvert.DeserializeObject<int>((client.GetAsync(urlCountOfSolutions).Result).Content.ReadAsStringAsync().Result);
-                            ViewBag.User = asu.User;
-                            return View("DisplayAssignment");
-                        case 1:
-                            return Redirect("/assignment/update-assignment/" + assignmentId);
-                        case 2:
-                            return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
-                        default:
-                            throw new Exception("Internal server error");
+                        returnCode = (client.GetAsync(urlCheckUser).Result).Content.ReadAsAsync<int>().Result;
+
+                        /*
+                         * 0 = hes neither author nor previous solver
+                         * 1 = authorUserId = currentUserId
+                         * 2 = solverId = currentUserId
+                         */
+                        switch (returnCode)
+                        {
+                            case 0:
+                                string urlCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
+                                HttpResponseMessage asuRM = client.GetAsync(urlCompleteAssignmentData).Result;
+                                if (asuRM.IsSuccessStatusCode)
+                                {
+                                    AssignmentSolutionUser asu = asuRM.Content.ReadAsAsync<AssignmentSolutionUser>().Result;
+                                    ViewBag.Assignment = asu.Assignment;
+                                    ViewBag.User = asu.User;
+
+                                    string urlCountOfSolutions = "https://localhost:44316/apiV1/solution/count-by-assignmentId/" + assignmentId;
+                                    HttpResponseMessage solutionCountRM = client.GetAsync(urlCountOfSolutions).Result;
+                                    if (solutionCountRM.IsSuccessStatusCode)
+                                    {
+                                        ViewBag.SolutionCount = solutionCountRM.Content.ReadAsStringAsync().Result;
+                                        return View("DisplayAssignment");
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("Could not find information about solutions for the assignment");
+                                    }
+                                }
+                                else
+                                {
+                                    throw new Exception("Could not find the assignment");
+                                }
+                            case 1:
+                                return Redirect("/assignment/update-assignment/" + assignmentId);
+                            case 2:
+                                return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                            default:
+                                throw new Exception("Internal server error");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Internal server error");
                     }
                 }
             }
@@ -178,6 +209,8 @@ namespace webApi.Controllers
                 return Redirect("/error");
             }
         }
+        #endregion
+
 
         //TODO add display all assignment for people not logged in
 
@@ -194,57 +227,38 @@ namespace webApi.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     if (User.Identity.IsAuthenticated)
-                    {
-                       
+                    { 
+                        // MAYBE TODO counts of answers to all assignments in assignment Cards
+                        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/not-posted-by-user";
+                        User user = new User();
+                        user.Id = userId;
 
-                        try
+                        HttpResponseMessage assignmentsNotPostedByUserRM = client.PostAsync(urlGetAllAssignments, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                        if (assignmentsNotPostedByUserRM.IsSuccessStatusCode)
                         {
-                            // MAYBE TODO counts of answers to all assignments in assignment Cards
-
-                            //IF you have any questions check APIController there is a new API added and the old one is commented out
-                            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                            string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment";
-                            List<Assignment> assignments =  client.GetAsync(urlGetAllAssignments).Result.Content.ReadAsAsync<List<Assignment>>().Result;
-
-                            
-
-                            if (assignments.Count > 0)
-                            {
-                                ViewBag.Assignments = assignments;
-                                return View("AllAssignments");
-                            }
-                            else
-                            {
-                                ViewBag.Message = "No assignment found";
-                                ViewBag.ResponseStyleClass = "text-danger";
-                                ViewBag.ButtonText = "Go back to homepage";
-                                ViewBag.ButtonLink = "/";
-                                ViewBag.PageTitle = "No assignments found!";
-                                ViewBag.SubMessage = "There were no assignments \nfor the given query";
-                                ViewBag.Image = "/assets/icons/error.svg";
-                                return View("UserFeedback");
-                            }
-
+                            ViewBag.Assignments = assignmentsNotPostedByUserRM.Content.ReadAsAsync<List<Assignment>>().Result;
+                            return View("AllAssignments");
                         }
-                        catch (Exception)
+                        else
                         {
-
-                            throw;
+                            ViewBag.Message = "No assignment found";
+                            ViewBag.ResponseStyleClass = "text-danger";
+                            ViewBag.ButtonText = "Go back to homepage";
+                            ViewBag.ButtonLink = "/";
+                            ViewBag.PageTitle = "No assignments found!";
+                            ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                            ViewBag.Image = "/assets/icons/error.svg";
+                            return View("UserFeedback");
                         }
-
-
-                        throw new NotImplementedException("we need to get all active not solved by this user");
                     }
                     else
                     {
-                        throw new NotImplementedException("we need to get all active");
-
-                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment";
-                        List<Assignment> assignments = client.GetAsync(urlGetAllAssignments).Result.Content.ReadAsAsync<List<Assignment>>().Result;
-
-                        if (assignments.Count > 0)
+                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/active";
+                        HttpResponseMessage allAssignmentsRM = client.GetAsync(urlGetAllAssignments).Result;
+                        if (allAssignmentsRM.IsSuccessStatusCode)
                         {
-                            ViewBag.Assignments = assignments;
+                            ViewBag.Assignments = allAssignmentsRM.Content.ReadAsAsync<List<Assignment>>().Result;
                             return View("AllAssignments");
                         }
                         else

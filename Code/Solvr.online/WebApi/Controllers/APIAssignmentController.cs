@@ -34,7 +34,7 @@ namespace WebApi.Controllers
                 //500 Server Error = if an exception was thrown
                 switch (insertedAssignmentId)
                 {
-                    case 1  : return Ok(insertedAssignmentId);
+                    case int iaid when (iaid > 0): return Ok(insertedAssignmentId);
                     case 0  : return StatusCode(417);
                     case -1 : return BadRequest("Invalid data inserted");
                     default: throw new HttpRequestException();
@@ -46,27 +46,11 @@ namespace WebApi.Controllers
             }
         }
 
-        //[Route("assignment")]
-        //[HttpGet]
-        //public IActionResult Get()
-        //{
-        //    List<Assignment> assignments = assignmentBusiness.GetAllAssignments();
-
-        //    if (assignments.Count() > 0)
-        //    {
-        //        return Ok(assignments);
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
-
         [Route("assignment")]
         [HttpGet]
-        public IActionResult GetAllActiveAssignmentsNotSolvedByUse([FromBody] string userId)
+        public IActionResult Get()
         {
-            List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotSolvedByUser(userId);
+            List<Assignment> assignments = assignmentBusiness.GetAllAssignments();
 
             if (assignments.Count() > 0)
             {
@@ -78,6 +62,83 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("assignment/complete-data/{assignmentId}")]
+        [HttpGet]
+        public IActionResult GetCompleteData(int assignmentId)
+        {
+            object assignmentCompleteData = assignmentBusiness.GetAssignmentCompleteData(assignmentId);
+
+            if (assignmentCompleteData != null )
+            {
+                return Ok(assignmentCompleteData);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [Route("assignment/active")]
+        [HttpGet]
+        public IActionResult GetAllActiveAssignments()
+        {
+            try
+            {
+                List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignments();
+
+                if (assignments.Count() > 0)
+                {
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment/not-posted-by-user")]
+        [HttpPost]
+        public IActionResult GetAllActiveAssignmentsNotPostedByUser([FromBody] User user)
+        {
+            try
+            {
+                List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotPostedByUser(user.Id);
+
+                if (assignments.Count() > 0)
+                {
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment/get-active-not-solved-by-user")]
+        [HttpGet]
+        public IActionResult GetAllActiveAssignmentsNotSolvedByUser([FromBody] User user)
+        {
+            List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotSolvedByUser(user.Id);
+
+            if (assignments.Count() > 0)
+            {
+                return Ok(assignments);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
 
         [Route("assignment/{id}")]
@@ -178,15 +239,14 @@ namespace WebApi.Controllers
 
         [Route("check-user-vs-assignment/{assignmentId}")]
         [HttpPost]
-        public IActionResult CheckUserVsAssignment([FromBody] string userId, int assignmentId)
+        public IActionResult CheckUserVsAssignment([FromBody] User user, int assignmentId)
         {
             try
             {
                 //Get the List<Subject>
-                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
+                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, user.Id);
 
                 //Check if the List<Subject> is not empty
-                
                 if (new[] { 0, 1, 2 }.Contains(returnCode))
                 {
                     //Return 200 + subjects

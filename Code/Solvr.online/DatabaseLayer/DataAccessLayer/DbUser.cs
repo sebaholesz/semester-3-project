@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DatabaseLayer.RepositoryLayer;
+using ModelLayer;
 using System.Data;
 using System.Data.SqlClient;
 using Utility.HildurConnection;
@@ -15,6 +16,18 @@ namespace DatabaseLayer.DataAccessLayer
             _db = new SqlConnection(HildurConnectionString.ConnectionString);
         }
 
+        public User GetDisplayDataByUserId(string userId)
+        {
+            try
+            {
+                User user = _db.QueryFirst<User>("Select [UserName], [FirstName], [LastName] from [Identity].[User] where id=@userId", new { userId = userId });
+                return user;
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
         public string GetUserUsername(string userId)
         {
             try
@@ -35,6 +48,18 @@ namespace DatabaseLayer.DataAccessLayer
                 string firstName = _db.QueryFirst<string>("Select [FirstName] from [Identity].[User] where id=@userId", new { userId = userId });
                 string lastName = _db.QueryFirst<string>("Select [LastName] from [Identity].[User] where id=@userId", new { userId = userId });
                 return firstName + " " + lastName;
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public bool CheckIfUserExists(string userId)
+        {
+            try
+            {
+                return _db.ExecuteScalar<bool>("select count(1) from [Identity].[User] where Id=@userId", new { userId = userId });
             }
             catch (SqlException e)
             {

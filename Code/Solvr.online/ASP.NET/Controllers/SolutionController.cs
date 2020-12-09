@@ -54,7 +54,7 @@ namespace webApi.Controllers
                         {
                             string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                             AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
-                            ViewBag.Assignment = asu.Assingment;
+                            ViewBag.Assignment = asu.Assignment;
                             //TODO get number of solutions we could parse to front end
                             //ViewBag.SolutionCount = JsonConvert.DeserializeObject<int>((client.GetAsync(url).Result).Content.ReadAsStringAsync().Result);
                             ViewBag.User = asu.User;
@@ -312,7 +312,7 @@ namespace webApi.Controllers
 
                     string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                     AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
-                    ViewBag.Assignment = asu.Assingment;
+                    ViewBag.Assignment = asu.Assignment;
                     ViewBag.Solution = solution;
                     ViewBag.User = asu.User;
 
@@ -364,7 +364,7 @@ namespace webApi.Controllers
 
                                 string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                                 AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
-                                ViewBag.Assignment = asu.Assingment;
+                                ViewBag.Assignment = asu.Assignment;
                                 ViewBag.Solution = solution;
                                 ViewBag.User = asu.User;
 
@@ -423,7 +423,7 @@ namespace webApi.Controllers
                         case 2:
                             string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                             AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
-                            ViewBag.Assignment = asu.Assingment;
+                            ViewBag.Assignment = asu.Assignment;
                             ViewBag.Solution = solution;
                             ViewBag.User = asu.User;
 

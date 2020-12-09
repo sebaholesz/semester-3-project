@@ -24,5 +24,6 @@ namespace DatabaseLayer.RepositoryLayer
         List<Assignment> GetAllAssignmentsForUser(string userId);
         List<Assignment> GetAllAssignmentsSolvedByUser(string userId);
         string GetAuthorUserId(int assignmentId);
+        List<Assignment> GetAllActiveAssignmentsNotPostedByUser(string userId);
     }
 }

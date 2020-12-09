@@ -9,6 +9,7 @@ namespace DatabaseLayer.RepositoryLayer
         int CreateSolution(Solution solution);
         List<Solution> GetAllSolutions();
         List<Solution> GetSolutionsByAssignmentId(int id);
+        int GetSolutionsCountByAssignmentId(int assignmentId);
         Solution GetBySolutionId(int id);
         Solution GetSolutionByAssignmentId(int assignmentId);
         int UpdateSolution(Solution solution, int id);

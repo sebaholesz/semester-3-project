@@ -303,5 +303,17 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+
+        public List<Assignment> GetAllActiveAssignmentsNotPostedByUser(string userId)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where not userId=@userId and isActive=1", new { userId = userId }).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

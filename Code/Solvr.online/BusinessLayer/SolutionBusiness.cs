@@ -67,6 +67,11 @@ namespace BusinessLayer
             return _dbSolution.GetSolutionsByAssignmentId(id);
         }
 
+        public int GetSolutionsCountByAssignmentId(int assignmentId)
+        {
+            return _dbSolution.GetSolutionsCountByAssignmentId(assignmentId);
+        }
+
         public Solution GetBySolutionId(int id)
         {
             return _dbSolution.GetBySolutionId(id);

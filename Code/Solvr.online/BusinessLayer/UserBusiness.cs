@@ -1,16 +1,27 @@
 ﻿using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
+using ModelLayer;
 
 namespace BusinessLayer
 {
     public class UserBusiness
     {
+        private static readonly UserBusiness _userBusinessInstance = new UserBusiness();
         private readonly IDbUser _dbUser;
 
-
-        public UserBusiness()
+        private UserBusiness()
         {
             _dbUser = new DbUser();
+        }
+
+        public static UserBusiness GetUserBusiness()
+        {
+            return _userBusinessInstance;
+        }
+
+        public User GetDisplayDataByUserId(string userId)
+        {
+            return _dbUser.GetDisplayDataByUserId(userId);
         }
 
         public string GetUserUsername(string userId)
@@ -20,6 +31,11 @@ namespace BusinessLayer
         public string GetUserName(string userId)
         {
             return _dbUser.GetUserName(userId);
+        }
+
+        public bool CheckIfUserExists(string userId)
+        {
+            return _dbUser.CheckIfUserExists(userId);
         }
 
         //public List<User> GetAllUsers()

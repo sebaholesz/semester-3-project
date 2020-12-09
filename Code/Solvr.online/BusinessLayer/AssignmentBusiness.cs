@@ -12,9 +12,11 @@ namespace BusinessLayer
         private static readonly AssignmentBusiness _assignmentBusinessInstance = new AssignmentBusiness();
         private readonly IDbAssignment _dbAssignment;
         private readonly AssignmentInputValidation _assignmentValidation;
+        private readonly UserBusiness _userBusiness;
 
         private AssignmentBusiness()
         {
+            _userBusiness = UserBusiness.GetUserBusiness();
             _dbAssignment = new DbAssignment();
             _assignmentValidation = new AssignmentInputValidation();
         }
@@ -62,6 +64,22 @@ namespace BusinessLayer
             return _dbAssignment.GetByAssignmentId(id);
         }
 
+        public object GetAssignmentCompleteData(int assignmentId)
+        {
+
+            Assignment assignment = _dbAssignment.GetByAssignmentId(assignmentId);
+            if(!assignment.Equals(null))
+            {
+                User user = _userBusiness.GetDisplayDataByUserId(assignment.UserId);
+
+                if(!user.Equals(null))
+                {
+                    return new { Assignment = assignment, User = user };
+                }
+            }
+            return null;
+        }
+
         public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)
         {
             return _dbAssignment.CheckIfUserAlreadySolvedThisAssignment(asignmentId, userId);
@@ -81,6 +99,11 @@ namespace BusinessLayer
         public int MakeInactive(int id)
         {
             return _dbAssignment.MakeAssignmentInactive(id);
+        }
+
+        public List<Assignment> GetAllActiveAssignmentsNotPostedByUser(string userId)
+        {
+            return _dbAssignment.GetAllActiveAssignmentsNotPostedByUser(userId);
         }
 
         public int MakeAssignmentInactive(int id)
@@ -138,6 +161,10 @@ namespace BusinessLayer
             }
             else
             {
+                if(!UserBusiness.GetUserBusiness().CheckIfUserExists(userId))
+                {
+                    throw new Exception("User with this ID was not found");
+                }
                 return 0;
             }
         }

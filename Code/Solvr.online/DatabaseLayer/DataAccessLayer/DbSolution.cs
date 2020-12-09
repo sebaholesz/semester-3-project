@@ -164,5 +164,18 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+
+        public int GetSolutionsCountByAssignmentId(int assignmentId)
+        {
+            try
+            {
+                return _db.QueryFirst<int>("SELECT COUNT(solutionId) FROM [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
     }
 }
+    
