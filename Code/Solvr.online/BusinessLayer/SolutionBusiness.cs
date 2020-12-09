@@ -28,8 +28,8 @@ namespace BusinessLayer
         {
             if (_validateSolution.CheckInput(solution))
             {
-
-                if (_dbSolution.CreateSolution(solution) > 0)
+                int result = _dbSolution.CreateSolution(solution);
+                if (result > 0)
                 {
                     List<Solution> solutionsAfterCreate = _dbSolution.GetSolutionsByAssignmentId(solution.AssignmentId);
                     int queueLengthAfter = solutionsAfterCreate.Count;

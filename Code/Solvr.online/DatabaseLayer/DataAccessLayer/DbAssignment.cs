@@ -172,12 +172,17 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public int UpdateAssignment(Assignment assignment, int assignmentId)
+        public int UpdateAssignment(Assignment assignment, int assignmentId, byte[] inputTimestamp)
         {
             try
             {
-                return _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId",
-                    new { title = assignment.Title, assignmentId = assignmentId, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject });
+                //get it
+                //byte[] pred = _db.ExecuteScalar<byte[]>(@"select [timestamp] from [dbo].[Assignment] where assignmentId = @assignmentId", new { assignmentId = assignmentId });
+                //byte[] mezitim = inputTimestamp;
+                int returni =  _db.Execute(@"Update [dbo].[Assignment] set title=@title, description=@description, price=@price, postDate=@postDate, deadline=@deadline, anonymous=@anonymous, academicLevel=@academicLevel, subject=@subject WHERE assignmentId = @assignmentId AND timestamp = @timestamp",
+                    new { title = assignment.Title, assignmentId = assignmentId, description = assignment.Description, price = assignment.Price, postDate = assignment.PostDate, deadline = assignment.Deadline, anonymous = assignment.Anonymous, academicLevel = assignment.AcademicLevel, subject = assignment.Subject, timestamp=inputTimestamp });
+                //byte[] po = _db.ExecuteScalar<byte[]>(@"select [timestamp] from [dbo].[Assignment] where assignmentId = @assignmentId", new { assignmentId = assignmentId });
+                return returni;
             }
             catch (SqlException e)
             {

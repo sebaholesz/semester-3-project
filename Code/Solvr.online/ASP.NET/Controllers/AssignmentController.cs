@@ -272,6 +272,7 @@ namespace webApi.Controllers
                         {
                             ViewBag.Assignment = assignment;
                             ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
+                            ViewBag.Timestamp = assignment.Timestamp;
                             return View("UpdateAssignment");
                         }
                         else
@@ -334,7 +335,7 @@ namespace webApi.Controllers
                                 //TODO check if the file should be updated
                                 //assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
 
-                                int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, assignmentId);
+                                int noOfRowsAffected = assignmentBusiness.UpdateAssignment(assignment, assignmentId, assignment.Timestamp);
 
                                 //TODO notify all solvers of the changes
                                 if (noOfRowsAffected > 0)
@@ -526,5 +527,6 @@ namespace webApi.Controllers
                 return Redirect("/error");
             }
         }
+
     }
 }

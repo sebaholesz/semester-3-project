@@ -73,10 +73,10 @@ namespace BusinessLayer
             return _dbAssignment.CheckIfAssignmentIsStillActive(assignmentId);
         }
        
-        public int UpdateAssignment(Assignment assignment, int id)
+        public int UpdateAssignment(Assignment assignment, int id, byte[] inputTimestamp)
         {
             //TODO validators 
-            return _dbAssignment.UpdateAssignment(assignment, id);
+            return _dbAssignment.UpdateAssignment(assignment, id, inputTimestamp);
         }
 
         public int MakeInactive(int id)

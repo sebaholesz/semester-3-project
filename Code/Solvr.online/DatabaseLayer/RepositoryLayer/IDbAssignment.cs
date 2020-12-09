@@ -15,7 +15,7 @@ namespace DatabaseLayer.RepositoryLayer
         Assignment GetByAssignmentId(int id);
         bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId);
         bool CheckIfAssignmentIsStillActive(int assignmentId);
-        int UpdateAssignment(Assignment assignment, int id);
+        int UpdateAssignment(Assignment assignment, int id, byte[] inputTimestamp);
         int MakeAssignmentInactive(int id);
         int MakeAssignmentActive(int id);
         List<string> GetAllAcademicLevels();

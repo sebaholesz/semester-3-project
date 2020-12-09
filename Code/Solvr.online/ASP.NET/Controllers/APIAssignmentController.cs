@@ -81,23 +81,23 @@ namespace webApi.Controllers
         }
 
 
-        [Route("assignment/{id}")]
-        [HttpPut]
-        public IActionResult Put([FromBody] Assignment assignment, int id)
-        {
-            //assignmentInterface update
-            //return in HttpResonseMessage body Assignment
+        //[Route("assignment/{id}")]
+        //[HttpPut]
+        //public IActionResult Put([FromBody] Assignment assignment, int id, byte[] inputTimestamp)
+        //{
+        //    assignmentInterface update
+        //    return in HttpResonseMessage body Assignment
 
-            int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
-            if (noOfRows > 0)
-            {
-                return Ok("Assignment updated successfully!");
-            }
-            else
-            {
-                return NotFound($"Assignment with id {id} was not found");
-            }
-        }
+        //    int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id, inputTimestamp);
+        //    if (noOfRows > 0)
+        //    {
+        //        return Ok("Assignment updated successfully!");
+        //    }
+        //    else
+        //    {
+        //        return NotFound($"Assignment with id {id} was not found");
+        //    }
+        //}
 
 
         [Route("assignment/inactive")]

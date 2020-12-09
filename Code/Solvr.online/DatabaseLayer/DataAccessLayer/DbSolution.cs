@@ -32,8 +32,8 @@ namespace DatabaseLayer.DataAccessLayer
                     {
                         //try if creation was successful
                         lastUsedId = _db.ExecuteScalar<int>(
-                                                        @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous, accepted) " +
-                                                        "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0); SELECT SCOPE_IDENTITY()",
+                                                        @"INSERT INTO [dbo].[Solution](assignmentId, userId, description, timestamp, solutionRating, anonymous, accepted) OUTPUT INSERTED.solutionId " +
+                                                        "VALUES (@assignmentId, @userId, @description, @timestamp, @solutionRating, @anonymous, 0)",
                                                         new
                                                         {
                                                             assignmentId = solution.AssignmentId,
@@ -43,7 +43,6 @@ namespace DatabaseLayer.DataAccessLayer
                                                             solutionRating = solution.SolutionRating,
                                                             anonymous = solution.Anonymous
                                                         }, transaction: transaction);
-
 
 
                         if (solution.SolutionFile != null)
