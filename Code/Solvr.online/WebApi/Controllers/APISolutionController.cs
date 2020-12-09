@@ -69,6 +69,25 @@ namespace WebApi.Controllers
                 return NotFound("Solutions with that AssignmentID not found!");
             }
         }
+        
+        [Route("solution/CountByAssignmentId/{assignmentId}")]
+        [HttpGet]
+        public IActionResult GetSolutionsCountByAssignmentId(int assignmentId)
+        {
+            //the list is oredered by timestamp
+
+            int numberOfSolutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId).Count;
+            if (numberOfSolutions >= 0)
+            {
+                return Ok(numberOfSolutions);
+            }
+            else
+            {
+                return NotFound("Solutions with that AssignmentID not found!");
+            }
+        }
+        
+        
 
         [Route("solution")]
         [HttpPost]

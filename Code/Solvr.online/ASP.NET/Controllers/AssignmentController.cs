@@ -83,12 +83,12 @@ namespace webApi.Controllers
                             new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")
                             ).Result).Content.ReadAsAsync<int>().Result;
 
-                        if (assignmentId >= 1)
+                        if (returnCode >= 1)
                         {
                             ViewBag.Message = "Assignment created successfully";
                             ViewBag.ResponseStyleClass = "text-success";
                             ViewBag.ButtonText = "Display your assignment";
-                            ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
+                            ViewBag.ButtonLink = "/assignment/display-assignment/" + returnCode;
                             ViewBag.PageTitle = "Assignment created!";
                             ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
                             ViewBag.Image = "/assets/icons/success.svg";
@@ -155,8 +155,8 @@ namespace webApi.Controllers
                             string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                             AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
                             ViewBag.Assignment = asu.Assingment;
-                            //TODO get number of solutions we could parse to front end
-                            //ViewBag.SolutionCount = JsonConvert.DeserializeObject<int>((client.GetAsync(url).Result).Content.ReadAsStringAsync().Result);
+                            string urlCountOfSolutions = "solution/CountByAssignmentId/{assignmentId}";
+                            ViewBag.SolutionCount = JsonConvert.DeserializeObject<int>((client.GetAsync(urlCountOfSolutions).Result).Content.ReadAsStringAsync().Result);
                             ViewBag.User = asu.User;
                             return View("DisplayAssignment");
                         case 1:
