@@ -1,7 +1,7 @@
 ﻿@model Models.Assignment
 
 @{
-    var solutions = ViewBag.Solutions;
+    //var solutionCount = ViewBag.SolutionCount;
 }
 
 <a href="/assignment/display-assignment/@Model.AssignmentId" class="assignment-card">
@@ -32,7 +32,7 @@
             <div class="col-md-6 card-text">
                 <p class="card-details">@Model.Deadline</p>
                 <p class="card-details">@Model.Price Credits</p>
-                <!--<p class="card-details">5-->@*@solutions.Count*@<!--</p>-->
+                @*<p class="card-details">@solutionCount</p>*@
             </div>
         </div>
         <div class="card-footer text-muted bg-white text-center">

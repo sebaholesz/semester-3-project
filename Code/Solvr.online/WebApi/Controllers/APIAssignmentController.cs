@@ -46,11 +46,27 @@ namespace WebApi.Controllers
             }
         }
 
+        //[Route("assignment")]
+        //[HttpGet]
+        //public IActionResult Get()
+        //{
+        //    List<Assignment> assignments = assignmentBusiness.GetAllAssignments();
+
+        //    if (assignments.Count() > 0)
+        //    {
+        //        return Ok(assignments);
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
+
         [Route("assignment")]
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetAllActiveAssignmentsNotSolvedByUse([FromBody] string userId)
         {
-            List<Assignment> assignments = assignmentBusiness.GetAllAssignments();
+            List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotSolvedByUser(userId);
 
             if (assignments.Count() > 0)
             {
@@ -61,6 +77,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
         }
+
 
 
         [Route("assignment/{id}")]
@@ -169,6 +186,7 @@ namespace WebApi.Controllers
                 int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, userId);
 
                 //Check if the List<Subject> is not empty
+                
                 if (new[] { 0, 1, 2 }.Contains(returnCode))
                 {
                     //Return 200 + subjects

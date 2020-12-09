@@ -7,13 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace webApi.Controllers
 {
-   // [Authorize]
+    [Authorize]
     public class AssignmentController : Controller
     {
     
@@ -124,6 +125,9 @@ namespace webApi.Controllers
             }
         }
 
+        
+
+
         /*can be accessed by everybody who 
          * hasnt posted the assignment  
          * and hasnt solved it yet 
@@ -155,7 +159,7 @@ namespace webApi.Controllers
                             string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                             AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
                             ViewBag.Assignment = asu.Assingment;
-                            string urlCountOfSolutions = "solution/CountByAssignmentId/{assignmentId}";
+                            string urlCountOfSolutions = "https://www.localhost:44316/apiV1/solution/CountByAssignmentId/" + assignmentId;
                             ViewBag.SolutionCount = JsonConvert.DeserializeObject<int>((client.GetAsync(urlCountOfSolutions).Result).Content.ReadAsStringAsync().Result);
                             ViewBag.User = asu.User;
                             return View("DisplayAssignment");
@@ -175,6 +179,10 @@ namespace webApi.Controllers
             }
         }
 
+        //TODO add display all assignment for people not logged in
+
+
+
         //can be accessed by everybody
         [AllowAnonymous]
         [Route("assignment/display-assignments")]
@@ -187,6 +195,44 @@ namespace webApi.Controllers
                 {
                     if (User.Identity.IsAuthenticated)
                     {
+                       
+
+                        try
+                        {
+                            // MAYBE TODO counts of answers to all assignments in assignment Cards
+
+                            //IF you have any questions check APIController there is a new API added and the old one is commented out
+                            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                            string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment";
+                            List<Assignment> assignments =  client.GetAsync(urlGetAllAssignments).Result.Content.ReadAsAsync<List<Assignment>>().Result;
+
+                            
+
+                            if (assignments.Count > 0)
+                            {
+                                ViewBag.Assignments = assignments;
+                                return View("AllAssignments");
+                            }
+                            else
+                            {
+                                ViewBag.Message = "No assignment found";
+                                ViewBag.ResponseStyleClass = "text-danger";
+                                ViewBag.ButtonText = "Go back to homepage";
+                                ViewBag.ButtonLink = "/";
+                                ViewBag.PageTitle = "No assignments found!";
+                                ViewBag.SubMessage = "There were no assignments \nfor the given query";
+                                ViewBag.Image = "/assets/icons/error.svg";
+                                return View("UserFeedback");
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+
+
                         throw new NotImplementedException("we need to get all active not solved by this user");
                     }
                     else
