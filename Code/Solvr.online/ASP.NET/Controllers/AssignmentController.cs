@@ -105,17 +105,8 @@ namespace webApi.Controllers
                             ViewBag.Image = "/assets/icons/success.svg";
                         }
                         else
-                        { 
-                            
-                            ViewBag.ResponseStyleClass = "text-danger";
-                            ViewBag.ButtonText = "Go back to the assignment form";
-                            ViewBag.ButtonLink = "/assignment/create-assignment/";
-                            ViewBag.PageTitle = "Assignment creation failed!";
-                            ViewBag.Image = "/assets/icons/error.svg";
-
-                            if ((int)createAssignmentRM.StatusCode == 400) ViewBag.SubMessage = " 400 - Bad Request";
-                            else if ((int)createAssignmentRM.StatusCode == 417) ViewBag.SubMessage = "417 - Expectation Failed";
-                            else if ((int)createAssignmentRM.StatusCode == 500) ViewBag.SubMessage = "500 - Internal Server Error";
+                        {
+                            throw new Exception(createAssignmentRM.ReasonPhrase);
                         }
                     }
                     else
@@ -176,12 +167,12 @@ namespace webApi.Controllers
                                     if (solutionCountRM.IsSuccessStatusCode)
                                     {
                                         ViewBag.SolutionCount = solutionCountRM.Content.ReadAsStringAsync().Result;
-                                        return View("DisplayAssignment");
                                     }
                                     else
                                     {
-                                        throw new Exception("Could not find information about solutions for the assignment");
+                                        ViewBag.SolutionCount = "Could not load";
                                     }
+                                    return View("DisplayAssignment");
                                 }
                                 else
                                 {
@@ -287,7 +278,6 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     User user = new User{Id = userId};
@@ -411,18 +401,12 @@ namespace webApi.Controllers
                                         ViewBag.PageTitle = "Assignment updated!";
                                         ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
                                         ViewBag.Image = "/assets/icons/success.svg";
+                                        return View("UserFeedback");
                                     }
                                     else
                                     {
-                                        ViewBag.Message = "Assignment update failed";
-                                        ViewBag.ResponseStyleClass = "text-danger";
-                                        ViewBag.ButtonText = "Go back to the assignment form";
-                                        ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-                                        ViewBag.PageTitle = "Assignment update failed!";
-                                        ViewBag.SubMessage = "There was a server error \ntry again later";
-                                        ViewBag.Image = "/assets/icons/error.svg";
+                                        throw new Exception(updateAssignmentRM.ReasonPhrase);
                                     }
-                                    return View("UserFeedback");
                                 case 2:
                                     return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                                 default:
@@ -454,7 +438,7 @@ namespace webApi.Controllers
             }
         }
 
-        ///*can be accessed by everybody who 
+        //*can be accessed by everybody who 
         // * posted the assignment
         // * and only if the assignment is still active
         // */
@@ -498,18 +482,13 @@ namespace webApi.Controllers
                                     ViewBag.PageTitle = "Assignment deleted!";
                                     ViewBag.SubMessage = "Your assignment is now deleted";
                                     ViewBag.Image = "/assets/icons/success.svg";
+                                    return View("UserFeedback");
+
                                 }
                                 else
                                 {
-                                    ViewBag.Message = "Assignment deletion failed";
-                                    ViewBag.ResponseStyleClass = "text-danger";
-                                    ViewBag.ButtonText = "Go back to the assignment form";
-                                    ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-                                    ViewBag.PageTitle = "Assignment deletion failed!";
-                                    ViewBag.SubMessage = "There was a server error \ntry again later";
-                                    ViewBag.Image = "/assets/icons/error.svg";
+                                    throw new Exception(makeInactiveRM.ReasonPhrase);
                                 }
-                                return View("UserFeedback");
                             case 2:
                                 return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
                             default:
