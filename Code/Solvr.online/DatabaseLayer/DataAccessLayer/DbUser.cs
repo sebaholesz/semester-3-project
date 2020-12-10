@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -39,6 +40,35 @@ namespace DatabaseLayer.DataAccessLayer
             }
             catch (SqlException e)
             {
+                throw e;
+            }
+        }
+
+        public int GetUserCredits(string userId)
+        {
+            try
+            {
+                int credits = Int32.Parse( _db.QueryFirst<string>("Select [Credit] from [Identity].[User] where Id=@userId", new { userId = userId }));
+                return credits;
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public int UpdateUserCredits(int credit, string userId)
+        {
+            try
+            {
+                
+                int returni = _db.Execute(@"Update [Identity].[User] set credit=@credit WHERE Id = @userId", new { credit = credit ,userId = userId});
+
+                return returni;
+            }
+            catch (SqlException e)
+            {
+
                 throw e;
             }
         }

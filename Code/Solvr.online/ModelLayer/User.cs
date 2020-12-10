@@ -7,5 +7,6 @@ namespace ModelLayer
         public string LastLogin { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public double Credit { get; set; }
     }
 }
