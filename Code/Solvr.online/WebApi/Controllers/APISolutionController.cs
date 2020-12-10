@@ -53,23 +53,25 @@ namespace WebApi.Controllers
             }
         }
 
-
-
-
-        [Route("solution/byAssignmentId/{assignmentId}")]
+        [Route("solution/by-assignment/{assignmentId}")]
         [HttpGet]
         public IActionResult GetSolutionsByAssignmentId(int assignmentId)
         {
-            //the list is oredered by timestamp
-
-            List<Solution> solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
-            if (solutions.Count > 0)
+            try
             {
-                return Ok(solutions);
+                List<Solution> solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
+                if (solutions.Count > 0)
+                {
+                    return Ok(solutions);
+                }
+                else
+                {
+                    return NotFound("Solutions with that AssignmentID not found!");
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound("Solutions with that AssignmentID not found!");
+                return StatusCode(500);
             }
         }
         
@@ -95,8 +97,6 @@ namespace WebApi.Controllers
                 return StatusCode(500);
             }
         }
-        
-        
 
         [Route("solution")]
         [HttpPost]
@@ -117,14 +117,6 @@ namespace WebApi.Controllers
         }
 
         [Route("solution/{id}")]
-        [HttpPost]
-        public IActionResult Post(int id)
-        {
-            //Invalid request which returns 400
-            return BadRequest("The URL Is Invalid - Bad Request!");
-        }
-
-        [Route("solution/{id}")]
         [HttpPut]
         public IActionResult Put([FromBody] Solution solution, int id)
         {
@@ -142,14 +134,6 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("solution")]
-        [HttpPut]
-        public IActionResult Put()
-        {
-            //Invalid request which returns 400
-            return BadRequest("The URL Is Invalid - Bad Request!");
-        }
-
         [Route("solution/{id}")]
         [HttpDelete]
         public IActionResult Delete(int id)
@@ -165,14 +149,6 @@ namespace WebApi.Controllers
             {
                 return NotFound("Solution was not found!");
             }
-        }
-
-        [Route("solution")]
-        [HttpDelete]
-        public IActionResult Delete()
-        {
-            //Invalid request which returns 400
-            return BadRequest("The URL Is Invalid - Bad Request!");
         }
     }
 }

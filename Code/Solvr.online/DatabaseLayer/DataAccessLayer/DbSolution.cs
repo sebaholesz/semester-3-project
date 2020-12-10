@@ -176,6 +176,18 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+
+        public Solution GetAcceptedSolutionForAssignment(int assignmentId)
+        {
+            try
+            {
+                return _db.QueryFirst<Solution>("Select * from [dbo].[Solution] where assignmentId=@assignmentId and accepted=1", new { assignmentId = assignmentId });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
     }
 }
     

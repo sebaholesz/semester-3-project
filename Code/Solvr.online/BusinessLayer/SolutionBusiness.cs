@@ -113,5 +113,18 @@ namespace BusinessLayer
         {
             return _dbSolution.GetAllSolversForAssignment(assignmentId);
         }
+
+        public Solution GetAcceptedSolutionForAssignment(int assignmentId)
+        {
+            try
+            {
+                Solution solution = _dbSolution.GetAcceptedSolutionForAssignment(assignmentId);
+                return solution ?? null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

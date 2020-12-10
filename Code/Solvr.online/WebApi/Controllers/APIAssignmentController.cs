@@ -66,15 +66,45 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetCompleteData(int assignmentId)
         {
-            object assignmentCompleteData = assignmentBusiness.GetAssignmentCompleteData(assignmentId);
+            try
+            {
+                object assignmentCompleteData = assignmentBusiness.GetAssignmentCompleteData(assignmentId);
 
-            if (assignmentCompleteData != null )
-            {
-                return Ok(assignmentCompleteData);
+                if (assignmentCompleteData != null )
+                {
+                    return Ok(assignmentCompleteData);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment/complete-data-with-solution/{assignmentId}")]
+        [HttpGet]
+        public IActionResult GetCompleteDataWithSolution(int assignmentId)
+        {
+            try
+            {
+                object assignmentCompleteDataWithSolution = assignmentBusiness.GetAssignmentCompleteDataWithSolution(assignmentId);
+
+                if (assignmentCompleteDataWithSolution != null)
+                {
+                    return Ok(assignmentCompleteDataWithSolution);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
             }
         }
 

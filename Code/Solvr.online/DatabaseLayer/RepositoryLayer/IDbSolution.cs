@@ -16,5 +16,6 @@ namespace DatabaseLayer.RepositoryLayer
         int DeleteSolution(int id);
         int ChooseSolution(int solutionId);
         List<string> GetAllSolversForAssignment(int assignmentId);
+        Solution GetAcceptedSolutionForAssignment(int assignmentId);
     }
 }

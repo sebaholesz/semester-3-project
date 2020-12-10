@@ -80,6 +80,37 @@ namespace BusinessLayer
             return null;
         }
 
+        public object GetAssignmentCompleteDataWithSolution(int assignmentId)
+        {
+            try
+            {
+                Assignment assignment = _dbAssignment.GetByAssignmentId(assignmentId);
+                if (!assignment.Equals(null))
+                {
+                    User user = _userBusiness.GetDisplayDataByUserId(assignment.UserId);
+
+                    if (!user.Equals(null))
+                    {
+                        Solution solution = SolutionBusiness.GetSolutionBusiness().GetAcceptedSolutionForAssignment(assignmentId);
+
+                        if (!solution.Equals(null))
+                        {
+                            //TODO refactor this nasty code :D
+                            if ((assignment.UserId.Equals(user.Id) && assignment.IsActive == false) || (solution.UserId.Equals(user.Id)))
+                            {
+                                return new { Assignment = assignment, Solution = solution, User = user };
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)
         {
             return _dbAssignment.CheckIfUserAlreadySolvedThisAssignment(asignmentId, userId);
