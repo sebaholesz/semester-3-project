@@ -10,28 +10,26 @@ namespace WebApi.Controllers
     [Route("apiV1/")]
     public class APISolutionController : ControllerBase
     {
-        private readonly SolutionBusiness solutionBusiness;
-
-        public APISolutionController()
-        {
-            solutionBusiness = SolutionBusiness.GetSolutionBusiness();
-        }
-
         [Route("solution")]
         [HttpGet]
         public IActionResult Get()
         {
-            //Get the List<Assignments>
-            List<Solution> solutions = solutionBusiness.GetAllSolutions();
+            try
+            {
+                List<Solution> solutions = SolutionBusiness.GetSolutionBusiness().GetAllSolutions();
 
-            //Check if the List<Assignments> is not empty and return 200 + solutions if true else return 404 + messasge
-            if (solutions.Count > 0)
-            {
-                return Ok(solutions);
+                if (solutions.Count > 0)
+                {
+                    return Ok(solutions);
+                }
+                else
+                {
+                    return NotFound("No Solutions found!");
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound("No Solutions found!");
+                return StatusCode(500);
             }
         }
 
@@ -39,17 +37,21 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult Get(int id)
         {
-            //assignmentInterface get
-            //return in HttpResonseMessage body Assignment
-
-            Solution solution = solutionBusiness.GetBySolutionId(id);
-            if (solution != null)
+            try
             {
-                return Ok(solution);
+                Solution solution = SolutionBusiness.GetSolutionBusiness().GetBySolutionId(id);
+                if (solution != null)
+                {
+                    return Ok(solution);
+                }
+                else
+                {
+                    return NotFound("Solution with that ID not found!");
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound("Solution with that ID not found!");
+                return StatusCode(500);
             }
         }
 
@@ -59,7 +61,8 @@ namespace WebApi.Controllers
         {
             try
             {
-                List<Solution> solutions = solutionBusiness.GetSolutionsByAssignmentId(assignmentId);
+                List<Solution> solutions = SolutionBusiness.GetSolutionBusiness().GetSolutionsByAssignmentId(assignmentId);
+                
                 if (solutions.Count > 0)
                 {
                     return Ok(solutions);
@@ -81,7 +84,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                int numberOfSolutions = solutionBusiness.GetSolutionsCountByAssignmentId(assignmentId);
+                int numberOfSolutions = SolutionBusiness.GetSolutionBusiness().GetSolutionsCountByAssignmentId(assignmentId);
 
                 if (numberOfSolutions >= 0)
                 {
@@ -102,17 +105,22 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Solution solution)
         {
-            //Attempt the creation of the solutioin and save the int value of the rows affected
-            int queuePosition = solutionBusiness.CreateSolution(solution);
+            try
+            {
+                int queuePosition = SolutionBusiness.GetSolutionBusiness().CreateSolution(solution);
 
-            //Check if the creation was successful and return 201 + queue position or 409 + -1 as a fail message
-            if (queuePosition >= 0)
-            {
-                return StatusCode(201, queuePosition);
+                if (queuePosition > 0)
+                {
+                    return StatusCode(201, queuePosition);
+                }
+                else
+                {
+                    return StatusCode(409);
+                }
             }
-            else
+            catch (Exception)
             {
-                return StatusCode(409, queuePosition);
+                return StatusCode(500);
             }
         }
 
@@ -120,17 +128,21 @@ namespace WebApi.Controllers
         [HttpPut]
         public IActionResult Put([FromBody] Solution solution, int id)
         {
-            //assignmentInterface update
-            //return in HttpResonseMessage body Assignment
-
-            int noOfRows = solutionBusiness.UpdateSolution(solution, id);
-            if (noOfRows > 0)
+            try
             {
-                return Ok("Solution Updated Successfuly!");
+                int noOfRowsAffected = SolutionBusiness.GetSolutionBusiness().UpdateSolution(solution, id);
+                if (noOfRowsAffected == 1)
+                {
+                    return Ok("Solution Updated Successfuly!");
+                }
+                else
+                {
+                    return NotFound("Solution was not found!");
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound("Solution was not found!");
+                return StatusCode(500);
             }
         }
 
@@ -138,16 +150,21 @@ namespace WebApi.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            //return if operation was successful
-
-            int noOfRows = solutionBusiness.DeleteSolution(id);
-            if (noOfRows > 0)
+            try
             {
-                return Ok("Solution Deleted Successfuly!");
+                int noOfRowsAffected = SolutionBusiness.GetSolutionBusiness().DeleteSolution(id);
+                if (noOfRowsAffected == 1)
+                {
+                    return Ok("Solution Deleted Successfuly!");
+                }
+                else
+                {
+                    return NotFound("Solution was not found!");
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound("Solution was not found!");
+                return StatusCode(500);
             }
         }
     }

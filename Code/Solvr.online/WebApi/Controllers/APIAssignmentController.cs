@@ -12,13 +12,6 @@ namespace WebApi.Controllers
     [Route("apiV1/")]
     public class APIAssignmentController : ControllerBase
     {
-        private readonly AssignmentBusiness assignmentBusiness;
-
-        public APIAssignmentController()
-        {
-            assignmentBusiness = AssignmentBusiness.GetAssignmentBusiness();
-        }
-
         [Route("assignment")]
         [HttpPost]
         public IActionResult CreateAssignment([FromBody] Assignment assignment)
@@ -26,18 +19,15 @@ namespace WebApi.Controllers
             try
             {
                 assignment.PostDate = DateTime.Now;
-                int insertedAssignmentId = assignmentBusiness.CreateAssignment(assignment);
+                int insertedAssignmentId = AssignmentBusiness.GetAssignmentBusiness().CreateAssignment(assignment);
 
-                //200 OK = if everything went well
-                //417 Expected value is not the same as the actual value = if noOfRowsAffected is not 1
-                //400 Bad Request = if invalid data was used for the post request
-                //500 Server Error = if an exception was thrown
-                switch (insertedAssignmentId)
+                if (insertedAssignmentId > 0)
                 {
-                    case int iaid when (iaid > 0): return Ok(insertedAssignmentId);
-                    case 0  : return StatusCode(417);
-                    case -1 : return BadRequest("Invalid data inserted");
-                    default: throw new HttpRequestException();
+                    return Ok(insertedAssignmentId);
+                }
+                else
+                { 
+                    return StatusCode(417);
                 }
             }
             catch (Exception)
@@ -50,15 +40,22 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            List<Assignment> assignments = assignmentBusiness.GetAllAssignments();
+            try
+            {
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignments();
 
-            if (assignments.Count() > 0)
-            {
-                return Ok(assignments);
+                if (assignments.Count() > 0)
+                {
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(500);
             }
         }
 
@@ -68,9 +65,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                object assignmentCompleteData = assignmentBusiness.GetAssignmentCompleteData(assignmentId);
+                object assignmentCompleteData = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteData(assignmentId);
 
-                if (assignmentCompleteData != null )
+                if (assignmentCompleteData != null)
                 {
                     return Ok(assignmentCompleteData);
                 }
@@ -91,7 +88,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                object assignmentCompleteDataWithSolution = assignmentBusiness.GetAssignmentCompleteDataWithSolution(assignmentId);
+                object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithSolution(assignmentId);
 
                 if (assignmentCompleteDataWithSolution != null)
                 {
@@ -114,7 +111,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignments();
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignments();
 
                 if (assignments.Count() > 0)
                 {
@@ -137,7 +134,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotPostedByUser(user.Id);
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotPostedByUser(user.Id);
 
                 if (assignments.Count() > 0)
                 {
@@ -160,7 +157,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                List<Assignment> assignments = assignmentBusiness.GetAllAssignmentsForUser(user.Id);
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsForUser(user.Id);
 
                 if (assignments.Count() > 0)
                 {
@@ -183,7 +180,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                List<Assignment> assignments = assignmentBusiness.GetAllAssignmentsSolvedByUser(user.Id);
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsSolvedByUser(user.Id);
 
                 if (assignments.Count() > 0)
                 {
@@ -204,41 +201,66 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAllActiveAssignmentsNotSolvedByUser([FromBody] User user)
         {
-            List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotSolvedByUser(user.Id);
+            try
+            {
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotSolvedByUser(user.Id);
 
-            if (assignments.Count() > 0)
-            {
-                return Ok(assignments);
+                if (assignments.Count() > 0)
+                {
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(500);
             }
         }
 
         [Route("assignment/{id}")]
         [HttpGet]
-        public Assignment GetByAssignmentId(int id)
+        public IActionResult GetByAssignmentId(int id)
         {
-            Assignment assignment = assignmentBusiness.GetByAssignmentId(id);
-            return assignment ?? null;
+            try
+            {
+                Assignment assignment = AssignmentBusiness.GetAssignmentBusiness().GetByAssignmentId(id);
+                if (!assignment.Equals(null))
+                {
+                    return Ok(assignment);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         [Route("assignment/{id}")]
         [HttpPut]
         public IActionResult Put([FromBody] Assignment assignment, int id)
         {
-            //assignmentInterface update
-            //return in HttpResonseMessage body Assignment
-
-            int noOfRows = assignmentBusiness.UpdateAssignment(assignment, id);
-            if (noOfRows > 0)
+            try
             {
-                return Ok("Assignment updated successfully!");
+                int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().UpdateAssignment(assignment, id);
+                if (noOfRowsAffected > 0)
+                {
+                    return Ok("Assignment updated successfully!");
+                }
+                else
+                {
+                    return NotFound($"Assignment with id {id} was not found");
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound($"Assignment with id {id} was not found");
+                return StatusCode(500);
             }
         }
 
@@ -246,14 +268,21 @@ namespace WebApi.Controllers
         [HttpPut]
         public IActionResult MakeInactive(int id)
         {
-            int noOfRows = assignmentBusiness.MakeInactive(id);
-            if (noOfRows > 0)
+            try
             {
-                return Ok();
+                int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeInactive(id);
+                if (noOfRowsAffected > 0)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(500);
             }
         }
 
@@ -261,14 +290,21 @@ namespace WebApi.Controllers
         [HttpPut]
         public IActionResult MakActive(int id)
         {
-            int noOfRows = assignmentBusiness.MakeActive(id);
-            if (noOfRows > 0)
+            try
             {
-                return Ok();
+                int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeActive(id);
+                if (noOfRowsAffected > 0)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(500);
             }
         }
 
@@ -276,19 +312,22 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAllAcademicLevels()
         {
-            //Get the List<AcademicLevel>
-            List<string> levels = assignmentBusiness.GetAllAcademicLevels();
+            try
+            {
+                List<string> levels = AssignmentBusiness.GetAssignmentBusiness().GetAllAcademicLevels();
 
-            //Check if the List<AcademicLevel> is not empty
-            if (levels.Count() > 0)
-            {
-                //Return 200 + levels
-                return Ok(levels);
+                if (levels.Count() > 0)
+                {
+                    return Ok(levels);
+                }
+                else
+                {
+                    return NotFound("No Academic levels Found!");
+                }
             }
-            else
+            catch (Exception)
             {
-                //Return 404 + string with message
-                return NotFound("No Academic levels Found!");
+                return StatusCode(500);
             }
         }
 
@@ -296,19 +335,22 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAllSubjects()
         {
-            //Get the List<Subject>
-            List<string> subjects = assignmentBusiness.GetAllSubjects();
+            try
+            {
+                List<string> subjects = AssignmentBusiness.GetAssignmentBusiness().GetAllSubjects();
 
-            //Check if the List<Subject> is not empty
-            if (subjects.Count() > 0)
-            {
-                //Return 200 + subjects
-                return Ok(subjects);
+                if (subjects.Count() > 0)
+                {
+                    return Ok(subjects);
+                }
+                else
+                {
+                    return NotFound("No Subjects Found!");
+                }
             }
-            else
+            catch (Exception)
             {
-                //Return 404 + string with message
-                return NotFound("No Subjects Found!");
+                return StatusCode(500);
             }
         }
 
@@ -318,13 +360,10 @@ namespace WebApi.Controllers
         {
             try
             {
-                //Get the List<Subject>
-                int returnCode = assignmentBusiness.CheckUserVsAssignment(assignmentId, user.Id);
+                int returnCode = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, user.Id);
 
-                //Check if the List<Subject> is not empty
                 if (new[] { 0, 1, 2 }.Contains(returnCode))
                 {
-                    //Return 200 + subjects
                     return Ok(returnCode);
                 }
                 else
@@ -332,9 +371,9 @@ namespace WebApi.Controllers
                     return NotFound("This user is not associated with the assignment!");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return NotFound(e.Message);
+                return StatusCode(500);
             }
         }
     }
