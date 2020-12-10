@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Models
 {
     public class Assignment
-    {       
+    {
         public int AssignmentId { get; set; }
         [Required]
         [StringLength(75)]
@@ -27,7 +27,8 @@ namespace Models
         public string Subject { get; set; }
         public bool IsActive { get; set; }
         public byte[] AssignmentFile { get; set; }
-        
+        public byte[] Timestamp { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Deadline <= DateTime.Now)

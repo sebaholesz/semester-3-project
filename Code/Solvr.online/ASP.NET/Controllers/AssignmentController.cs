@@ -18,12 +18,9 @@ namespace webApi.Controllers
     [Authorize]
     public class AssignmentController : Controller
     {
-
-        #region REFACTORED
         /*can be accessed by everybody who 
          * is logged in
          */
-        //REFACTORED
         [Route("assignment/create-assignment")]
         [HttpGet]
         public ActionResult CreateAssignment()
@@ -54,13 +51,10 @@ namespace webApi.Controllers
                 return Redirect("/error");
             }
         }
-            
         
-
         /*can be accessed by everybody who 
          * is logged in
          */
-        //REFACTORED
         [Route("assignment/create-assignment")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -198,8 +192,6 @@ namespace webApi.Controllers
                 return Redirect("/error");
             }
         }
-        #endregion
-
 
         //can be accessed by everybody
         [AllowAnonymous]
@@ -308,7 +300,6 @@ namespace webApi.Controllers
                                     {
                                         ViewBag.Assignment = assignment;
                                         ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
-                                        //added
                                         ViewBag.Timestamp = assignment.Timestamp;
                                         return View("UpdateAssignment");
                                     }
@@ -599,6 +590,5 @@ namespace webApi.Controllers
                 return Redirect("/error");
             }
         }
-
     }
 }
