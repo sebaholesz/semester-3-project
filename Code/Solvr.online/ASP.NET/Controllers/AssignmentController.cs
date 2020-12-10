@@ -308,6 +308,8 @@ namespace webApi.Controllers
                                     {
                                         ViewBag.Assignment = assignment;
                                         ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
+                                        //added
+                                        ViewBag.Timestamp = assignment.Timestamp;
                                         return View("UpdateAssignment");
                                     }
                                     else
@@ -389,6 +391,8 @@ namespace webApi.Controllers
                                     string urlUpdateAssignment = "https://localhost:44316/apiV1/assignment/" + assignmentId;
                                     HttpResponseMessage updateAssignmentRM = client.PutAsync(urlUpdateAssignment, 
                                         new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;
+                                    
+                                    ///UpdateAssignment(assignment, assignmentId, assignment.Timestamp);
 
                                     if(updateAssignmentRM.IsSuccessStatusCode)
                                     {
@@ -595,5 +599,6 @@ namespace webApi.Controllers
                 return Redirect("/error");
             }
         }
+
     }
 }

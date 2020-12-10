@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using Utility.HildurConnection;
 
 namespace SolvrOnlineUnitTests
 {
@@ -85,20 +86,25 @@ namespace SolvrOnlineUnitTests
 
         [Test]
         //TODO: REDO
-        public void TestUpdate()
+        public void TestUpdateConcurrency()
         {
             List<Assignment> listOfItems = dba.GetAllAssignments();
             int id = listOfItems[0].AssignmentId;
             DateTime now = DateTime.Now;
+            DateTime tomorrow = DateTime.Today.AddDays(1);
+
 
             Assignment assignment = dba.GetByAssignmentId(id);
-            assignment.Description = "test description 2";
+            assignment.PostDate = tomorrow;
+            dba.UpdateAssignment(assignment, id, assignment.Timestamp);
 
-            dba.UpdateAssignment(assignment, id);
+            assignment.PostDate = now;
+            dba.UpdateAssignment(assignment, id, assignment.Timestamp);
 
-            Assignment updatedAssignment = dba.GetByAssignmentId(id);
 
-            Assert.AreEqual(updatedAssignment.Description, "test description 2");
+            Assignment newAssignment = dba.GetByAssignmentId(id);
+
+            Assert.AreEqual(newAssignment.PostDate, tomorrow);
         }
 
         [Test]

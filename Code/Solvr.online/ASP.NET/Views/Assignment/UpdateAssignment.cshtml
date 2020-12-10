@@ -46,6 +46,7 @@
                     <div class="row assignment-description-detail-container">
                         <div class="col-md-7 height-max">
                             <div class="assignment-description">
+                                <input asp-for="Timestamp" type="hidden" value="@ViewBag.Timestamp"/>
                                 <span asp-validation-for="Description" class="text-danger"></span>
                                 <textarea name="@Html.NameFor(m => m.Description)" class="textarea-assignment-description" readonly>@assignment.Description</textarea>
                             </div>
