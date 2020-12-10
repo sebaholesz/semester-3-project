@@ -28,7 +28,7 @@ namespace ModelLayer
         public bool IsActive { get; set; }
         public byte[] AssignmentFile { get; set; }
         public byte[] Timestamp { get; set; }
-        
+   
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Deadline <= DateTime.Now)

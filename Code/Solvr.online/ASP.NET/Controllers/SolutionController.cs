@@ -16,12 +16,6 @@ namespace webApi.Controllers
     [Authorize]
     public class SolutionController : Controller
     {
-
-        public SolutionController()
-        {
-
-        }
-
         /*can be accessed by everybody who 
          * hasnt posted the assignment  
          * and hasnt solved it yet 
