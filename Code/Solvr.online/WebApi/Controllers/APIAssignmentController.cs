@@ -78,7 +78,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("assignment/active")]
+        [Route("assignment/all-active")]
         [HttpGet]
         public IActionResult GetAllActiveAssignments()
         {
@@ -101,13 +101,59 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("assignment/not-posted-by-user")]
+        [Route("assignment/all-active-not-posted-by-user")]
         [HttpPost]
         public IActionResult GetAllActiveAssignmentsNotPostedByUser([FromBody] User user)
         {
             try
             {
                 List<Assignment> assignments = assignmentBusiness.GetAllActiveAssignmentsNotPostedByUser(user.Id);
+
+                if (assignments.Count() > 0)
+                {
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment/user")]
+        [HttpPost]
+        public IActionResult GetAllAssignmentsForUser([FromBody] User user)
+        {
+            try
+            {
+                List<Assignment> assignments = assignmentBusiness.GetAllAssignmentsForUser(user.Id);
+
+                if (assignments.Count() > 0)
+                {
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment/solved-by-user")]
+        [HttpGet]
+        public IActionResult GetAllAssignmentsSolvedByUser([FromBody] User user)
+        {
+            try
+            {
+                List<Assignment> assignments = assignmentBusiness.GetAllAssignmentsSolvedByUser(user.Id);
 
                 if (assignments.Count() > 0)
                 {
@@ -139,7 +185,6 @@ namespace WebApi.Controllers
                 return NotFound();
             }
         }
-
 
         [Route("assignment/{id}")]
         [HttpGet]

@@ -52,7 +52,7 @@ namespace webApi.Controllers
                     case 0:
                         using (HttpClient client = new HttpClient())
                         {
-                            string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
+                            string urlCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                             AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
                             ViewBag.Assignment = asu.Assignment;
                             //TODO get number of solutions we could parse to front end
@@ -137,7 +137,7 @@ namespace webApi.Controllers
                             int queueOrder;
                             using (HttpClient client = new HttpClient())
                             {
-                                string urlCreateSolution = "https://www.localhost:44316/apiV1/solution/" + assignmentId;
+                                string urlCreateSolution = "https://localhost:44316/apiV1/solution/" + assignmentId;
                                 queueOrder = Convert.ToInt32((client.PostAsync(urlCreateSolution, new StringContent(JsonConvert.SerializeObject(solution))).Result).Content.ReadAsStringAsync().Result);
                             }
 
@@ -310,7 +310,7 @@ namespace webApi.Controllers
 
                     Solution solution = JsonConvert.DeserializeObject<Solution>((client.GetAsync("https://localhost:44316/apiV1/solution/"+assignmentId).Result).Content.ReadAsStringAsync().Result);
 
-                    string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
+                    string urlCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                     AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
                     ViewBag.Assignment = asu.Assignment;
                     ViewBag.Solution = solution;
@@ -362,7 +362,7 @@ namespace webApi.Controllers
                             //if (!solvedAssignment.IsActive)
                             //{
 
-                                string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
+                                string urlCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                                 AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
                                 ViewBag.Assignment = asu.Assignment;
                                 ViewBag.Solution = solution;
@@ -421,7 +421,7 @@ namespace webApi.Controllers
                         case 1:
                             return Redirect("/assignment/display-assignment/" + assignmentId);
                         case 2:
-                            string urlCompleteAssignmentData = "https://www.localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
+                            string urlCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
                             AssignmentSolutionUser asu = JsonConvert.DeserializeObject<AssignmentSolutionUser>((client.GetAsync(urlCompleteAssignmentData).Result).Content.ReadAsStringAsync().Result);
                             ViewBag.Assignment = asu.Assignment;
                             ViewBag.Solution = solution;

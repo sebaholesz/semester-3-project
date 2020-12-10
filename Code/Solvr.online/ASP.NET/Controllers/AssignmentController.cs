@@ -146,16 +146,14 @@ namespace webApi.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    int returnCode;
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    User user = new User();
-                    user.Id = userId;
+                    User user = new User { Id = userId };
 
                     HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
-                        returnCode = (client.GetAsync(urlCheckUser).Result).Content.ReadAsAsync<int>().Result;
+                        int returnCode = returnCodeRM.Content.ReadAsAsync<int>().Result;
 
                         /*
                          * 0 = hes neither author nor previous solver
@@ -212,10 +210,6 @@ namespace webApi.Controllers
         #endregion
 
 
-        //TODO add display all assignment for people not logged in
-
-
-
         //can be accessed by everybody
         [AllowAnonymous]
         [Route("assignment/display-assignments")]
@@ -230,9 +224,8 @@ namespace webApi.Controllers
                     { 
                         // MAYBE TODO counts of answers to all assignments in assignment Cards
                         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/not-posted-by-user";
-                        User user = new User();
-                        user.Id = userId;
+                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/all-active-not-posted-by-user";
+                        User user = new User() { Id = userId };
 
                         HttpResponseMessage assignmentsNotPostedByUserRM = client.PostAsync(urlGetAllAssignments, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
                         if (assignmentsNotPostedByUserRM.IsSuccessStatusCode)
@@ -254,7 +247,7 @@ namespace webApi.Controllers
                     }
                     else
                     {
-                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/active";
+                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/all-active";
                         HttpResponseMessage allAssignmentsRM = client.GetAsync(urlGetAllAssignments).Result;
                         if (allAssignmentsRM.IsSuccessStatusCode)
                         {
@@ -294,39 +287,57 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    int returnCode;
-                    string baseUrl = "http://localhost:44316/apiV1/";
-                    string urlCheckUser = baseUrl + "check-user-vs-assignment/" + assignmentId;
+                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                    User user = new User{Id = userId};
 
-                    returnCode = Convert.ToInt32((client.PostAsync(urlCheckUser, new StringContent(userId)).Result).Content.ReadAsStringAsync().Result);
+                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
-                    /*
-                     * 0 = hes neither author nor previous solver
-                     * 1 = authorUserId = currentUserId
-                     * 2 = solverId = currentUserId
-                     */
-                    switch (returnCode)
+                    if (returnCodeRM.IsSuccessStatusCode)
                     {
-                        case 0:
-                            return Redirect("/assignment/display-assignment/" + assignmentId);
-                        case 1:
-                            string urlGetAssignment = "https://www.localhost:44316/apiV1/assignment/" + assignmentId;
-                            Assignment assignment = JsonConvert.DeserializeObject<Assignment>((client.GetAsync(urlGetAssignment).Result).Content.ReadAsStringAsync().Result);
-                            if (assignment.IsActive)
-                            {
-                                ViewBag.Assignment = assignment;
-                                ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
-                                return View("UpdateAssignment");
-                            }
-                            else
-                            {
-                                return Redirect("/solution/solution-for-assignment/" + assignmentId);
-                            }
-                        case 2:
-                            return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
-                        default:
-                            throw new Exception("Internal server error");
+                        int returnCode = returnCodeRM.Content.ReadAsAsync<int>().Result;
+
+                        /*
+                         * 0 = hes neither author nor previous solver
+                         * 1 = authorUserId = currentUserId
+                         * 2 = solverId = currentUserId
+                         */
+                        switch (returnCode)
+                        {
+                            case 0:
+                                return Redirect("/assignment/display-assignment/" + assignmentId);
+                            case 1:
+                                string urlGetAssignment = "https://localhost:44316/apiV1/assignment/" + assignmentId;
+                                HttpResponseMessage getAssignmentRM = client.GetAsync(urlGetAssignment).Result;
+                                
+                                if(getAssignmentRM.IsSuccessStatusCode)
+                                {
+                                    Assignment assignment = getAssignmentRM.Content.ReadAsAsync<Assignment>().Result;
+                                    if (assignment.IsActive)
+                                    {
+                                        ViewBag.Assignment = assignment;
+                                        ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
+                                        return View("UpdateAssignment");
+                                    }
+                                    else
+                                    {
+                                        return Redirect("/solution/solution-for-assignment/" + assignmentId);
+                                    }
+                                }
+                                else
+                                {
+                                    throw new Exception("Could not find the assignment");
+                                }
+                            case 2:
+                                return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                            default:
+                                throw new Exception("Internal server error");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Internal server error");
                     }
                 }
             }
@@ -353,30 +364,30 @@ namespace webApi.Controllers
                     using (HttpClient client = new HttpClient())
                     {
                         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        int returnCode;
-                        string baseUrl = "http://localhost:44316/apiV1/";
-                        string urlCheckUser = baseUrl + "check-user-vs-assignment/" + assignmentId;
+                        string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                        User user = new User { Id = userId };
 
-                        returnCode = Convert.ToInt32((client.PostAsync(urlCheckUser, new StringContent(userId)).Result).Content.ReadAsStringAsync().Result);
+                        HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
-                        /*
-                         * 0 = hes neither author nor previous solver
-                         * 1 = authorUserId = currentUserId
-                         * 2 = solverId = currentUserId
-                         */
-                        switch (returnCode)
+                        if (returnCodeRM.IsSuccessStatusCode)
                         {
-                            case 0:
-                                return Redirect("/assignment/display-assignment/" + assignmentId);
-                            case 1:
-                                string urlGetAssignment = "https://www.localhost:44316/apiV1/assignment/" + assignmentId;
-                                Assignment assignment = JsonConvert.DeserializeObject<Assignment>((client.GetAsync(urlGetAssignment).Result).Content.ReadAsStringAsync().Result);
-                                if (assignment.IsActive)
-                                {
+                            int returnCode = returnCodeRM.Content.ReadAsAsync<int>().Result;
+
+                            /*
+                             * 0 = hes neither author nor previous solver
+                             * 1 = authorUserId = currentUserId
+                             * 2 = solverId = currentUserId
+                             */
+                            switch (returnCode)
+                            {
+                                case 0:
+                                    return Redirect("/assignment/display-assignment/" + assignmentId);
+                                case 1:
+                                    Assignment assignment = new Assignment();
+
                                     assignment.Title = collection["Title"];
                                     assignment.Description = collection["Description"];
                                     assignment.Price = Convert.ToInt32(collection["Price"]);
-                                    //maybe the parse not needed?
                                     assignment.Deadline = DateTime.Parse(collection["Deadline"]);
                                     assignment.Anonymous = Convert.ToBoolean(collection["Anonymous"][0]);
                                     assignment.AcademicLevel = collection["AcademicLevel"];
@@ -385,12 +396,14 @@ namespace webApi.Controllers
                                     //TODO check if the file should be updated
                                     //assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
 
-                                    string urlUpdateAssignment = "https://www.localhost:44316/apiV1/assignment/" + assignmentId;
-                                    int noOfRowsAffected = JsonConvert.DeserializeObject<int>((client.PutAsync(urlUpdateAssignment, new StringContent(JsonConvert.SerializeObject(assignment))).Result).Content.ReadAsStringAsync().Result);
+                                    string urlUpdateAssignment = "https://localhost:44316/apiV1/assignment/" + assignmentId;
+                                    HttpResponseMessage updateAssignmentRM = client.PutAsync(urlUpdateAssignment, 
+                                        new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;
 
-                                    //TODO notify all solvers of the changes
-                                    if (noOfRowsAffected > 0)
+                                    if(updateAssignmentRM.IsSuccessStatusCode)
                                     {
+                                        //TODO notify all solvers of the changes
+
                                         ViewBag.Message = "Assignment updated successfully";
                                         ViewBag.ResponseStyleClass = "text-success";
                                         ViewBag.ButtonText = "Display your assignment";
@@ -410,15 +423,15 @@ namespace webApi.Controllers
                                         ViewBag.Image = "/assets/icons/error.svg";
                                     }
                                     return View("UserFeedback");
-                                }
-                                else
-                                {
-                                    throw new Exception("Cannot update inactive assignment");
-                                }
-                            case 2:
-                                return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
-                            default:
-                                throw new Exception("Internal server error");
+                                case 2:
+                                    return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                                default:
+                                    throw new Exception("Internal server error");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Internal server error");
                         }
                     }
                 }
@@ -446,7 +459,7 @@ namespace webApi.Controllers
         // * and only if the assignment is still active
         // */
         [Route("assignment/delete-assignment/{assignmentId}")]
-        [HttpDelete]
+        [HttpPut]
         public ActionResult DeleteAssignment(int assignmentId)
         {
             try
@@ -454,50 +467,58 @@ namespace webApi.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    int returnCode;
-                    string baseUrl = "http://localhost:44316/apiV1/";
-                    string urlCheckUser = baseUrl + "check-user-vs-assignment/" + assignmentId;
+                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                    User user = new User { Id = userId };
 
-                    returnCode = Convert.ToInt32((client.PostAsync(urlCheckUser, new StringContent(userId)).Result).Content.ReadAsStringAsync().Result);
+                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
-                    /*
-                     * 0 = hes neither author nor previous solver
-                     * 1 = authorUserId = currentUserId
-                     * 2 = solverId = currentUserId
-                     */
-                    switch (returnCode)
+                    if (returnCodeRM.IsSuccessStatusCode)
                     {
-                        case 0:
-                            return Redirect("/assignment/display-assignment/" + assignmentId);
-                        case 1:
-                            string urlMakeInactive = "https://www.localhost:44316/apiV1/assignment/inactive" + assignmentId;
-                            int noOfRowsAffected = Convert.ToInt32((client.PutAsync(urlMakeInactive, null).Result).Content.ReadAsStringAsync().Result);
+                        int returnCode = returnCodeRM.Content.ReadAsAsync<int>().Result;
 
-                            if (noOfRowsAffected == 1)
-                            {
-                                ViewBag.Message = "Assignment deleted successfully";
-                                ViewBag.ResponseStyleClass = "text-success";
-                                ViewBag.ButtonText = "Go back to homepage";
-                                ViewBag.ButtonLink = "/";
-                                ViewBag.PageTitle = "Assignment deleted!";
-                                ViewBag.SubMessage = "Your assignment is now deleted";
-                                ViewBag.Image = "/assets/icons/success.svg";
-                            }
-                            else
-                            {
-                                ViewBag.Message = "Assignment deletion failed";
-                                ViewBag.ResponseStyleClass = "text-danger";
-                                ViewBag.ButtonText = "Go back to the assignment form";
-                                ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-                                ViewBag.PageTitle = "Assignment deletion failed!";
-                                ViewBag.SubMessage = "There was a server error \ntry again later";
-                                ViewBag.Image = "/assets/icons/error.svg";
-                            }
-                            return View("UserFeedback");
-                        case 2:
-                            return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
-                        default:
-                            throw new Exception("Internal server error");
+                        /*
+                         * 0 = hes neither author nor previous solver
+                         * 1 = authorUserId = currentUserId
+                         * 2 = solverId = currentUserId
+                         */
+                        switch (returnCode)
+                        {
+                            case 0:
+                                return Redirect("/assignment/display-assignment/" + assignmentId);
+                            case 1:
+                                string urlMakeInactive = "https://localhost:44316/apiV1/assignment/inactive/" + assignmentId;
+                                HttpResponseMessage makeInactiveRM = client.PutAsync(urlMakeInactive, null).Result;
+
+                                if (makeInactiveRM.IsSuccessStatusCode)
+                                {
+                                    ViewBag.Message = "Assignment deleted successfully";
+                                    ViewBag.ResponseStyleClass = "text-success";
+                                    ViewBag.ButtonText = "Go back to homepage";
+                                    ViewBag.ButtonLink = "/";
+                                    ViewBag.PageTitle = "Assignment deleted!";
+                                    ViewBag.SubMessage = "Your assignment is now deleted";
+                                    ViewBag.Image = "/assets/icons/success.svg";
+                                }
+                                else
+                                {
+                                    ViewBag.Message = "Assignment deletion failed";
+                                    ViewBag.ResponseStyleClass = "text-danger";
+                                    ViewBag.ButtonText = "Go back to the assignment form";
+                                    ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
+                                    ViewBag.PageTitle = "Assignment deletion failed!";
+                                    ViewBag.SubMessage = "There was a server error \ntry again later";
+                                    ViewBag.Image = "/assets/icons/error.svg";
+                                }
+                                return View("UserFeedback");
+                            case 2:
+                                return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
+                            default:
+                                throw new Exception("Internal server error");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Internal server error");
                     }
                 }
             }
@@ -520,14 +541,15 @@ namespace webApi.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    User user = new User { Id = userId };
 
-                    throw new NotImplementedException("we need to get all for user");
-
-                    string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment";
-                    List<Assignment> assignments = client.GetAsync(urlGetAllAssignments).Result.Content.ReadAsAsync<List<Assignment>>().Result;
-
-                    if (assignments.Count > 0)
+                    string urlGetAllAssignmentsForLoggedInUser = "https://localhost:44316/apiV1/assignment/user";
+                    HttpResponseMessage getAllAssignmentsForLoggedInUserRM = client.PostAsync(urlGetAllAssignmentsForLoggedInUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    
+                    if(getAllAssignmentsForLoggedInUserRM.IsSuccessStatusCode)
                     {
+                        List<Assignment> assignments = getAllAssignmentsForLoggedInUserRM.Content.ReadAsAsync<List<Assignment>>().Result;
+
                         ViewBag.Assignments = assignments;
                         return View("AllAssignments");
                     }
@@ -541,7 +563,7 @@ namespace webApi.Controllers
                         ViewBag.SubMessage = "There were no assignments \nfor the given query";
                         ViewBag.Image = "/assets/icons/error.svg";
                         return View("UserFeedback");
-                    } 
+                    }
                 }
             }
             catch (Exception e)
@@ -563,14 +585,15 @@ namespace webApi.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    User user = new User { Id = userId };
 
-                    throw new NotImplementedException("we need to get all solved by user");
+                    string urlGetAllAssignmentsSolvedByLoggedInUser = "https://localhost:44316/apiV1/assignment/solved-by-user";
+                    HttpResponseMessage getAllAssignmentsSolvedByLoggedInUserRM = client.PostAsync(urlGetAllAssignmentsSolvedByLoggedInUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
-                    string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment";
-                    List<Assignment> solvedAssignments = client.GetAsync(urlGetAllAssignments).Result.Content.ReadAsAsync<List<Assignment>>().Result;
-
-                    if (solvedAssignments.Count > 0)
+                    if (getAllAssignmentsSolvedByLoggedInUserRM.IsSuccessStatusCode)
                     {
+                        List<Assignment> solvedAssignments = getAllAssignmentsSolvedByLoggedInUserRM.Content.ReadAsAsync<List<Assignment>>().Result;
+
                         ViewBag.Assignments = solvedAssignments;
                         return View("AllAssignments");
                     }
