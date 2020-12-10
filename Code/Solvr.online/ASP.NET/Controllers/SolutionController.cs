@@ -141,8 +141,10 @@ namespace webApi.Controllers
                                         solution.SolutionFile = dataStream.ToArray();
                                         dataStream.Close();
                                     }
-                                    
-                                    string urlCreateSolution = "https://localhost:44316/apiV1/solution/" + assignmentId;
+
+
+                                    //changed to fix it
+                                    string urlCreateSolution = "https://localhost:44316/apiV1/solution/";
                                     HttpResponseMessage createSolutionRM = client.PostAsync(urlCreateSolution, new StringContent(JsonConvert.SerializeObject(solution), Encoding.UTF8, "application/json")).Result;
                                     if(createSolutionRM.IsSuccessStatusCode)
                                     {

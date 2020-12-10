@@ -53,3 +53,17 @@ CREATE TABLE [dbo].[SolutionFile] (
 	solutionFile varbinary(max),
 	CONSTRAINT [fkFileSolutionId] foreign key(solutionId) references [Solution](solutionId),
 )
+
+CREATE TABLE [dbo].[Customer]
+
+ (
+   	 [userId] NVARCHAR(450) NOT NULL,
+
+     [title] NVARCHAR(50) NOT NULL, 
+
+     [rating] FLOAT NOT NULL,  
+
+     [credit] FLOAT NOT NULL,
+     constraint fkCuserId foreign key(userId) references [Identity].[User](Id) ON DELETE CASCADE ON UPDATE CASCADE,
+
+ )
