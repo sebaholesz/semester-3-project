@@ -50,7 +50,7 @@ namespace ASP.NET.Migrations
                     LastName = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
                     Rating = table.Column<double>(nullable: false),
-                    Credit = table.Column<int>(nullable: false)
+                    Credit = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {

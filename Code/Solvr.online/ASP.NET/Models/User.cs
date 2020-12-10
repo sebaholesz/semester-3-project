@@ -12,7 +12,7 @@ namespace Models
 
         public double Rating { get; set; }
         public int Credit { get; set; }
-
+        public byte[] ProfilePicture { get; set; }
 
     }
 }

@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Solvr.online_desktop.AppWindow"
       mc:Ignorable="d"       
-      Title="LoginPage" MaxHeight="400" MaxWidth="600" d:DesignWidth="369.343" d:DesignHeight="222.02" FontSize="20">
+      Title="LoginPage" MaxHeight="400" MaxWidth="600" d:DesignWidth="600" d:DesignHeight="327.176" FontSize="20">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -75,8 +75,7 @@
                 </Style>
             </Button.Style>
         </Button>
-        <TextBlock Name="TextBlockLogOut" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Visibility="Hidden">
-            You have been successfully logged out!
-        </TextBlock>
+        <TextBlock Name="TextBlockMessage" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" Visibility="Hidden"/>
+
     </Grid>
 </Page>
