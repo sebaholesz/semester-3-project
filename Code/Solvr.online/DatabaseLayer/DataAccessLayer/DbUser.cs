@@ -1,8 +1,10 @@
 ﻿using Dapper;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using Utility.HildurConnection;
 
 namespace DatabaseLayer.DataAccessLayer
@@ -68,11 +70,18 @@ namespace DatabaseLayer.DataAccessLayer
         }
 
 
-        //public List<User> GetAllUsers()
-        //{
-        //    this._db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
-        //    return this._db.Query<User>("Select * from [dbo].[User]").ToList();
-        //}
+        public List<User> GetAllUsers()
+        {
+            try
+            {
+                return _db.Query<User>("Select * from [Identity].[User]").ToList();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+            
+        }
 
         //public int InsertUser(User user)
         //{

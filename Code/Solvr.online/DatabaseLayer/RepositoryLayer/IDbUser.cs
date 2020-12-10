@@ -1,4 +1,5 @@
 ﻿using ModelLayer;
+using System.Collections.Generic;
 
 namespace DatabaseLayer.RepositoryLayer
 {
@@ -8,7 +9,7 @@ namespace DatabaseLayer.RepositoryLayer
         string GetUserUsername(string userId);
         string GetUserName(string userId);
         bool CheckIfUserExists(string userId);
-        //List<User> GetAllUsers();
+        List<User> GetAllUsers();
         //int InsertUser(User user);
         //int UpdateUser(User user, int id);
         //User GetUserById(int id);

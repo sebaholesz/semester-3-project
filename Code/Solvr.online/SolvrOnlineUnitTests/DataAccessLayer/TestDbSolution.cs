@@ -16,6 +16,7 @@ namespace SolvrOnlineUnitTests
         private readonly IDbConnection _db;
         private IDbSolution dbS;
         private IDbAssignment dba;
+        private IDbUser dbu;
         private int assignmentForTestingId;
         private int assignmentForTestingId2;
 
@@ -25,11 +26,13 @@ namespace SolvrOnlineUnitTests
             _db = new SqlConnection(HildurConnectionString.ConnectionString);
             dbS = new DbSolution();
             dba = new DbAssignment();
+            dbu = new DbUser();
         }
 
         [SetUp]
         public void SetUp()
         {
+            List<User> users = dbu.GetAllUsers();
             DateTime now = DateTime.Now;
             Assignment assignment = new Assignment();
 
@@ -41,7 +44,7 @@ namespace SolvrOnlineUnitTests
             assignment.Anonymous = true;
             assignment.AcademicLevel = "University";
             assignment.Subject = "Computer Science";
-            assignment.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+            assignment.UserId = users[0].Id;
 
             assignmentForTestingId = dba.CreateAssignment(assignment);
         }
@@ -71,26 +74,29 @@ namespace SolvrOnlineUnitTests
         [Test]
         public void TestCreateSolution()
         {
+            List<User> users = dbu.GetAllUsers();
             int lengthBefore = dbS.GetAllSolutions().Count;
 
             Solution solution = new Solution();
             solution.AssignmentId = assignmentForTestingId;
-            solution.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+            solution.UserId = users[0].Id;
             solution.Description = "Test description";
             solution.Timestamp = DateTime.Now;
             solution.SolutionRating = 3.6M;
             solution.Anonymous = true;
 
-            dbS.CreateSolution(solution);
+            int returnedId = dbS.CreateSolution(solution);
 
             int lengthAfter = dbS.GetAllSolutions().Count;
 
-            Assert.IsTrue(lengthAfter > lengthBefore);
+            Assert.IsTrue((lengthAfter > lengthBefore) && (returnedId>0));
         }
 
         [Test]
         public void TestCreateSolutionFailWhenDayTimeWrongMultipleTimes()
         {
+            List<User> users = dbu.GetAllUsers();
+
             List<int> resultsArray = new List<int>();
 
             for (int i = 0; i < 20; i++)
@@ -106,13 +112,13 @@ namespace SolvrOnlineUnitTests
                 assignment.Anonymous = true;
                 assignment.AcademicLevel = "University";
                 assignment.Subject = "Computer Science";
-                assignment.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+                assignment.UserId = users[0].Id;
 
                 assignmentForTestingId2 = dba.CreateAssignment(assignment);
 
                 Solution solution = new Solution();
                 solution.AssignmentId = assignmentForTestingId;
-                solution.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+                solution.UserId = users[0].Id;
                 solution.Description = "Test description 1";
                 solution.Timestamp = new DateTime(2017, 1, 18);
                 solution.SolutionRating = 3.6M;
@@ -120,7 +126,7 @@ namespace SolvrOnlineUnitTests
 
                 Solution solutionEarlyDateTime = new Solution();
                 solutionEarlyDateTime.AssignmentId = assignmentForTestingId;
-                solutionEarlyDateTime.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+                solutionEarlyDateTime.UserId = users[0].Id;
                 solutionEarlyDateTime.Description = "Test description 3";
                 solutionEarlyDateTime.Timestamp = new DateTime(2017, 1, 17);
                 solutionEarlyDateTime.SolutionRating = 3.6M;
@@ -161,10 +167,13 @@ namespace SolvrOnlineUnitTests
         [Test]
         public void TestGetByAssignmentId()
         {
+
+            List<User> users = dbu.GetAllUsers();
+
             #region Arrange
             Solution solution = new Solution();
             solution.AssignmentId = assignmentForTestingId;
-            solution.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+            solution.UserId = users[0].Id;
             solution.Description = "Test description 1";
             solution.Timestamp = DateTime.Now;
             solution.SolutionRating = 3.6M;
@@ -172,7 +181,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution2 = new Solution();
             solution2.AssignmentId = assignmentForTestingId;
-            solution2.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+            solution2.UserId = users[0].Id;
             solution2.Description = "Test description 2";
             solution2.Timestamp = DateTime.Now.AddMinutes(1);
             solution2.SolutionRating = 3.6M;
@@ -180,7 +189,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution3 = new Solution();
             solution3.AssignmentId = assignmentForTestingId;
-            solution3.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+            solution3.UserId = users[0].Id;
             solution3.Description = "Test description 3";
             solution3.Timestamp = DateTime.Now.AddMinutes(2);
             solution3.SolutionRating = 3.6M;
@@ -205,10 +214,12 @@ namespace SolvrOnlineUnitTests
         [Test]
         public void TestDelete()
         {
+            List<User> users = dbu.GetAllUsers();
+
             #region Arrange
             Solution solution = new Solution();
             solution.AssignmentId = assignmentForTestingId;
-            solution.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+            solution.UserId = users[0].Id;
             solution.Description = "Test description 1";
             solution.Timestamp = DateTime.Now;
             solution.SolutionRating = 3.6M;
@@ -216,7 +227,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution2 = new Solution();
             solution2.AssignmentId = assignmentForTestingId;
-            solution2.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+            solution2.UserId = users[0].Id;
             solution2.Description = "Test description 2";
             solution2.Timestamp = DateTime.Now.AddMinutes(1);
             solution2.SolutionRating = 3.6M;
@@ -224,7 +235,7 @@ namespace SolvrOnlineUnitTests
 
             Solution solution3 = new Solution();
             solution3.AssignmentId = assignmentForTestingId;
-            solution3.UserId = "e09f9371-509d-45c6-91f2-ae8caadbdb42";
+            solution3.UserId = users[0].Id;
             solution3.Description = "Test description 3";
             solution3.Timestamp = DateTime.Now.AddMinutes(2);
             solution3.SolutionRating = 3.6M;
