@@ -17,8 +17,8 @@ CREATE TABLE [dbo].[Assignment]
 	[postDate]      DATETIME       NOT NULL,    
 	[deadline]      DATETIME       NOT NULL,    
 	[anonymous]     BIT            NOT NULL,    
-	[academicLevel] NVARCHAR(50)   NOT NULL,    
-	[subject]       NVARCHAR(50)   NOT NULL,    
+	[academicLevel] NVARCHAR(50)   NOT NULL DEFAULT 'Not selected',    
+	[subject]       NVARCHAR(50)   NOT NULL DEFAULT 'Not selected',    
 	[isActive]      BIT            NOT NULL,    
 	[userId]        NVARCHAR (450) NOT NULL,    
 	PRIMARY KEY CLUSTERED ([assignmentId] ASC),
@@ -53,17 +53,3 @@ CREATE TABLE [dbo].[SolutionFile] (
 	solutionFile varbinary(max),
 	CONSTRAINT [fkFileSolutionId] foreign key(solutionId) references [Solution](solutionId),
 )
-
-CREATE TABLE [dbo].[Customer]
-
- (
-   	 [userId] NVARCHAR(450) NOT NULL,
-
-     [title] NVARCHAR(50) NOT NULL, 
-
-     [rating] FLOAT NOT NULL,  
-
-     [credit] FLOAT NOT NULL,
-     constraint fkCuserId foreign key(userId) references [Identity].[User](Id) ON DELETE CASCADE ON UPDATE CASCADE,
-
- )
