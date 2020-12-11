@@ -130,7 +130,7 @@ namespace webApi.Controllers
                                     Solution solution = new Solution();
                                     solution.AssignmentId = assignmentId;
                                     solution.Description = collection["Solution.Description"];
-                                    solution.Timestamp = DateTime.Now;
+                                    solution.Timestamp = DateTime.UtcNow;
                                     solution.Anonymous = Convert.ToBoolean(collection["Solution.Anonymous"][0]);
                                     solution.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -228,7 +228,7 @@ namespace webApi.Controllers
                             case 0:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
-                                string urlGetAllSolutionsForAssignment = "https://localhost:44316/apiV1/solution/by-assignment";
+                                string urlGetAllSolutionsForAssignment = $"https://localhost:44316/apiV1/solution/by-assignment/{assignmentId}";
                                 HttpResponseMessage getAllSolutionsForAssignmentRM = client.GetAsync(urlGetAllSolutionsForAssignment).Result;
 
                                 if (getAllSolutionsForAssignmentRM.IsSuccessStatusCode)
@@ -321,7 +321,8 @@ namespace webApi.Controllers
                                         ViewBag.Solution = asu.Solution;
                                         ViewBag.User = asu.User;
 
-                                        return Redirect("/solution/solution-for-assignment/"+assignmentId);
+                                        //return Redirect("/solution/solution-for-assignment/"+assignmentId);
+                                        return View("DisplaySolution");
                                     }
                                     else
                                     {

@@ -137,10 +137,10 @@ namespace BusinessLayer
                         if (!solution.Equals(null))
                         {
                             //TODO refactor this nasty code :D
-                            if ((assignment.UserId.Equals(user.Id) && assignment.IsActive == false) || (solution.UserId.Equals(user.Id)))
-                            {
+                           // if ((assignment.UserId.Equals(user.Id) && assignment.IsActive == false) || (solution.UserId.Equals(user.Id)))
+                            //{
                                 return new { Assignment = assignment, Solution = solution, User = user };
-                            }
+                            //}
                         }
                     }
                 }

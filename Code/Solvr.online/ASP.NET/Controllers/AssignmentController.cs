@@ -93,8 +93,8 @@ namespace webApi.Controllers
                         string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + User.FindFirstValue(ClaimTypes.NameIdentifier);
                         HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
                         int userCredits = JsonConvert.DeserializeObject<int>(urlGetUserCreditRM.Content.ReadAsStringAsync().Result);
-                        string urlCreateAssignment = "https://localhost:44316/apiV1/assignment";
 
+                        string urlCreateAssignment = "https://localhost:44316/apiV1/assignment";
                         if (assignment.Price <= userCredits)
                         {
                             HttpResponseMessage createAssignmentRM = client.PostAsync(urlCreateAssignment, new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;

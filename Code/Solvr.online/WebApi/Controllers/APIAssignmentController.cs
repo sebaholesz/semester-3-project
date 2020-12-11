@@ -18,7 +18,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                assignment.PostDate = DateTime.Now;
+                assignment.PostDate = DateTime.UtcNow;
                 int insertedAssignmentId = AssignmentBusiness.GetAssignmentBusiness().CreateAssignment(assignment);
 
                 if (insertedAssignmentId > 0)

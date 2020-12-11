@@ -43,7 +43,7 @@ namespace SolvrOnlineUnitTests
             List<User> users = dbu.GetAllUsers();
 
             int length1 = dba.GetAllAssignments().Count;
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
 
             Assignment assignment = new Assignment();
             
@@ -121,7 +121,7 @@ namespace SolvrOnlineUnitTests
         public void TestDelete()
         {
             #region Arrange
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
             List<User> users = dbu.GetAllUsers();
             Assignment assignment = new Assignment();
 

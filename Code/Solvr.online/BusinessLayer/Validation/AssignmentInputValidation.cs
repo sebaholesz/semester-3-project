@@ -45,7 +45,7 @@ namespace BusinessLayer.Validation
                     #endregion
                     #region Assignment.Deadline
                     case "Deadline":
-                        value = DateTime.Compare(assignment.Deadline, DateTime.Now) > 0;
+                        value = DateTime.Compare(assignment.Deadline, DateTime.UtcNow) > 0;
                         break;
                     #endregion
                     #region Assignment.AcademicLevel

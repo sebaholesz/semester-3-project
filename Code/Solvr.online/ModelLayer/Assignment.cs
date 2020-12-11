@@ -31,7 +31,7 @@ namespace ModelLayer
    
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (Deadline <= DateTime.Now)
+            if (Deadline <= DateTime.UtcNow)
             {
                 yield return new ValidationResult(
                     $"Deadline has to be in future.",
