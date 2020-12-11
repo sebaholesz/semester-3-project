@@ -306,6 +306,7 @@ namespace webApi.Controllers
                                 List<int> ids = new List<int>() { solutionId, assignmentId };
                                 HttpResponseMessage chooseSolutionRM = client.PostAsync(urlChooseSolution, new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/json")).Result;
                           
+
                                 if (chooseSolutionRM.IsSuccessStatusCode)
                                 {
                                     string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;

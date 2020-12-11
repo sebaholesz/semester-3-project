@@ -71,9 +71,23 @@ namespace BusinessLayer
 
         public bool ChooseSolution(int solutionId, int assignmentId)
         {
-            bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1 ? true : false; ;
-            bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeAssignmentInactive(assignmentId) == 1 ? true : false;
-            return successfulyAccepted && successfulyMadeInactive;
+            try
+            {
+                bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1;
+                if (successfulyAccepted)
+                {
+                    bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeAssignmentInactive(assignmentId) == 1;
+                    Solution solution = GetBySolutionId(solutionId);
+                    Assignment assignment = AssignmentBusiness.GetAssignmentBusiness().GetByAssignmentId(assignmentId);
+                    bool successfulyAdded = UserBusiness.GetUserBusiness().IncreaseUserCreadits(assignment.Price, solution.UserId) == 1;
+                    return successfulyAccepted && successfulyMadeInactive && successfulyAdded;
+                }
+                return false;
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         public Solution GetSolutionByAssignmentId(int assignmentId)

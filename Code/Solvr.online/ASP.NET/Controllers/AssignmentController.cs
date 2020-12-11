@@ -98,10 +98,8 @@ namespace webApi.Controllers
                         if (assignment.Price <= userCredits)
                         {
                             HttpResponseMessage createAssignmentRM = client.PostAsync(urlCreateAssignment, new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;
-                            string urlRemoveCredits = "https://localhost:44316/apiV1/user/remove-credit/" + assignment.UserId;
-                            HttpResponseMessage removeCreditsRM = client.PutAsync(urlRemoveCredits, new StringContent(JsonConvert.SerializeObject(assignment.Price), Encoding.UTF8, "application/json")).Result;
-
-                            if (createAssignmentRM.IsSuccessStatusCode && removeCreditsRM.IsSuccessStatusCode)
+                            
+                            if (createAssignmentRM.IsSuccessStatusCode)
                             {
                                 int lastUsedId = createAssignmentRM.Content.ReadAsAsync<int>().Result;
                                 ViewBag.Message = "Assignment created successfully";

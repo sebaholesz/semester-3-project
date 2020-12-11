@@ -53,11 +53,21 @@ namespace BusinessLayer
         
         public int CreateAssignment(Assignment assignment)
         {
-            if (_assignmentValidation.CheckInput(assignment))
+            try
             {
-                return _dbAssignment.CreateAssignment(assignment);
+                if (_assignmentValidation.CheckInput(assignment))
+                {
+                    
+                    UserBusiness.GetUserBusiness().DecreaseUserCreadits(assignment.Price, assignment.UserId);
+                    return _dbAssignment.CreateAssignment(assignment);
+                }
+                return -1;
             }
-            return -1;
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
         public Assignment GetByAssignmentId(int id)
         {
