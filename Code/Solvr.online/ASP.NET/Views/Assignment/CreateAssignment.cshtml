@@ -69,7 +69,7 @@
                                     <label for="Price">
                                         Credits
                                     </label>
-                                    <input asp-for="Price" type="number" class="form-control" />
+                                    <input asp-for="Price" type="number" class="form-control" max="@ViewBag.Credits"/>
                                     <span asp-validation-for="Price" class="text-danger"></span>
                                 </div>
 

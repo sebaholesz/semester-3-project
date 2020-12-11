@@ -31,12 +31,17 @@ namespace webApi.Controllers
                 {
                     string urlGetAllAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
                     string urlGetAllSubjects = "https://localhost:44316/apiV1/subject";
+                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + userId;
                     HttpResponseMessage academicLevelsRM = (client.GetAsync(urlGetAllAcademicLevels).Result);
                     HttpResponseMessage subjectsRM = (client.GetAsync(urlGetAllSubjects).Result);
+                    HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
+
                     if (academicLevelsRM.IsSuccessStatusCode && subjectsRM.IsSuccessStatusCode)
                     {
                         ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>(academicLevelsRM.Content.ReadAsStringAsync().Result);
                         ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>(subjectsRM.Content.ReadAsStringAsync().Result);
+                        ViewBag.Credits = JsonConvert.DeserializeObject<int>(urlGetUserCreditRM.Content.ReadAsStringAsync().Result);
                         return View("CreateAssignment");
                     }
                     else
@@ -66,6 +71,7 @@ namespace webApi.Controllers
                 {
                     if (ModelState.IsValid)
                     {
+
                         Assignment assignment = new Assignment();
                         assignment.Title = collection["Title"];
                         assignment.Description = collection["Description"];
@@ -84,23 +90,36 @@ namespace webApi.Controllers
                             dataStream.Close();
                         }
 
+                        string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
+                        int userCredits = JsonConvert.DeserializeObject<int>(urlGetUserCreditRM.Content.ReadAsStringAsync().Result);
                         string urlCreateAssignment = "https://localhost:44316/apiV1/assignment";
-                        HttpResponseMessage createAssignmentRM = client.PostAsync(urlCreateAssignment, new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;
 
-                        if (createAssignmentRM.IsSuccessStatusCode) 
-                        { 
-                            int lastUsedId = createAssignmentRM.Content.ReadAsAsync<int>().Result;
-                            ViewBag.Message = "Assignment created successfully";
-                            ViewBag.ResponseStyleClass = "text-success";
-                            ViewBag.ButtonText = "Display your assignment";
-                            ViewBag.ButtonLink = "/assignment/display-assignment/" + lastUsedId;
-                            ViewBag.PageTitle = "Assignment created!";
-                            ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-                            ViewBag.Image = "/assets/icons/success.svg";
+                        if (assignment.Price <= userCredits)
+                        {
+                            HttpResponseMessage createAssignmentRM = client.PostAsync(urlCreateAssignment, new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;
+                            string urlRemoveCredits = "https://localhost:44316/apiV1/user/remove-credit/" + assignment.UserId;
+                            HttpResponseMessage removeCreditsRM = client.PutAsync(urlRemoveCredits, new StringContent(JsonConvert.SerializeObject(assignment.Price), Encoding.UTF8, "application/json")).Result;
+
+                            if (createAssignmentRM.IsSuccessStatusCode && removeCreditsRM.IsSuccessStatusCode)
+                            {
+                                int lastUsedId = createAssignmentRM.Content.ReadAsAsync<int>().Result;
+                                ViewBag.Message = "Assignment created successfully";
+                                ViewBag.ResponseStyleClass = "text-success";
+                                ViewBag.ButtonText = "Display your assignment";
+                                ViewBag.ButtonLink = "/assignment/display-assignment/" + lastUsedId;
+                                ViewBag.PageTitle = "Assignment created!";
+                                ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
+                                ViewBag.Image = "/assets/icons/success.svg";
+                            }
+                            else
+                            {
+                                throw new Exception(createAssignmentRM.ReasonPhrase);
+                            }
                         }
                         else
                         {
-                            throw new Exception(createAssignmentRM.ReasonPhrase);
+                            throw new Exception("Invalid data inserted");
                         }
                     }
                     else
