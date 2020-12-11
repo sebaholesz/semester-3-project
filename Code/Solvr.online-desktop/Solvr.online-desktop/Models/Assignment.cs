@@ -16,13 +16,12 @@ namespace Solvr.online_desktop.Models
         public string Subject { get; set; }
         public bool IsActive { get; set; }
 
-        public Assignment(string title, string description, int price, DateTime postDate, DateTime deadline, bool anonymous, string academicLevel, string subject)
+        public Assignment(string title, string description, int price, DateTime deadline, bool anonymous, string academicLevel, string subject)
         {
             Title = title;
             Description = description;
             //Author = author;
             Price = price;
-            PostDate = postDate;
             Deadline = deadline;
             Anonymous = anonymous;
             AcademicLevel = academicLevel;

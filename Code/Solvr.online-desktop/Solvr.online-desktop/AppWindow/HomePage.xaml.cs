@@ -107,7 +107,8 @@ namespace Solvr.online_desktop.AppWindow
             mw.FrameDefault.Content = loginPage;
             mw.Width = 550;
             mw.Height = 300;
-            loginPage.TextBlockLogOut.Visibility = Visibility.Visible;
+            loginPage.TextBlockMessage.Text = "You have been successfully logged out!";
+            loginPage.TextBlockMessage.Visibility = Visibility.Visible;
         }
     }
 }

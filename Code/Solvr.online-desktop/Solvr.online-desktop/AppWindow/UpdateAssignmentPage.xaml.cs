@@ -36,7 +36,7 @@ namespace Solvr.online_desktop.AppWindow
 
         private void ButtonUpdateAssignment_Click(object sender, RoutedEventArgs e)
         {
-            ApiAssignment.UpdateAssignment(id, TextBoxTitle.Text, TextBoxDescription.Text, Convert.ToInt32(TextBoxPrice.Text), DateTime.Parse(TextBoxPostDate.Text),
+            ApiAssignment.UpdateAssignment(id, TextBoxTitle.Text, TextBoxDescription.Text, Convert.ToInt32(TextBoxPrice.Text),
                 DatePickerDeadline.DisplayDate, (bool)CheckBoxAnonymous.IsChecked, ComboBoxAcademicLevel.Text, ComboBoxSubject.Text);
         }
     }
