@@ -20,6 +20,7 @@ namespace ASP.NET.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + userId;
                     HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
                     if (urlGetUserCreditRM.IsSuccessStatusCode)
@@ -49,6 +50,7 @@ namespace ASP.NET.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     object credits = collection["credits"];
                     string urlAddCredits = "https://localhost:44316/apiV1/user/add-credit/" + userId;
                     HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(credits), Encoding.UTF8, "application/json")).Result;

@@ -29,6 +29,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     User user = new User { Id = userId };
@@ -109,6 +110,7 @@ namespace webApi.Controllers
                 {
                     using (HttpClient client = new HttpClient())
                     {
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                         string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                         User user = new User { Id = userId };
@@ -208,6 +210,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     User user = new User { Id = userId };
@@ -278,6 +281,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string[] reqBodyStringArray = reqBody.Split("*");
                     int solutionId = Convert.ToInt32(reqBodyStringArray[0]);
                     int assignmentId = Convert.ToInt32(reqBodyStringArray[1]);
@@ -360,6 +364,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     User user = new User { Id = userId };
@@ -427,6 +432,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     User user = new User { Id = userId };

@@ -65,6 +65,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     if (ModelState.IsValid)
                     {
                         Assignment assignment = new Assignment();
@@ -131,6 +132,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     User user = new User { Id = userId };
@@ -204,6 +206,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     if (User.Identity.IsAuthenticated)
                     { 
                         // MAYBE TODO counts of answers to all assignments in assignment Cards
@@ -271,6 +274,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     User user = new User{Id = userId};
@@ -348,6 +352,7 @@ namespace webApi.Controllers
                 {
                     using (HttpClient client = new HttpClient())
                     {
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                         string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                         User user = new User { Id = userId };
@@ -454,6 +459,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     User user = new User { Id = userId };
@@ -523,6 +529,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     User user = new User { Id = userId };
 
@@ -567,6 +574,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     User user = new User { Id = userId };
 
