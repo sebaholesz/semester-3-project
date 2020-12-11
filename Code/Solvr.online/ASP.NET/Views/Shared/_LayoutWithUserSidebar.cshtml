@@ -113,9 +113,16 @@
 
                         <div class="user-sidebar-bio">
                             <div class="user-sidebar-profile-image">
-                                @* Some conditional logic where if there is no image URL, we go to the fallback *@
-                                @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
-                                <img alt="Default user avatar" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))"/>
+
+                                @{ if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+                                   {
+                                        <img alt="User avatar" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />
+                                   }
+                                   else {
+                                        @* Some conditional logic where if there is no image URL, we go to the fallback *@
+                                        <img alt="Default user avatar" src="Assets/Images/hunterek.png" />
+                                   } 
+                                }
                             </div>
                             <div class="user-sidebar-username">
                                 <a class="mt-1" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
