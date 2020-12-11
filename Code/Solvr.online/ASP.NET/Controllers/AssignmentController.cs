@@ -300,7 +300,8 @@ namespace webApi.Controllers
                                     {
                                         ViewBag.Assignment = assignment;
                                         ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
-                                        ViewBag.Timestamp = assignment.Timestamp;
+                                        string bitString = BitConverter.ToString(assignment.Timestamp);
+                                        ViewBag.Timestamp  = bitString;
                                         return View("UpdateAssignment");
                                     }
                                     else
@@ -376,14 +377,21 @@ namespace webApi.Controllers
                                     assignment.AcademicLevel = collection["AcademicLevel"];
                                     assignment.Subject = collection["Subject"];
 
+
+                                    String[] arr = collection["Timestamp"].ToString().Split('-');
+                                    byte[] array = new byte[arr.Length];
+                                    for (int i = 0; i < arr.Length; i++) array[i] = Convert.ToByte(arr[i], 16);
+
+                                    assignment.Timestamp = array;
+
+
                                     //TODO check if the file should be updated
                                     //assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
 
                                     string urlUpdateAssignment = "https://localhost:44316/apiV1/assignment/" + assignmentId;
+                                    //doesnt work
                                     HttpResponseMessage updateAssignmentRM = client.PutAsync(urlUpdateAssignment, 
                                         new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;
-                                    
-                                    ///UpdateAssignment(assignment, assignmentId, assignment.Timestamp);
 
                                     if(updateAssignmentRM.IsSuccessStatusCode)
                                     {

@@ -21,6 +21,7 @@ CREATE TABLE [dbo].[Assignment]
 	[subject]       NVARCHAR(50)   NOT NULL DEFAULT 'Not selected',    
 	[isActive]      BIT            NOT NULL,    
 	[userId]        NVARCHAR (450) NOT NULL,    
+	[timestamp] 	rowversion, 
 	PRIMARY KEY CLUSTERED ([assignmentId] ASC),
     CONSTRAINT [fkAcademicLevel] FOREIGN KEY ([academicLevel]) REFERENCES [dbo].[AcademicLevel] ([academicLevelName]) ON DELETE SET DEFAULT ON UPDATE CASCADE,
     CONSTRAINT [fkSubject] FOREIGN KEY ([subject]) REFERENCES [dbo].[Subject] ([subjectName]) ON DELETE SET DEFAULT ON UPDATE CASCADE,
