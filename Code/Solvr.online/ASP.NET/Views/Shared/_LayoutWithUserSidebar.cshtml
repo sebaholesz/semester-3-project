@@ -135,12 +135,11 @@
                             <div class="user-sidebar-meta-name-score">Score</div>
                             <div class="user-sidebar-meta-value-score">15000</div>
                             <div class="user-sidebar-meta-name-credits">Credits</div>
-                            <div class="user-sidebar-meta-value-credits">450</div>
+                            <div class="user-sidebar-meta-value-credits">@(UserManager.GetUserAsync(User).Result.Credit)</div>
                         </div>
 
                         <div class="user-sidebar-add-credit">
-                            <a class="btn-add-credit"
-                               href="#">
+                            <a  asp-controller="user" asp-action="add-credits" asp-route-id="@(UserManager.GetUserAsync(User).Result.Id)" class="btn-add-credit">
                                 <img class="btn-add-credit-icon"
                                      src="/assets/icons/dollar.svg">Add Credit
                             </a>

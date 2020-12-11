@@ -25,7 +25,8 @@ namespace ASP.NET.Controllers
                     if (urlGetUserCreditRM.IsSuccessStatusCode)
                     {
                         ViewBag.Credits = JsonConvert.DeserializeObject<int>(urlGetUserCreditRM.Content.ReadAsStringAsync().Result);
-                        return View("AddCredit");
+                        ViewBag.userId = userId;
+                        return View("AddCredits");
                     }
                     else
                     {
@@ -42,22 +43,21 @@ namespace ASP.NET.Controllers
         }
 
         [Route("user/add-credits/{userId}")]
-        [HttpPut]
-        public ActionResult AddCredits(IFormCollection collection, string userId)
+        [HttpPost]
+        public ActionResult AddCredits(int credit, string userId)
         {
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    object credits = collection["credits"];
                     string urlAddCredits = "https://localhost:44316/apiV1/user/add-credit/" + userId;
-                    HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(credits), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(credit), Encoding.UTF8, "application/json")).Result;
                     if (urlAddCreditsRM.IsSuccessStatusCode)
                     {
                         ViewBag.Message = "Credit added successfully";
                         ViewBag.ResponseStyleClass = "text-success";
                         ViewBag.ButtonText = "Post assignment";
-                        ViewBag.ButtonLink = "assignment/create-assignment";
+                        ViewBag.ButtonLink = "/assignment/create-assignment";
                         ViewBag.PageTitle = "Credit added!";
                         ViewBag.SubMessage = "You can now post assignments";
                         ViewBag.Image = "/assets/icons/success.svg";
