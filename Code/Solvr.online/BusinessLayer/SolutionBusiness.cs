@@ -71,7 +71,7 @@ namespace BusinessLayer
 
         public bool ChooseSolution(int solutionId, int assignmentId)
         {
-            bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1 ? true : false; ;
+            bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1 ? true : false;
             bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeAssignmentInactive(assignmentId) == 1 ? true : false;
             return successfulyAccepted && successfulyMadeInactive;
         }

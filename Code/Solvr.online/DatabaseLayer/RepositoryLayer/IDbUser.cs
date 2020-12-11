@@ -12,6 +12,9 @@ namespace DatabaseLayer.RepositoryLayer
         string GetUserName(string userId);
         bool CheckIfUserExists(string userId);
         List<User> GetAllUsers();
+        string GetUserHashedPasswordByUserName(string userUserName);
+        string GetUserRoleByUserName(string userUserName);
+        User GetUserByUserName(string userUserName);
         //int InsertUser(User user);
         //int UpdateUser(User user, int id);
         //User GetUserById(int id);

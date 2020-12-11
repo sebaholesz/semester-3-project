@@ -29,6 +29,7 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
                     string urlGetAllAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
                     string urlGetAllSubjects = "https://localhost:44316/apiV1/subject";
                     HttpResponseMessage academicLevelsRM = (client.GetAsync(urlGetAllAcademicLevels).Result);

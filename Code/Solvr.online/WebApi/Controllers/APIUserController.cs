@@ -1,12 +1,14 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("apiV1/")]
     public class APIUserController : ControllerBase
@@ -17,7 +19,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCreadits(credits , id);
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(credits , id);
                 if (noOfRowsAffected > 0)
                 {
                     return Ok();
@@ -39,7 +41,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCreadits(credits, id);
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(credits, id);
                 if (noOfRowsAffected > 0)
                 {
                     return Ok();

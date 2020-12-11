@@ -1,4 +1,5 @@
-﻿﻿using Microsoft.AspNetCore.Authentication;
+﻿using ASP.NET.Controllers;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mail;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ASP.NET.Areas.Identity.Pages.Account
@@ -88,9 +90,10 @@ namespace ASP.NET.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var userName = Input.Email;
+                User user;
                 if (IsValidEmail(Input.Email))
                 {
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user != null)
                     {
                         userName = user.UserName;
@@ -105,12 +108,36 @@ namespace ASP.NET.Areas.Identity.Pages.Account
                         }
                     }
                 }
+                else
+                {
+                    user = await _userManager.FindByNameAsync(userName);
+                    
+                    //register last login for the user into the database
+                    user.LastLogin = DateTime.Now.ToString();
+                    var lastLoginResult = await _userManager.UpdateAsync(user);
+                    if (!lastLoginResult.Succeeded)
+                    {
+                        throw new Exception($"Unexpected error occurred setting the last login date" +
+                            $" ({lastLoginResult.ToString()}) for user with ID '{user.Id}'.");
+                    }
+                }
+
                 var result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    string token = AuthenticationController.CreateJWT(userName, Input.Password);
+                    IdentityResult ir = await _userManager.AddClaimAsync(user, new Claim("JWT", token));
+                    if (ir == IdentityResult.Success)
+                    {
+                        _logger.LogInformation("User logged in.");
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        await _signInManager.SignOutAsync();
+                        throw new Exception("Could not log in, try again later");
+                    }
                 }
                 if (result.RequiresTwoFactor)
                 {

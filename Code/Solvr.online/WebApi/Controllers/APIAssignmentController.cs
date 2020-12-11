@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
 using System;
@@ -8,6 +9,7 @@ using System.Net.Http;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("apiV1/")]
     public class APIAssignmentController : ControllerBase
@@ -105,6 +107,7 @@ namespace WebApi.Controllers
             }
         }
 
+        [AllowAnonymous]
         [Route("assignment/all-active")]
         [HttpGet]
         public IActionResult GetAllActiveAssignments()

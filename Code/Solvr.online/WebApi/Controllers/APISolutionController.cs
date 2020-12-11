@@ -7,6 +7,8 @@ using System.Collections.Generic;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
+    [ApiController]
     [Route("apiV1/")]
     public class APISolutionController : ControllerBase
     {

@@ -1,7 +1,10 @@
 ﻿using DatabaseLayer.DataAccessLayer;
 using DatabaseLayer.RepositoryLayer;
 using ModelLayer;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace BusinessLayer
 {
@@ -29,16 +32,22 @@ namespace BusinessLayer
         {
             return _dbUser.GetUserUsername(userId);
         }
+
+        public User GetUserByUserName(string userUserName)
+        {
+            return _dbUser.GetUserByUserName(userUserName);
+        }
+
         public int GetUserCredits(string userId)
         {
             return _dbUser.GetUserCredits(userId);
         }
-        public int IncreaseUserCreadits(int credits, string userId)
+        public int IncreaseUserCredits(int credits, string userId)
         {
             int currentCredits = _dbUser.GetUserCredits(userId);
             return _dbUser.UpdateUserCredits(credits + currentCredits, userId);
         }
-        public int DecreaseUserCreadits(int credits, string userId)
+        public int DecreaseUserCredits(int credits, string userId)
         {
             int currentCredits = _dbUser.GetUserCredits(userId);
             return _dbUser.UpdateUserCredits(currentCredits - credits, userId);
@@ -47,15 +56,31 @@ namespace BusinessLayer
         {
             return _dbUser.GetUserName(userId);
         }
-
+        public string GetUserRoleByUserName(string userUsername)
+        {
+            return _dbUser.GetUserRoleByUserName(userUsername);
+        }
         public bool CheckIfUserExists(string userId)
         {
             return _dbUser.CheckIfUserExists(userId);
         }
-
         public List<User> GetAllUsers()
         {
             return _dbUser.GetAllUsers();
+        }
+        public bool AuthenticateUser(User userToAuthenticate)
+        {
+            try
+            {
+                PasswordHasher<User> ph = new PasswordHasher<User>();
+                string currentHash = _dbUser.GetUserHashedPasswordByUserName(userToAuthenticate.UserName);
+                PasswordVerificationResult pvr = ph.VerifyHashedPassword(userToAuthenticate, currentHash, userToAuthenticate.Password);
+                return pvr == PasswordVerificationResult.Success;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         //public int InsertUser(User user)

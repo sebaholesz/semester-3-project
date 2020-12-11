@@ -8,5 +8,7 @@ namespace ModelLayer
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public double Credit { get; set; }
+        //needed just for login purposes in the API
+        public string Password { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+        
         public string GetUserUsername(string userId)
         {
             try
@@ -43,7 +44,7 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
-
+        
         public int GetUserCredits(string userId)
         {
             try
@@ -99,7 +100,6 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-
         public List<User> GetAllUsers()
         {
             try
@@ -111,6 +111,42 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
             
+        }
+
+        public string GetUserHashedPasswordByUserName(string userUserName)
+        {
+            try
+            {
+                return _db.QueryFirst<string>("Select [PasswordHash] from [Identity].[User] where UserName=@userUserName", new { userUserName = userUserName });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public string GetUserRoleByUserName(string userUserName)
+        {
+            try
+            {
+                return _db.QueryFirst<string>("Select [RoleId] from [Identity].[UserRoles] where UserId=(Select [Id] from [Identity].[User] where UserName=@userUserName )", new { userUserName = userUserName });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public User GetUserByUserName(string userUserName)
+        {
+            try
+            {
+                return _db.QueryFirst<User>("Select [Id], [UserName], [Email] from [Identity].[User] where UserName=@userUserName", new { userUserName = userUserName });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         //public int InsertUser(User user)
