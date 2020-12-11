@@ -32,7 +32,7 @@ namespace BusinessLayer
                 if (result > 0)
                 {
                     int queueLengthAfter = GetSolutionsCountByAssignmentId(solution.AssignmentId);
-                    return queueLengthAfter + 1;
+                    return queueLengthAfter;
                 }
             }
             return -1;
@@ -114,6 +114,19 @@ namespace BusinessLayer
             try
             {
                 Solution solution = _dbSolution.GetAcceptedSolutionForAssignment(assignmentId);
+                return solution ?? null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public Solution GetSolutionForAssignment(int assignmentId)
+        {
+            try
+            {
+                Solution solution = _dbSolution.GetSolutionForAssignment(assignmentId);
                 return solution ?? null;
             }
             catch (Exception e)

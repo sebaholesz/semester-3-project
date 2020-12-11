@@ -105,6 +105,29 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("assignment/complete-data-with-accepted-solution/{assignmentId}")]
+        [HttpGet]
+        public IActionResult GetCompleteDataWithAcceptedSolution(int assignmentId)
+        {
+            try
+            {
+                object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithAcceptedSolution(assignmentId);
+
+                if (assignmentCompleteDataWithSolution != null)
+                {
+                    return Ok(assignmentCompleteDataWithSolution);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         [Route("assignment/all-active")]
         [HttpGet]
         public IActionResult GetAllActiveAssignments()

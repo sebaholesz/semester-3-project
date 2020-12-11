@@ -309,7 +309,9 @@ namespace webApi.Controllers
 
                                 if (chooseSolutionRM.IsSuccessStatusCode)
                                 {
-                                    string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
+                                    //dunno which one 
+                                    string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-accepted-solution/" + assignmentId;
+                                    //string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
                                     HttpResponseMessage getCompleteAssignmentDataWithSolutionRM = client.GetAsync(urlCompleteAssignmentDataWithSolution).Result;
 
                                     if (getCompleteAssignmentDataWithSolutionRM.IsSuccessStatusCode)
@@ -381,7 +383,7 @@ namespace webApi.Controllers
                             case 0:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
-                                string urlGetCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
+                                string urlGetCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data-with-accepted-solution/" + assignmentId;
                                 HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlGetCompleteAssignmentData).Result;
                                
                                 if(getCompleteAssignmentDataRM.IsSuccessStatusCode)
@@ -450,7 +452,7 @@ namespace webApi.Controllers
                             case 1:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 2:
-                                string urlGetCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
+                                string urlGetCompleteAssignmentData = $"https://localhost:44316/apiV1/assignment/complete-data-with-solution/{assignmentId}";
                                 HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlGetCompleteAssignmentData).Result;
 
                                 if (getCompleteAssignmentDataRM.IsSuccessStatusCode)

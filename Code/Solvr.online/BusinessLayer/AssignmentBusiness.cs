@@ -101,6 +101,37 @@ namespace BusinessLayer
 
                     if (!user.Equals(null))
                     {
+                        Solution solution = SolutionBusiness.GetSolutionBusiness().GetSolutionForAssignment(assignmentId);
+
+                        if (!solution.Equals(null))
+                        {
+                            //TODO refactor this nasty code :D
+                            //if (assignment.UserId.Equals(user.Id) || (solution.UserId.Equals(user.Id)))
+                            //{
+                                return new { Assignment = assignment, Solution = solution, User = user };
+                            //}
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public object GetAssignmentCompleteDataWithAcceptedSolution(int assignmentId)
+        {
+            try
+            {
+                Assignment assignment = _dbAssignment.GetByAssignmentId(assignmentId);
+                if (!assignment.Equals(null))
+                {
+                    User user = _userBusiness.GetDisplayDataByUserId(assignment.UserId);
+
+                    if (!user.Equals(null))
+                    {
                         Solution solution = SolutionBusiness.GetSolutionBusiness().GetAcceptedSolutionForAssignment(assignmentId);
 
                         if (!solution.Equals(null))
