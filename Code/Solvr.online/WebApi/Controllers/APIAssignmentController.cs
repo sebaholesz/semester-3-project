@@ -1,10 +1,12 @@
 ﻿using BusinessLayer;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Web;
 
 namespace WebApi.Controllers
 {
@@ -151,6 +153,42 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("assignment/page-all-active/{pageNumber}")]
+        [HttpGet]
+        public IActionResult GetActiveAssignmentsByPage(int pageNumber)
+        {
+            try
+            {
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetActiveAssignmentsByPage(pageNumber);
+
+                if (assignments.Count() > 0)
+                {
+                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCount();
+                    int totalPages = (int)Math.Ceiling(count / 12.00);
+                    bool previousPage = pageNumber > 1 ? true : false;
+                    bool nextPage = pageNumber < totalPages ? true : false;
+                    var paginationMetadata = new
+                    {
+                        count,
+                        totalPages,
+                        previousPage,
+                        nextPage
+
+                    };
+                    HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata)); 
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         [Route("assignment/all-active-not-posted-by-user")]
         [HttpPost]
         public IActionResult GetAllActiveAssignmentsNotPostedByUser([FromBody] User user)
@@ -161,6 +199,42 @@ namespace WebApi.Controllers
 
                 if (assignments.Count() > 0)
                 {
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment/page-all-active-not-posted-by-user/{pageNumber}")]
+        [HttpPost]
+        public IActionResult GetAllActiveAssignmentsNotPostedByUserPage([FromBody] User user, int pageNumber)
+        {
+            try
+            {
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotPostedByUserPage(user.Id, pageNumber);
+
+                if (assignments.Count() > 0)
+                {
+                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCountNotByUser(user.Id);
+                    int totalPages = (int)Math.Ceiling(count / 12.00);
+                    bool previousPage = pageNumber > 1 ? true : false;
+                    bool nextPage = pageNumber < totalPages ? true : false;
+                    var paginationMetadata = new
+                    {
+                        count,
+                        totalPages,
+                        previousPage,
+                        nextPage
+
+                    };
+                    HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata));
                     return Ok(assignments);
                 }
                 else
@@ -196,6 +270,43 @@ namespace WebApi.Controllers
                 return StatusCode(500);
             }
         }
+
+        [Route("assignment/page-user/{pageNumber}")]
+        [HttpPost]
+        public IActionResult GetAllAssignmentsForUserPage([FromBody] User user, int pageNumber)
+        {
+            try
+            {
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsForUserPage(user.Id, pageNumber);
+
+                if (assignments.Count() > 0)
+                {
+                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCountForUser(user.Id);
+                    int totalPages = (int)Math.Ceiling(count / 12.00);
+                    bool previousPage = pageNumber > 1 ? true : false;
+                    bool nextPage = pageNumber < totalPages ? true : false;
+                    var paginationMetadata = new
+                    {
+                        count,
+                        totalPages,
+                        previousPage,
+                        nextPage
+
+                    };
+                    HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata));
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
 
         [Route("assignment/solved-by-user")]
         [HttpGet]

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -212,9 +213,9 @@ namespace webApi.Controllers
 
         //can be accessed by everybody
         [AllowAnonymous]
-        [Route("assignment/display-assignments")]
+        [Route("assignment/display-assignments-page/{pageNumber}")]
         [HttpGet]
-        public ActionResult DisplayAllAssignments()
+        public ActionResult DisplayAllAssignments(int pageNumber)
         {
             try
             {
@@ -224,13 +225,21 @@ namespace webApi.Controllers
                     { 
                         // MAYBE TODO counts of answers to all assignments in assignment Cards
                         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/all-active-not-posted-by-user";
+                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/page-all-active-not-posted-by-user/" + pageNumber;
                         User user = new User() { Id = userId };
 
                         HttpResponseMessage assignmentsNotPostedByUserRM = client.PostAsync(urlGetAllAssignments, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
                         if (assignmentsNotPostedByUserRM.IsSuccessStatusCode)
                         {
                             ViewBag.Assignments = assignmentsNotPostedByUserRM.Content.ReadAsAsync<List<Assignment>>().Result;
+                            Page page = JsonConvert.DeserializeObject<Page>(assignmentsNotPostedByUserRM.Headers.GetValues("PagingHeaders").FirstOrDefault());
+                            ViewBag.NextPage = pageNumber + 1;
+                            ViewBag.PreviousPage = pageNumber - 1;
+                            ViewBag.Link = "/assignment/display-assignments-page/";
+                            ViewBag.PreviousEnable = page.PreviousPage == true ? "" : "disabled";
+                            ViewBag.NextEnable = page.NextPage == true ? "" : "disabled";
+                            ViewBag.PageNumber = pageNumber;
+                            ViewBag.TotalPages = page.TotalPages;
                             return View("AllAssignments");
                         }
                         else
@@ -247,11 +256,19 @@ namespace webApi.Controllers
                     }
                     else
                     {
-                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/all-active";
+                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/page-all-active/" + pageNumber;
                         HttpResponseMessage allAssignmentsRM = client.GetAsync(urlGetAllAssignments).Result;
                         if (allAssignmentsRM.IsSuccessStatusCode)
                         {
                             ViewBag.Assignments = allAssignmentsRM.Content.ReadAsAsync<List<Assignment>>().Result;
+                            Page page = JsonConvert.DeserializeObject<Page>(allAssignmentsRM.Headers.GetValues("PagingHeaders").FirstOrDefault());
+                            ViewBag.NextPage = pageNumber + 1;
+                            ViewBag.PreviousPage = pageNumber - 1;
+                            ViewBag.Link = "/assignment/display-assignments-page/";
+                            ViewBag.PreviousEnable = page.PreviousPage == true ? "" : "disabled";
+                            ViewBag.NextEnable = page.NextPage == true ? "" : "disabled";
+                            ViewBag.PageNumber = pageNumber;
+                            ViewBag.TotalPages = page.TotalPages;
                             return View("AllAssignments");
                         }
                         else
@@ -531,9 +548,9 @@ namespace webApi.Controllers
         /*can be accessed by everybody who 
          * posted the assignment
          */
-        [Route("assignment/user")]
+        [Route("assignment/page-user/{pageNumber}")]
         [HttpGet]
-        public ActionResult GetAllAssignmentsForLoggedInUser()
+        public ActionResult GetAllAssignmentsForLoggedInUser(int pageNumber)
         {
             try
             {
@@ -542,13 +559,20 @@ namespace webApi.Controllers
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     User user = new User { Id = userId };
 
-                    string urlGetAllAssignmentsForLoggedInUser = "https://localhost:44316/apiV1/assignment/user";
+                    string urlGetAllAssignmentsForLoggedInUser = "https://localhost:44316/apiV1/assignment/page-user/" + pageNumber;
                     HttpResponseMessage getAllAssignmentsForLoggedInUserRM = client.PostAsync(urlGetAllAssignmentsForLoggedInUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
                     
                     if(getAllAssignmentsForLoggedInUserRM.IsSuccessStatusCode)
                     {
                         List<Assignment> assignments = getAllAssignmentsForLoggedInUserRM.Content.ReadAsAsync<List<Assignment>>().Result;
-
+                        Page page = JsonConvert.DeserializeObject<Page>(getAllAssignmentsForLoggedInUserRM.Headers.GetValues("PagingHeaders").FirstOrDefault());
+                        ViewBag.NextPage = pageNumber + 1;
+                        ViewBag.PreviousPage = pageNumber - 1;
+                        ViewBag.Link = "/assignment/page-user/";
+                        ViewBag.PreviousEnable = page.PreviousPage == true ? "" : "disabled";
+                        ViewBag.NextEnable = page.NextPage == true ? "" : "disabled";
+                        ViewBag.PageNumber = pageNumber;
+                        ViewBag.TotalPages = page.TotalPages;
                         ViewBag.Assignments = assignments;
                         return View("AllAssignments");
                     }

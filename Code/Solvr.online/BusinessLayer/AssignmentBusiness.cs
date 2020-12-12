@@ -31,6 +31,59 @@ namespace BusinessLayer
             return _dbAssignment.GetAllAssignments();
         }
 
+        public List<Assignment> GetActiveAssignmentsByPage(int pageNumber)
+        {
+            
+            int start = (pageNumber-1) * 12;
+            return _dbAssignment.GetAssignmentsByPage(start);
+        }
+
+        public List<Assignment> GetAllActiveAssignmentsNotPostedByUserPage(string userId, int pageNumber)
+        {
+
+            int start = (pageNumber - 1) * 12;
+            return _dbAssignment.GetAllActiveAssignmentsNotPostedByUserPage(userId, start);
+        }
+
+        public List<Assignment> GetAllAssignmentsForUserPage(string userId, int pageNumber)
+        {
+
+            int start = (pageNumber - 1) * 12;
+            return _dbAssignment.GetAllAssignmentsForUserPage(userId, start);
+        }
+
+        public int GetAssignmentsCount()
+        {
+            return _dbAssignment.GetAssignmentsCount();
+        }
+
+        public int GetAssignmentsCountNotByUser(string userId)
+        {
+            return _dbAssignment.GetAssignmentsCountNotByUser(userId);
+        }
+
+        public int GetAssignmentsCountForUser(string userId)
+        {
+            return _dbAssignment.GetAssignmentsCountForUser(userId);
+        }
+
+        public object PaginationMetadata(int pageNumber)
+        {
+            int count = GetAssignmentsCount();
+            int totalPages = (int)Math.Ceiling(count / 12.00);
+            bool previousPage = pageNumber > 1 ? true : false;
+            bool nextPage = pageNumber < totalPages ? true : false;
+            var paginationMetadata = new
+            {
+                count,
+                totalPages,
+                previousPage,
+                nextPage
+
+            };
+            return paginationMetadata;
+        }
+
         public List<Assignment> GetAllActiveAssignmentsNotSolvedByUser(string userId)
         {
             return _dbAssignment.GetAllActiveAssignmentsNotSolvedByUser(userId);
@@ -151,6 +204,8 @@ namespace BusinessLayer
                 throw e;
             }
         }
+
+
 
         public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)
         {

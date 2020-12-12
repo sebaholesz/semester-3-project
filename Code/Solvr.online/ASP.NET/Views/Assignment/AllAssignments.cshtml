@@ -14,6 +14,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 screen-1300-full">
+                <div class="d-flex justify-content-between mb-2">
+                    <a type="button" class="btn btn-info @ViewBag.PreviousEnable" href="@ViewBag.Link@ViewBag.PreviousPage" role="button" >Previous</a>
+                    <h5>Page @ViewBag.PageNumber out of @ViewBag.TotalPages</h5>
+                    <a type="button" class="btn btn-info @ViewBag.NextEnable" href="@ViewBag.Link@ViewBag.NextPage" role="button" >Next</a>
+                </div>
                 <div class="card-columns">
                     @foreach (var assignment in assignments)
                     {

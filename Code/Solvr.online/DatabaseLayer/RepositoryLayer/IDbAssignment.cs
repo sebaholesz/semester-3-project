@@ -8,6 +8,12 @@ namespace DatabaseLayer.RepositoryLayer
         int CreateAssignment(Assignment assignment);
         byte[] GetFileFromDB(int id);
         List<Assignment> GetAllAssignments();
+        int GetAssignmentsCount();
+        int GetAssignmentsCountNotByUser(string userId);
+        int GetAssignmentsCountForUser(string userId);
+        List<Assignment> GetAssignmentsByPage(int start);
+        List<Assignment> GetAllActiveAssignmentsNotPostedByUserPage(string userId, int start);
+        List<Assignment> GetAllAssignmentsForUserPage(string userId, int start);
         List<Assignment> GetAllActiveAssignmentsNotSolvedByUser(string userId);
         List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId);
         List<Assignment> GetAllActiveAssignments();
