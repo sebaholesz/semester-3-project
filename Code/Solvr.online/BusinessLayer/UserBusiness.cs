@@ -61,9 +61,14 @@ namespace BusinessLayer
         {
             return _dbUser.GetUserName(userId);
         }
-        public string GetUserRoleByUserName(string userUsername)
+        public bool CheckIfAdminOrModerator(string userUsername)
         {
-            return _dbUser.GetUserRoleByUserName(userUsername);
+            string role = _dbUser.GetRoleByUserName(userUsername);
+            if (role.Equals("MODERATOR") || role.Equals("ADMIN"))
+            {
+                return true;
+            }
+            return false;
         }
         public bool CheckIfUserExists(string userId)
         {

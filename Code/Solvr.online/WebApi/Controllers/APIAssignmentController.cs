@@ -28,7 +28,7 @@ namespace WebApi.Controllers
                     return Ok(insertedAssignmentId);
                 }
                 else
-                { 
+                {
                     return StatusCode(417);
                 }
             }
@@ -291,24 +291,24 @@ namespace WebApi.Controllers
 
         [Route("assignment/active/{id}")]
         [HttpPut]
-        public IActionResult MakActive(int id)
+        public IActionResult MakActive(int id, [FromBody]User user)
         {
             try
             {
-                int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeActive(id);
-                if (noOfRowsAffected > 0)
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(user.UserName))
                 {
-                    return Ok();
+                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeActive(id);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok();
+                    }
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return NotFound("Neither admin nor moderator!");
             }
             catch (Exception)
             {
                 return StatusCode(500);
-            }
+            }            
         }
 
         [Route("academiclevel")]

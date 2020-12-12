@@ -13,7 +13,9 @@ namespace Solvr.online_desktop.AppWindow
     {
         private readonly MainWindow mw;
         private readonly int id;
-        public UpdateAssignmentPage(int assignmentId, string title, string description, int price, DateTime postDate, DateTime deadline, Boolean anonymous, IEnumerable<string> academicLevel, IEnumerable<string> subject)
+        private readonly string username;
+
+        public UpdateAssignmentPage(int assignmentId, string title, string description, int price, DateTime postDate, DateTime deadline, Boolean anonymous, IEnumerable<string> academicLevel, IEnumerable<string> subject, string username)
         {
             InitializeComponent();
             mw = (MainWindow)Application.Current.MainWindow;
@@ -27,11 +29,12 @@ namespace Solvr.online_desktop.AppWindow
             CheckBoxAnonymous.IsChecked = anonymous;
             ComboBoxAcademicLevel.ItemsSource = academicLevel;
             ComboBoxSubject.ItemsSource = subject;
+            this.username = username;
         }
 
         private void ButtonGoBack_Click(object sender, RoutedEventArgs e)
         {
-            mw.FrameDefault.Content = new HomePage();
+            mw.FrameDefault.Content = new HomePage(username);
         }
 
         private void ButtonUpdateAssignment_Click(object sender, RoutedEventArgs e)

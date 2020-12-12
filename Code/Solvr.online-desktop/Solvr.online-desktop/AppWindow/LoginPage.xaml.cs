@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Solvr.online_desktop.ApiCalls;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -25,19 +26,30 @@ namespace Solvr.online_desktop.AppWindow
                 TextBlockMessage.Visibility = Visibility.Visible;
                 TextBoxUsername.Focus();
             }
-            else if(TextBoxUsername.Text == "superadmin")
-            {
-                mw.FrameDefault.Content = new HomePage();
-                mw.Width = 1280;
-                mw.Height = 720;                
-            }
             else
             {
-                TextBlockMessage.Text = "Enter valid username";
-                TextBlockMessage.FontSize = 15;
-                TextBlockMessage.Visibility = Visibility.Visible;
-                TextBoxUsername.Focus();
-            }            
+                if (ApiAuthentication.Login(TextBoxUsername.Text, PasswordBoxPassword.Password))
+                {
+                    string username = TextBoxUsername.Text;
+                    mw.FrameDefault.Content = new HomePage(username);
+                    mw.Width = 1280;
+                    mw.Height = 720;
+                }
+                else
+                {
+                    TextBlockMessage.Text = "Enter valid username";
+                    TextBlockMessage.FontSize = 15;
+                    TextBlockMessage.Visibility = Visibility.Visible;
+                    TextBoxUsername.Focus();
+                }
+
+            }
+            //else if(TextBoxUsername.Text == "superadmin")
+            //{
+            //    mw.FrameDefault.Content = new HomePage();
+            //    mw.Width = 1280;
+            //    mw.Height = 720;                
+            //}          
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)
