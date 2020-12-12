@@ -38,6 +38,11 @@ namespace BusinessLayer
             return _dbUser.GetUserByUserName(userUserName);
         }
 
+        public User GetUserById(string userId)
+        {
+            return _dbUser.GetUserById(userId);
+        }
+
         public int GetUserCredits(string userId)
         {
             return _dbUser.GetUserCredits(userId);
@@ -64,10 +69,12 @@ namespace BusinessLayer
         {
             return _dbUser.CheckIfUserExists(userId);
         }
+       
         public List<User> GetAllUsers()
         {
             return _dbUser.GetAllUsers();
         }
+        
         public bool AuthenticateUser(User userToAuthenticate)
         {
             try
@@ -76,6 +83,18 @@ namespace BusinessLayer
                 string currentHash = _dbUser.GetUserHashedPasswordByUserName(userToAuthenticate.UserName);
                 PasswordVerificationResult pvr = ph.VerifyHashedPassword(userToAuthenticate, currentHash, userToAuthenticate.Password);
                 return pvr == PasswordVerificationResult.Success;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public bool AuthenticateUserWithIdAndSecurityStamp(User userToAuthenticate)
+        {
+            try
+            {
+                return _dbUser.AuthenticateUserWithIdAndSecurityStamp(userToAuthenticate);
             }
             catch (Exception e)
             {

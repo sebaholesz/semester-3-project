@@ -227,6 +227,19 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+
+        public byte[] GetFileFromDB(int solutionId)
+        {
+            try
+            {
+                byte[] fileData = _db.QueryFirst<byte[]>("select solutionFile from [dbo].[SolutionFile] where solutionId=@solutionId", new { solutionId = solutionId });
+                return fileData;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
     

@@ -27,14 +27,37 @@ namespace JWTAuthentication.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] User loginUser)
         {
+            try
+            {
+                IActionResult response = Unauthorized();
+
+                User loginUserFromDB = UserBusiness.GetUserBusiness().GetUserByUserName(loginUser.UserName);
+                loginUserFromDB.Password = loginUser.Password;
+
+                if (UserBusiness.GetUserBusiness().AuthenticateUser(loginUserFromDB))
+                {
+                    var tokenString = GenerateJSONWebToken(loginUserFromDB);
+                    response = Ok(new { token = tokenString });
+                }
+                return response;
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("login-internal")]
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult LoginWithIdAndSecurityStamp([FromBody] User loginUser)
+        {
             IActionResult response = Unauthorized();
 
-            User loginUserFromDB = UserBusiness.GetUserBusiness().GetUserByUserName(loginUser.UserName);
-            loginUserFromDB.Password = loginUser.Password;
-
-            if (AuthenticateUser(loginUserFromDB))
+            if (UserBusiness.GetUserBusiness().AuthenticateUserWithIdAndSecurityStamp(loginUser))
             {
-                var tokenString = GenerateJSONWebToken(loginUserFromDB);
+                User user = UserBusiness.GetUserBusiness().GetUserById(loginUser.Id);
+                var tokenString = GenerateJSONWebToken(user);
                 response = Ok(new { token = tokenString });
             }
             return response;
@@ -58,11 +81,6 @@ namespace JWTAuthentication.Controllers
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private bool AuthenticateUser(User userToAuthenticate)
-        {
-            return UserBusiness.GetUserBusiness().AuthenticateUser(userToAuthenticate);
         }
     }
 }

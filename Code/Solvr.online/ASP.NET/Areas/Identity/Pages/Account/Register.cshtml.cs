@@ -1,4 +1,5 @@
-﻿using ASP.NET.Models;
+﻿using ASP.NET.Controllers;
+using ASP.NET.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -109,6 +110,7 @@ namespace ASP.NET.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        AuthenticationController.CreateJWT(_userManager, Input.UserName, Input.Password);
                         return LocalRedirect(returnUrl);
                     }
                 }

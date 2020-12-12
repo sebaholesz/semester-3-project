@@ -149,6 +149,30 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
+        public User GetUserById(string userId)
+        {
+            try
+            {
+                return _db.QueryFirst<User>("Select [Id], [UserName], [Email] from [Identity].[User] where Id=@userId", new { userId = userId });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public bool AuthenticateUserWithIdAndSecurityStamp(User userToAuthenticate)
+        {
+            try
+            {
+                return _db.ExecuteScalar<bool>("select count(1) from [Identity].[User] where Id=@id and SecurityStamp=@securityStamp", new { id = userToAuthenticate.Id, securityStamp = userToAuthenticate.SecurityStamp });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
         //public int InsertUser(User user)
         //{
         //    try

@@ -107,5 +107,18 @@ namespace BusinessLayer
                 throw e;
             }
         }
+
+        public byte[] GetFileFromDB(int solutionId, User user)
+        {
+            Solution solution = GetBySolutionId(solutionId);
+            if (user.Id == solution.UserId || (AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(solution.AssignmentId, user.Id) == 1 && solution.Accepted))
+            {
+                return _dbSolution.GetFileFromDB(solutionId);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ASP.NET.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeDetective;
 using Models;
 using Newtonsoft.Json;
 using System;
@@ -17,6 +20,14 @@ namespace webApi.Controllers
     [Authorize]
     public class SolutionController : Controller
     {
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
+        public SolutionController(UserManager<User> userManager, SignInManager<User> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
         /*can be accessed by everybody who 
          * hasnt posted the assignment  
          * and hasnt solved it yet 
@@ -30,11 +41,10 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
-                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    User user = new User { Id = userId };
+                    User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                    client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
+                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -90,6 +100,10 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
@@ -111,11 +125,10 @@ namespace webApi.Controllers
                 {
                     using (HttpClient client = new HttpClient())
                     {
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
-                        string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                        User user = new User { Id = userId };
+                        User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                        client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
+                        string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                         HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
                         if (returnCodeRM.IsSuccessStatusCode)
@@ -194,6 +207,10 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
@@ -211,11 +228,10 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
-                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    User user = new User { Id = userId };
+                    User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                    client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
+                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -265,6 +281,10 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
@@ -282,15 +302,14 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
+                    User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                    client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
+
                     string[] reqBodyStringArray = reqBody.Split("*");
                     int solutionId = Convert.ToInt32(reqBodyStringArray[0]);
                     int assignmentId = Convert.ToInt32(reqBodyStringArray[1]);
 
-                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    User user = new User { Id = userId };
-
                     HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -348,6 +367,10 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
@@ -365,11 +388,10 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
-                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    User user = new User { Id = userId };
+                    User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                    client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
+                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -416,6 +438,10 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
@@ -433,11 +459,10 @@ namespace webApi.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
-                    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    User user = new User { Id = userId };
+                    User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                    client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
+                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -484,6 +509,51 @@ namespace webApi.Controllers
             }
             catch (Exception e)
             {
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
+            }
+        }
+
+        /*can be accessed by everybody who 
+         * is logged in
+         */
+        [Route("solution/download-file/{solutionId}")]
+        [HttpGet]
+        public ActionResult DownloadFile(int solutionId)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                    client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
+
+                    string urlGetFileForDownload = $"https://localhost:44316/apiV1/solution/get-file/{solutionId}";
+                    HttpResponseMessage getFileForDownloadRM = client.PostAsync(urlGetFileForDownload, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+
+                    if (getFileForDownloadRM.IsSuccessStatusCode)
+                    {
+                        byte[] fileContent = getFileForDownloadRM.Content.ReadAsAsync<byte[]>().Result;
+                        string extension = fileContent.GetFileType().Extension;
+                        string fileName = $"{solutionId}-solution-file_{DateTime.Today.Day}-{DateTime.Today.Month}-{DateTime.Today.Year}.{extension}";
+                        return File(fileContent, "application/force-download", fileName);
+                    }
+                    else
+                    {
+                        throw new Exception("Could not download the file");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }

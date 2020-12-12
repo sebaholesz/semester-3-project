@@ -7,13 +7,24 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using Newtonsoft.Json;
 
 namespace ASP.NET.Controllers
 {
     public class UserController : Controller
     {
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
         [Route("user/add-credits/{userId}")]
         [HttpGet]
         public ActionResult AddCredits(string userId)
@@ -22,7 +33,9 @@ namespace ASP.NET.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
+                    User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                    client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
+
                     string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + userId;
                     HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
                     if (urlGetUserCreditRM.IsSuccessStatusCode)
@@ -38,10 +51,13 @@ namespace ASP.NET.Controllers
             }
             catch (Exception e)
             {
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
                 TempData["ErrorMessage"] = e.Message;
                 return Redirect("/error");
             }
-
         }
 
         [Route("user/add-credits/{userId}")]
@@ -52,7 +68,9 @@ namespace ASP.NET.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", User.FindFirstValue("JWT"));
+                    User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
+                    client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
+
                     object credits = collection["credits"];
                     string urlAddCredits = "https://localhost:44316/apiV1/user/add-credit/" + userId;
                     HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(credits), Encoding.UTF8, "application/json")).Result;
@@ -70,15 +88,17 @@ namespace ASP.NET.Controllers
                     {
                     }
                     return View("UserFeedback");
-
                 }
             }
             catch (Exception e)
             {
-
-                throw;
+                if (e.InnerException is UnauthorizedAccessException)
+                {
+                    return Unauthorized();
+                }
+                TempData["ErrorMessage"] = e.Message;
+                return Redirect("/error");
             }
-            
         }
 
     }

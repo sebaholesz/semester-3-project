@@ -5,7 +5,7 @@ using ModelLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+
 
 namespace WebApi.Controllers
 {
@@ -372,6 +372,28 @@ namespace WebApi.Controllers
                 else
                 {
                     return NotFound("This user is not associated with the assignment!");
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment/get-file/{assignmentId}")]
+        [HttpGet]
+        public IActionResult GetFileFromDB(int assignmentId)
+        {
+            try
+            {
+                byte[] fileContent = AssignmentBusiness.GetAssignmentBusiness().GetFileFromDB(assignmentId);
+                if(fileContent.Length > 1)
+                {
+                    return Ok(fileContent);
+                }
+                else
+                {
+                    return NotFound();
                 }
             }
             catch (Exception)

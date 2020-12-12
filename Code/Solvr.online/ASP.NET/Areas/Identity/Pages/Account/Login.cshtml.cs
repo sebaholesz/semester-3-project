@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mail;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ASP.NET.Areas.Identity.Pages.Account
@@ -126,9 +125,7 @@ namespace ASP.NET.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    string token = AuthenticationController.CreateJWT(userName, Input.Password);
-                    IdentityResult ir = await _userManager.AddClaimAsync(user, new Claim("JWT", token));
-                    if (ir == IdentityResult.Success)
+                    if (AuthenticationController.CreateJWT(_userManager, userName, Input.Password) != null)
                     {
                         _logger.LogInformation("User logged in.");
                         return LocalRedirect(returnUrl);

@@ -169,5 +169,27 @@ namespace WebApi.Controllers
                 return StatusCode(500);
             }
         }
+
+        [Route("solution/get-file/{solutionId}")]
+        [HttpPost]
+        public IActionResult GetFileFromDB([FromBody] User user, int solutionId)
+        {
+            try
+            {
+                byte[] fileContent = SolutionBusiness.GetSolutionBusiness().GetFileFromDB(solutionId, user);
+                if (fileContent.Length > 1)
+                {
+                    return Ok(fileContent);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

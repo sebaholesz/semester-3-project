@@ -59,6 +59,7 @@ namespace BusinessLayer
             }
             return -1;
         }
+        
         public Assignment GetByAssignmentId(int id)
         {
             return _dbAssignment.GetByAssignmentId(id);
@@ -198,6 +199,11 @@ namespace BusinessLayer
                 }
                 return 0;
             }
+        }
+
+        public byte[] GetFileFromDB(int assignmentId)
+        {
+            return _dbAssignment.GetFileFromDB(assignmentId);
         }
     }
 }

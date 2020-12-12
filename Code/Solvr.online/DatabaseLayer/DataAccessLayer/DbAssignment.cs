@@ -85,7 +85,6 @@ namespace DatabaseLayer.DataAccessLayer
 
         public byte[] GetFileFromDB(int id)
         {
-            //TODO create a default path for users to download file
             try
             {
                 byte[] fileData = _db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = id });

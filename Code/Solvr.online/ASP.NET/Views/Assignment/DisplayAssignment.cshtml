@@ -23,11 +23,18 @@
                             <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
                         </div>
                         <div class="col-md-4 d-flex align-items-center justify-content-end">
-                            @if (assignment.IsActive)
+                            <div>
+                                <a href="/assignment/download-file/@assignment.AssignmentId" class="btn btn-default-style">
+                                    Download Attachment
+                                </a>
+                            </div>
+                           @if (assignment.IsActive)
                             {
+                            <div class="btn-block-with-left-margin">
                                 <a class="btn btn-solve-assignment" href="/solution/assignment/@assignment.AssignmentId/">
                                     Solve Assignment
                                 </a>
+                            </div>
                             }
                         </div>
                     </div>
