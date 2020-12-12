@@ -363,3 +363,5 @@ FodyWeavers.xsd
 
 /semester-3-project/DatabaseHildur/DatabaseHildur.dbmdl
 *.cache
+/Code/Solvr.online-desktop/Solvr.online-desktop/Models/Globals.cs
+/Code/Solvr.online-desktop/Solvr.online-desktop/ApiCalls/ApiAuthentication.cs
