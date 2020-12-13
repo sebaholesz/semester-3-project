@@ -33,15 +33,18 @@ namespace BusinessLayer
         {
             return _dbUser.GetUserCredits(userId);
         }
-        public int IncreaseUserCreadits(int credits, string userId)
+        public int IncreaseUserCredits(int credits, string userId, string stamp)
         {
             int currentCredits = _dbUser.GetUserCredits(userId);
-            return _dbUser.UpdateUserCredits(credits + currentCredits, userId);
+            //int credits = (int)user.Credit;
+            return _dbUser.UpdateUserCredits(credits + currentCredits, userId, stamp);
         }
-        public int DecreaseUserCreadits(int credits, string userId)
+        public int DecreaseUserCredits(int credits, string userId, string stamp)
         {
             int currentCredits = _dbUser.GetUserCredits(userId);
-            return _dbUser.UpdateUserCredits(currentCredits - credits, userId);
+            //int credits = (int)user.Credit;
+            //string stamp = user.ConcurrencyStamp;
+            return _dbUser.UpdateUserCredits(currentCredits - credits, userId, stamp);
         }
         public string GetUserName(string userId)
         {
@@ -56,6 +59,11 @@ namespace BusinessLayer
         public List<User> GetAllUsers()
         {
             return _dbUser.GetAllUsers();
+        }
+
+        public string GetUserConcurrencyStamp(string userId)
+        {
+            return _dbUser.GetUserConcurrencyStamp(userId);
         }
 
         //public int InsertUser(User user)

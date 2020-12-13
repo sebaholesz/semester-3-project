@@ -10,10 +10,10 @@
 }
 
 <main>
+    
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 screen-1300-full">
-
                 <div class="boxed-row">
                     <div class="row choose-solution-title-block">
                         <div class="col-md-6">
@@ -26,13 +26,17 @@
                         </div>
                         <div class="col-md-6 d-flex align-items-center justify-content-end">
                             <div>
-                                <button id="chooseSolutionButton" class="btn-update">
+
+
+
+                                <button id="chooseSolutionButton" type="submit" class="btn-update">
                                     Choose this solution
                                 </button>
+
                             </div>
                             <div class="btn-block-with-left-margin">
                                 <button id="rejectSolutionButton" class="btn-delete">
-                                   Reject this solution
+                                    Reject this solution
                                 </button>
                             </div>
                         </div>
@@ -71,8 +75,15 @@
 
             </div>
         </div>
-    </div>
-</main>
+        @using (Html.BeginForm())
+
+        {
+            @Html.Hidden("kokot", (object)ViewBag.ConcurrencyStamp);
+        }
+
+        </div>
+   
+    </main>
 
 @section Scripts {
     <script>
@@ -123,7 +134,8 @@
 
                 const solutionId = collection[currentIndex].SolutionId.toString();
                 const assignmentId = collection[currentIndex].AssignmentId.toString();
-                const reqBody = solutionId + "*" + assignmentId;
+                const stamp = '@ViewBag.ConcurrencyStamp';
+                const reqBody = solutionId + "*" + assignmentId + "*" + stamp;
                 const xhrChooseSolutionBody = reqBody;
                 const xhrGetSolution = new XMLHttpRequest();
                 const xhrChooseSolution = new XMLHttpRequest();

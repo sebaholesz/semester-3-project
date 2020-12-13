@@ -13,11 +13,12 @@ namespace WebApi.Controllers
     {
         [Route("user/add-credit/{id}")]
         [HttpPut]
-        public IActionResult AddCredits([FromBody] int credits, string id)
+        public IActionResult AddCredits([FromBody] User user, string id)
         {
             try
             {
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCreadits(credits , id);
+                int credit = (int)user.Credit;
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(credit, id, user.ConcurrencyStamp);
                 if (noOfRowsAffected > 0)
                 {
                     return Ok();
@@ -35,11 +36,12 @@ namespace WebApi.Controllers
 
         [Route("user/remove-credit/{id}")]
         [HttpPut]
-        public IActionResult RemoveCredits([FromBody] int credits, string id)
+        public IActionResult RemoveCredits([FromBody] User user, string id)
         {
             try
             {
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCreadits(credits, id);
+                int credit = (int)user.Credit;
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(credit, id, user.ConcurrencyStamp);
                 if (noOfRowsAffected > 0)
                 {
                     return Ok();
@@ -89,6 +91,29 @@ namespace WebApi.Controllers
                 if (users.Count() > 0)
                 {
                     return Ok(users);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("user/get-concurrency-stamp/{id}")]
+        [HttpGet]
+        public IActionResult GetUserConcurrencyStamp(string id)
+        {
+            try
+            {
+                string stamp = UserBusiness.GetUserBusiness().GetUserConcurrencyStamp(id);
+
+                if (stamp.Length >= 0)
+                {
+                    return Ok(stamp);
                 }
                 else
                 {

@@ -56,10 +56,11 @@
                                 </div>
                             </div>
                             <div class="boxed-row solution-description-detail-container">
+                                
                                 <div class="solution-description-detail-content height-max">
                                     <input asp-for="Solution.AssignmentId" type="hidden" value="@assignment.AssignmentId" />
                                     <div class="solution-description">
-
+                                        
                                         <span asp-validation-for="Solution.Description" class="text-danger"></span>
                                         <textarea asp-for="Solution.Description" placeholder="Write the description of your solution here..." class="textarea-solution-description"></textarea>
                                     </div>

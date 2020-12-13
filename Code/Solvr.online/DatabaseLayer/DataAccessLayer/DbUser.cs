@@ -57,14 +57,23 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public int UpdateUserCredits(int credit, string userId)
+        public int UpdateUserCredits(int credit, string userId, string concurrencyStamp)
         {
+            //mayeb should be in a transaction
             try
             {
                 
-                int returni = _db.Execute(@"Update [Identity].[User] set credit=@credit WHERE Id = @userId", new { credit = credit ,userId = userId});
+                int returni = _db.Execute(@"Update [Identity].[User] set credit=@credit WHERE Id = @userId AND ConcurrencyStamp = @ConcurrencyStamp", new { credit = credit ,userId = userId, ConcurrencyStamp = concurrencyStamp });
+                if (returni > 0)
+                {
+                    int generated = this.GenerateNewConcurrencyStamp(userId);
+                    if (generated > 0)
+                    {
+                        return returni;
+                    }
+                }
 
-                return returni;
+                return -1;
             }
             catch (SqlException e)
             {
@@ -113,6 +122,46 @@ namespace DatabaseLayer.DataAccessLayer
             
         }
 
+        public string GetUserConcurrencyStamp(string userId)
+        {
+            try
+            {
+                string result = _db.ExecuteScalar<string>("Select [ConcurrencyStamp] from [Identity].[User] where Id=@userId", new { userId = userId });
+                return result;
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public int GenerateNewConcurrencyStamp(string userId)
+        {
+            try
+            {
+                string newGuid = Guid.NewGuid().ToString();
+                int result = _db.Execute("Update [Identity].[User] set ConcurrencyStamp=@concurrencystamp WHERE Id = @userId", new { userId = userId, concurrencystamp = newGuid });
+                return result;
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        //public User GetUserById(int id)
+        //{
+        //    try
+        //    {
+        //        return this._db.QueryFirst<User>("Select * from [dbo].[User] where userId=@userId", new { userId = id });
+        //    }
+        //    catch (SqlException e)
+        //    {
+        //        System.Console.WriteLine(e.Message);
+        //        return null;
+        //    }
+        //}
+
         //public int InsertUser(User user)
         //{
         //    try
@@ -146,19 +195,7 @@ namespace DatabaseLayer.DataAccessLayer
         //    }
         //}
 
-        //public User GetUserById(int id)
-        //{
-        //    try
-        //    {
-        //        this._db = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
-        //        return this._db.QueryFirst<User>("Select * from [dbo].[User] where userId=@userId", new { userId = id });
-        //    }
-        //    catch (SqlException e)
-        //    {
-        //        System.Console.WriteLine(e.Message);
-        //        return null;
-        //    }
-        //}
+
 
         //public int DeleteUser(int id)
         //{
