@@ -5,11 +5,11 @@ using ModelLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Utility.RequestAuthenticator;
 
 namespace WebApi.Controllers
 {
-    [Authorize]
+    [Authorize()]
     [ApiController]
     [Route("apiV1/")]
     public class APIAssignmentController : ControllerBase
@@ -62,7 +62,7 @@ namespace WebApi.Controllers
         }
 
         [Route("assignment/complete-data/{assignmentId}")]
-        [HttpGet]
+        [HttpGet]   
         public IActionResult GetCompleteData(int assignmentId)
         {
             try

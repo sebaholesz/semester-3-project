@@ -103,7 +103,7 @@ namespace BusinessLayer
                 return solution ?? null;
             }
             catch (Exception e)
-            {
+            {   
                 throw e;
             }
         }

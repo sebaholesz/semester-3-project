@@ -7,6 +7,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ASP.NET.Controllers
 {
@@ -85,6 +87,37 @@ namespace ASP.NET.Controllers
                     }
                     return new AuthenticationHeaderValue("Bearer", JWTtoken); 
                 }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static string GenerateRequestToken(User user)
+        {
+            try
+            {
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("testtwojimamy123"));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+                var claims = new[] {
+                new Claim(JwtRegisteredClaimNames.Website, "www.solver.online"),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+                new Claim("AuthenticationString", "ifTHISstringWITHallOFourNAMESwhichAREmarosMARTINsebiSAMandSEBAisPRESENT...theREQUESTshouldBEaccepted"),
+                new Claim("Now", DateTime.UtcNow.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                };
+
+                var token = new JwtSecurityToken("SolvrOnline",
+                    "SolvrOnline",
+                    claims,
+                    expires: DateTime.Now.AddMinutes(3),
+                    signingCredentials: credentials);
+
+                JwtSecurityTokenHandler jwtth = new JwtSecurityTokenHandler();
+                string tokenF = jwtth.WriteToken(token);
+                return tokenF;
             }
             catch (Exception e)
             {

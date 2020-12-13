@@ -41,6 +41,7 @@ namespace webApi.Controllers
                 {
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
+                    client.DefaultRequestHeaders.Add("request-token", AuthenticationController.GenerateRequestToken(user));
 
                     string urlGetAllAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
                     string urlGetAllSubjects = "https://localhost:44316/apiV1/subject";
