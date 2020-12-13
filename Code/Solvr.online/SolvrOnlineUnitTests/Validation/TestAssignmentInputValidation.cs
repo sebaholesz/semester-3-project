@@ -8,7 +8,7 @@ namespace SolvrOnlineUnitTests
     public class TestAssignmentInputValidation
     {
         private AssignmentInputValidation assignmentInputValidation;
-        private DateTime deadline = DateTime.Now;
+        private DateTime deadline = DateTime.UtcNow;
 
         public TestAssignmentInputValidation()
         {

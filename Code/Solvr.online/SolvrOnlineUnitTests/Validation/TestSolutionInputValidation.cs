@@ -22,7 +22,7 @@ namespace SolvrOnlineUnitTests
             solution.Anonymous = false;
             solution.Description = "";
             solution.SolutionRating = 3.4m;
-            solution.Timestamp = DateTime.Now;
+            solution.Timestamp = DateTime.UtcNow;
             solution.UserId = "12";
             solution.AssignmentId = 7;
 
@@ -42,7 +42,7 @@ namespace SolvrOnlineUnitTests
             solution.Anonymous = false;
             solution.Description = tooLongDescription;
             solution.SolutionRating = 3.4m;
-            solution.Timestamp = DateTime.Now;
+            solution.Timestamp = DateTime.UtcNow;
             solution.UserId = "12";
             solution.AssignmentId = 7;
 

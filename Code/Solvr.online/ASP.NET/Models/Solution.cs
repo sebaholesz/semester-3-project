@@ -16,5 +16,11 @@ namespace Models
         public byte[] SolutionFile { get; set; }
         public string UserId { get; set; }
         public bool Accepted { get; set; }
+
+        public Solution()
+        {
+            SolutionRating = 0.0M;
+            Accepted = false;
+        }
     }
 }

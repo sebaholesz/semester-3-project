@@ -33,7 +33,7 @@ namespace SolvrOnlineUnitTests
         public void SetUp()
         {
             List<User> users = dbu.GetAllUsers();
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
             Assignment assignment = new Assignment();
 
             assignment.Title = "Test title";
@@ -81,7 +81,7 @@ namespace SolvrOnlineUnitTests
             solution.AssignmentId = assignmentForTestingId;
             solution.UserId = users[0].Id;
             solution.Description = "Test description";
-            solution.Timestamp = DateTime.Now;
+            solution.Timestamp = DateTime.UtcNow;
             solution.SolutionRating = 3.6M;
             solution.Anonymous = true;
 
@@ -101,7 +101,7 @@ namespace SolvrOnlineUnitTests
 
             for (int i = 0; i < 20; i++)
             {
-                DateTime now = DateTime.Now;
+                DateTime now = DateTime.UtcNow;
                 Assignment assignment = new Assignment();
 
                 assignment.Title = "Test title";
@@ -175,7 +175,7 @@ namespace SolvrOnlineUnitTests
             solution.AssignmentId = assignmentForTestingId;
             solution.UserId = users[0].Id;
             solution.Description = "Test description 1";
-            solution.Timestamp = DateTime.Now;
+            solution.Timestamp = DateTime.UtcNow;
             solution.SolutionRating = 3.6M;
             solution.Anonymous = true;
 
@@ -183,7 +183,7 @@ namespace SolvrOnlineUnitTests
             solution2.AssignmentId = assignmentForTestingId;
             solution2.UserId = users[0].Id;
             solution2.Description = "Test description 2";
-            solution2.Timestamp = DateTime.Now.AddMinutes(1);
+            solution2.Timestamp = DateTime.UtcNow.AddMinutes(1);
             solution2.SolutionRating = 3.6M;
             solution2.Anonymous = true;
 
@@ -191,7 +191,7 @@ namespace SolvrOnlineUnitTests
             solution3.AssignmentId = assignmentForTestingId;
             solution3.UserId = users[0].Id;
             solution3.Description = "Test description 3";
-            solution3.Timestamp = DateTime.Now.AddMinutes(2);
+            solution3.Timestamp = DateTime.UtcNow.AddMinutes(2);
             solution3.SolutionRating = 3.6M;
             solution3.Anonymous = true;
 
@@ -221,7 +221,7 @@ namespace SolvrOnlineUnitTests
             solution.AssignmentId = assignmentForTestingId;
             solution.UserId = users[0].Id;
             solution.Description = "Test description 1";
-            solution.Timestamp = DateTime.Now;
+            solution.Timestamp = DateTime.UtcNow;
             solution.SolutionRating = 3.6M;
             solution.Anonymous = true;
 
@@ -229,7 +229,7 @@ namespace SolvrOnlineUnitTests
             solution2.AssignmentId = assignmentForTestingId;
             solution2.UserId = users[0].Id;
             solution2.Description = "Test description 2";
-            solution2.Timestamp = DateTime.Now.AddMinutes(1);
+            solution2.Timestamp = DateTime.UtcNow.AddMinutes(1);
             solution2.SolutionRating = 3.6M;
             solution2.Anonymous = true;
 
@@ -237,7 +237,7 @@ namespace SolvrOnlineUnitTests
             solution3.AssignmentId = assignmentForTestingId;
             solution3.UserId = users[0].Id;
             solution3.Description = "Test description 3";
-            solution3.Timestamp = DateTime.Now.AddMinutes(2);
+            solution3.Timestamp = DateTime.UtcNow.AddMinutes(2);
             solution3.SolutionRating = 3.6M;
             solution3.Anonymous = true;
 

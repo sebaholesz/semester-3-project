@@ -31,10 +31,12 @@ namespace Solvr.online_desktop.AppWindow
         {
             if (ApiAssignment.GetAllAssignments() != null)
             {
-                DataGridAssignments.ItemsSource = ApiAssignment.GetAllAssignments();
-                DataGridAssignments.Columns[2].Width = 300;
-                DataGridAssignments.Visibility = Visibility.Visible;
+                DataGridForAll.ItemsSource = ApiAssignment.GetAllAssignments();
+                DataGridForAll.Columns[2].Width = 300;
+                DataGridForAll.Visibility = Visibility.Visible;
                 ButtonUpdate.Visibility = Visibility.Visible;
+                ButtonRemoveCredits.Visibility = Visibility.Hidden;
+                ButtonAddCredits.Visibility = Visibility.Hidden;
                 ButtonMakeActive.Visibility = Visibility.Visible;
                 ButtonMakeInactive.Visibility = Visibility.Visible;
             }
@@ -46,7 +48,7 @@ namespace Solvr.online_desktop.AppWindow
 
         private void ButtonMakeInactive_Click(object sender, RoutedEventArgs e)
         {
-            if (DataGridAssignments.SelectedItem is Assignment assignment)
+            if (DataGridForAll.SelectedItem is Assignment assignment)
             {
                 int assignmentId = assignment.AssignmentId;
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Are you sure?", "Make inactive", System.Windows.MessageBoxButton.YesNo);
@@ -58,14 +60,14 @@ namespace Solvr.online_desktop.AppWindow
                 }
                 else
                 {
-                    DataGridAssignments.SelectedItem = null;
+                    DataGridForAll.SelectedItem = null;
                 }
             }
         }
 
         private void ButtonMakeActive_Click(object sender, RoutedEventArgs e)
         {
-            if (DataGridAssignments.SelectedItem is Assignment assignment)
+            if (DataGridForAll.SelectedItem is Assignment assignment)
             {
                 int assignmentId = assignment.AssignmentId;
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Are you sure?", "Make active", System.Windows.MessageBoxButton.YesNo);
@@ -77,14 +79,14 @@ namespace Solvr.online_desktop.AppWindow
                 }
                 else
                 {
-                    DataGridAssignments.SelectedItem = null;
+                    DataGridForAll.SelectedItem = null;
                 }
             }
         }
 
         private void ButtonUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if (DataGridAssignments.SelectedItem is Assignment assignment)
+            if (DataGridForAll.SelectedItem is Assignment assignment)
             {
                 int assignmentId = assignment.AssignmentId;
                 string title = assignment.Title;
@@ -113,6 +115,46 @@ namespace Solvr.online_desktop.AppWindow
             loginPage.TextBlockMessage.Text = "You have been successfully logged out!";
             loginPage.TextBlockMessage.Visibility = Visibility.Visible;
             ApiAuthentication.Logintoken = "";
+        }
+
+        internal void ButtonAllUsers_Click(object sender, RoutedEventArgs e)
+        {
+            DataGridForAll.ItemsSource = ApiUser.GetAllUsers();
+            DataGridForAll.Columns[0].Visibility = Visibility.Hidden;
+            DataGridForAll.Visibility = Visibility.Visible;
+            ButtonUpdate.Visibility = Visibility.Visible;
+            ButtonMakeActive.Visibility = Visibility.Hidden;
+            ButtonMakeInactive.Visibility = Visibility.Hidden;
+            ButtonRemoveCredits.Visibility = Visibility.Visible;
+            ButtonAddCredits.Visibility = Visibility.Visible;
+        }
+
+        private void ButtonRemoveCredits_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataGridForAll.SelectedItem is User user)
+            {
+                string userId = user.Id;
+                CreditsWindow cw = new CreditsWindow(userId)
+                {
+                    Title = "Remove Credits"
+                };
+                cw.Show();
+                cw.ButtonRemove.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void ButtonAddCredits_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataGridForAll.SelectedItem is User user)
+            {
+                string userId = user.Id;
+                CreditsWindow cw = new CreditsWindow(userId)
+                {
+                    Title = "Add Credits"
+                };
+                cw.Show();
+                cw.ButtonAdd.Visibility = Visibility.Visible;                
+            }
         }
     }
 }

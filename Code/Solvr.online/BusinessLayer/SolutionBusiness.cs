@@ -32,7 +32,7 @@ namespace BusinessLayer
                 if (result > 0)
                 {
                     int queueLengthAfter = GetSolutionsCountByAssignmentId(solution.AssignmentId);
-                    return queueLengthAfter + 1;
+                    return queueLengthAfter;
                 }
             }
             return -1;
@@ -71,9 +71,23 @@ namespace BusinessLayer
 
         public bool ChooseSolution(int solutionId, int assignmentId)
         {
-            bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1 ? true : false;
-            bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeAssignmentInactive(assignmentId) == 1 ? true : false;
-            return successfulyAccepted && successfulyMadeInactive;
+            try
+            {
+                bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1;
+                if (successfulyAccepted)
+                {
+                    bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeAssignmentInactive(assignmentId) == 1;
+                    Solution solution = GetBySolutionId(solutionId);
+                    Assignment assignment = AssignmentBusiness.GetAssignmentBusiness().GetByAssignmentId(assignmentId);
+                    bool successfulyAdded = UserBusiness.GetUserBusiness().IncreaseUserCreadits(assignment.Price, solution.UserId) == 1;
+                    return successfulyAccepted && successfulyMadeInactive && successfulyAdded;
+                }
+                return false;
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         public Solution GetSolutionByAssignmentId(int assignmentId)
@@ -110,14 +124,34 @@ namespace BusinessLayer
 
         public byte[] GetFileFromDB(int solutionId, User user)
         {
-            Solution solution = GetBySolutionId(solutionId);
-            if (user.Id == solution.UserId || (AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(solution.AssignmentId, user.Id) == 1 && solution.Accepted))
+            try
             {
-                return _dbSolution.GetFileFromDB(solutionId);
+                Solution solution = GetBySolutionId(solutionId);
+                if (user.Id == solution.UserId || (AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(solution.AssignmentId, user.Id) == 1 && solution.Accepted))
+                {
+                    return _dbSolution.GetFileFromDB(solutionId);
+                }
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception e)
             {
-                return null;
+                throw e;
+            }
+        }
+
+        public Solution GetSolutionForAssignment(int assignmentId)
+        {
+            try
+            {
+                Solution solution = _dbSolution.GetSolutionForAssignment(assignmentId);
+                return solution ?? null;
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }

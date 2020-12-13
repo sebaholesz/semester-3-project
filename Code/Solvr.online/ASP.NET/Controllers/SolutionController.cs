@@ -146,7 +146,7 @@ namespace webApi.Controllers
                                     Solution solution = new Solution();
                                     solution.AssignmentId = assignmentId;
                                     solution.Description = collection["Solution.Description"];
-                                    solution.Timestamp = DateTime.Now;
+                                    solution.Timestamp = DateTime.UtcNow;
                                     solution.Anonymous = Convert.ToBoolean(collection["Solution.Anonymous"][0]);
                                     solution.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -248,7 +248,7 @@ namespace webApi.Controllers
                             case 0:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
-                                string urlGetAllSolutionsForAssignment = "https://localhost:44316/apiV1/solution/by-assignment";
+                                string urlGetAllSolutionsForAssignment = $"https://localhost:44316/apiV1/solution/by-assignment/{assignmentId}";
                                 HttpResponseMessage getAllSolutionsForAssignmentRM = client.GetAsync(urlGetAllSolutionsForAssignment).Result;
 
                                 if (getAllSolutionsForAssignmentRM.IsSuccessStatusCode)
@@ -329,10 +329,13 @@ namespace webApi.Controllers
                                 string urlChooseSolution = $"https://localhost:44316/apiV1/solution/choose-solution";
                                 List<int> ids = new List<int>() { solutionId, assignmentId };
                                 HttpResponseMessage chooseSolutionRM = client.PostAsync(urlChooseSolution, new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/json")).Result;
+                          
 
                                 if (chooseSolutionRM.IsSuccessStatusCode)
                                 {
-                                    string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
+                                    //dunno which one 
+                                    string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-accepted-solution/" + assignmentId;
+                                    //string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
                                     HttpResponseMessage getCompleteAssignmentDataWithSolutionRM = client.GetAsync(urlCompleteAssignmentDataWithSolution).Result;
 
                                     if (getCompleteAssignmentDataWithSolutionRM.IsSuccessStatusCode)
@@ -342,7 +345,8 @@ namespace webApi.Controllers
                                         ViewBag.Solution = asu.Solution;
                                         ViewBag.User = asu.User;
 
-                                        return Redirect("/solution/solution-for-assignment/"+assignmentId);
+                                        //return Redirect("/solution/solution-for-assignment/"+assignmentId);
+                                        return View("DisplaySolution");
                                     }
                                     else
                                     {
@@ -408,7 +412,7 @@ namespace webApi.Controllers
                             case 0:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
-                                string urlGetCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
+                                string urlGetCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data-with-accepted-solution/" + assignmentId;
                                 HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlGetCompleteAssignmentData).Result;
                                
                                 if(getCompleteAssignmentDataRM.IsSuccessStatusCode)
@@ -481,7 +485,7 @@ namespace webApi.Controllers
                             case 1:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 2:
-                                string urlGetCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
+                                string urlGetCompleteAssignmentData = $"https://localhost:44316/apiV1/assignment/complete-data-with-solution/{assignmentId}";
                                 HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlGetCompleteAssignmentData).Result;
 
                                 if (getCompleteAssignmentDataRM.IsSuccessStatusCode)

@@ -108,6 +108,77 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
+        public List<Assignment> GetAssignmentsByPage(int start)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] Where isActive=1  Order By [postDate] Desc offset @start rows fetch next 12 rows only", new {start = start}).ToList();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public List<Assignment> GetAllActiveAssignmentsNotPostedByUserPage(string userId, int start)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] Where not userId=@userId and isActive=1  Order By [postDate] Desc offset @start rows fetch next 12 rows only", new { userId=userId, start = start }).ToList();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public List<Assignment> GetAllAssignmentsForUserPage(string userId, int start)
+        {
+            try
+            {
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] Where userId=@userId Order By [postDate] Desc offset @start rows fetch next 12 rows only", new { userId = userId, start = start }).ToList();
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public int GetAssignmentsCount()
+        {
+            try
+            {
+                return _db.QueryFirst<int>("Select Count(*) from[dbo].[Assignment] where isActive = 1");
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+        public int GetAssignmentsCountNotByUser(string userId)
+        {
+            try
+            {
+                return _db.QueryFirst<int>("Select Count(*) from[dbo].[Assignment] where not userid=@userId and isActive = 1", new { userId = userId});
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
+        public int GetAssignmentsCountForUser(string userId)
+        {
+            try
+            {
+                return _db.QueryFirst<int>("Select Count(*) from[dbo].[Assignment] where userid=@userId", new { userId = userId });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
+
         public List<Assignment> GetAllActiveAssignmentsNotSolvedByUser(string userId)
         {
             try

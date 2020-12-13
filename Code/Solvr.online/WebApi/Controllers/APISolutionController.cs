@@ -103,6 +103,30 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("solution/choose-solution")]
+        [HttpPost]
+        public IActionResult ChooseSolution([FromBody] List<int> ids )
+        {
+            try
+            {
+                int solutionId = ids[0];
+                int assignmentId = ids[1];
+                bool response = SolutionBusiness.GetSolutionBusiness().ChooseSolution(solutionId, assignmentId);
+                if(response)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(409);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         [Route("solution")]
         [HttpPost]
         public IActionResult Post([FromBody] Solution solution)

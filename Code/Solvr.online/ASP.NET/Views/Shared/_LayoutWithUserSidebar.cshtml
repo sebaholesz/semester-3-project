@@ -39,7 +39,7 @@
 
                         <ul class="nav navigation-list">
                             <li class="navigation-list-item"><a class="nav-dashboard" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                            <li class="navigation-list-item"><a class="nav-assignments" asp-controller="assignment" asp-action="display-assignments">Assignments</a></li>
+                            <li class="navigation-list-item"><a class="nav-assignments" asp-controller="assignment" asp-action="display-assignments-page" asp-route-id="1">Assignments</a></li>
                             <li class="navigation-list-item"><a class="nav-solved" asp-controller="Home" asp-action="Index">Solved</a></li>
                             <li class="navigation-list-item"><a class="nav-forum" asp-controller="Home" asp-action="Index">Forum</a></li>
                             <li class="navigation-list-item"><a class="nav-faq" asp-controller="Home" asp-action="Index">FAQ</a></li>
@@ -135,12 +135,11 @@
                             <div class="user-sidebar-meta-name-score">Score</div>
                             <div class="user-sidebar-meta-value-score">15000</div>
                             <div class="user-sidebar-meta-name-credits">Credits</div>
-                            <div class="user-sidebar-meta-value-credits">450</div>
+                            <div class="user-sidebar-meta-value-credits">@(UserManager.GetUserAsync(User).Result.Credit)</div>
                         </div>
 
                         <div class="user-sidebar-add-credit">
-                            <a class="btn-add-credit"
-                               href="#">
+                            <a  asp-controller="user" asp-action="add-credits" asp-route-id="@(UserManager.GetUserAsync(User).Result.Id)" class="btn-add-credit">
                                 <img class="btn-add-credit-icon"
                                      src="/assets/icons/dollar.svg">Add Credit
                             </a>
@@ -149,7 +148,7 @@
                         <div class="user-sidebar-block">
                             <h4 class="user-sidebar-block-title">Assignments</h4>
                             <div>
-                                <a class="user-sidebar-block-link" asp-controller="Assignment" asp-action="GetAllAssignmentsForLoggedInUser">My Assignments</a>
+                                <a class="user-sidebar-block-link" asp-controller="assignment" asp-action="page-user" asp-route-id="1">My Assignments</a>
                             </div>
                         </div>
 

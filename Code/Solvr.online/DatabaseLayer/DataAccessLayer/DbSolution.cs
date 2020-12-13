@@ -57,18 +57,18 @@ namespace DatabaseLayer.DataAccessLayer
                         //doesn't actually check if the input was successful
                         if (lastUsedId > 0)
                         {
-                            int noOfSolutions = _db.QueryFirst<int>("SELECT COUNT(*) FROM [dbo].[Solution]", transaction: transaction);
+                            int noOfSolutions = _db.QueryFirst<int>("SELECT COUNT(*) FROM [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = solution.AssignmentId }, transaction: transaction);
                             //check if solution is the first in the queue
-                            if (noOfSolutions==0)
+                            if (noOfSolutions==1)
                             {
                                 transaction.Commit();
                                 _db.Close();
                                 return lastUsedId;
                             }
                             
-                            if (noOfSolutions>0)
+                            if (noOfSolutions>1)
                             {
-                                Solution lastPostedSolution = _db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] order by timestamp DESC", transaction: transaction);
+                                Solution lastPostedSolution = _db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] where assignmentId=@assignmentId order by timestamp DESC", new { assignmentId = solution.AssignmentId }, transaction: transaction);
                                 //checks if the Id put into the DB really is last
                                 if (lastPostedSolution.SolutionId == lastUsedId)
                                 {
@@ -236,6 +236,18 @@ namespace DatabaseLayer.DataAccessLayer
                 return fileData;
             }
             catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public Solution GetSolutionForAssignment(int assignmentId)
+        {
+            try
+            {
+                return _db.QueryFirst<Solution>("Select * from [dbo].[Solution] where assignmentId=@assignmentId and accepted=0", new { assignmentId = assignmentId });
+            }
+            catch (SqlException e)
             {
                 throw e;
             }

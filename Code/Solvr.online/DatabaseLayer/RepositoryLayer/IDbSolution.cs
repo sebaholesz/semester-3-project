@@ -18,5 +18,6 @@ namespace DatabaseLayer.RepositoryLayer
         List<string> GetAllSolversForAssignment(int assignmentId);
         Solution GetAcceptedSolutionForAssignment(int assignmentId);
         byte[] GetFileFromDB(int solutionId);
+        Solution GetSolutionForAssignment(int assignmentId);
     }
 }

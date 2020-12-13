@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Utility.RequestAuthenticator;
+using System.Net.Http;
+using System.Web;
 
 namespace WebApi.Controllers
 {
@@ -20,7 +22,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                assignment.PostDate = DateTime.Now;
+                assignment.PostDate = DateTime.UtcNow;
                 int insertedAssignmentId = AssignmentBusiness.GetAssignmentBusiness().CreateAssignment(assignment);
 
                 if (insertedAssignmentId > 0)
@@ -107,6 +109,29 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("assignment/complete-data-with-accepted-solution/{assignmentId}")]
+        [HttpGet]
+        public IActionResult GetCompleteDataWithAcceptedSolution(int assignmentId)
+        {
+            try
+            {
+                object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithAcceptedSolution(assignmentId);
+
+                if (assignmentCompleteDataWithSolution != null)
+                {
+                    return Ok(assignmentCompleteDataWithSolution);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         [AllowAnonymous]
         [Route("assignment/all-active")]
         [HttpGet]
@@ -118,6 +143,42 @@ namespace WebApi.Controllers
 
                 if (assignments.Count() > 0)
                 {
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Route("assignment/page-all-active/{pageNumber}")]
+        [HttpGet]
+        public IActionResult GetActiveAssignmentsByPage(int pageNumber)
+        {
+            try
+            {
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetActiveAssignmentsByPage(pageNumber);
+
+                if (assignments.Count() > 0)
+                {
+                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCount();
+                    int totalPages = (int)Math.Ceiling(count / 12.00);
+                    bool previousPage = pageNumber > 1 ? true : false;
+                    bool nextPage = pageNumber < totalPages ? true : false;
+                    var paginationMetadata = new
+                    {
+                        count,
+                        totalPages,
+                        previousPage,
+                        nextPage
+
+                    };
+                    HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata)); 
                     return Ok(assignments);
                 }
                 else
@@ -154,6 +215,42 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("assignment/page-all-active-not-posted-by-user/{pageNumber}")]
+        [HttpPost]
+        public IActionResult GetAllActiveAssignmentsNotPostedByUserPage([FromBody] User user, int pageNumber)
+        {
+            try
+            {
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotPostedByUserPage(user.Id, pageNumber);
+
+                if (assignments.Count() > 0)
+                {
+                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCountNotByUser(user.Id);
+                    int totalPages = (int)Math.Ceiling(count / 12.00);
+                    bool previousPage = pageNumber > 1 ? true : false;
+                    bool nextPage = pageNumber < totalPages ? true : false;
+                    var paginationMetadata = new
+                    {
+                        count,
+                        totalPages,
+                        previousPage,
+                        nextPage
+
+                    };
+                    HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata));
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         [Route("assignment/user")]
         [HttpPost]
         public IActionResult GetAllAssignmentsForUser([FromBody] User user)
@@ -176,6 +273,43 @@ namespace WebApi.Controllers
                 return StatusCode(500);
             }
         }
+
+        [Route("assignment/page-user/{pageNumber}")]
+        [HttpPost]
+        public IActionResult GetAllAssignmentsForUserPage([FromBody] User user, int pageNumber)
+        {
+            try
+            {
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsForUserPage(user.Id, pageNumber);
+
+                if (assignments.Count() > 0)
+                {
+                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCountForUser(user.Id);
+                    int totalPages = (int)Math.Ceiling(count / 12.00);
+                    bool previousPage = pageNumber > 1 ? true : false;
+                    bool nextPage = pageNumber < totalPages ? true : false;
+                    var paginationMetadata = new
+                    {
+                        count,
+                        totalPages,
+                        previousPage,
+                        nextPage
+
+                    };
+                    HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata));
+                    return Ok(assignments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
 
         [Route("assignment/solved-by-user")]
         [HttpGet]

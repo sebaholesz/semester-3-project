@@ -45,7 +45,7 @@
         <Button Name="ButtonAllSolutions" Grid.Row="3" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" HorizontalContentAlignment="Left">
             Solutions
         </Button>
-        <Button Name="ButtonAllUsers" Grid.Row="4" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" HorizontalContentAlignment="Left">
+        <Button Name="ButtonAllUsers" Grid.Row="4" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" HorizontalContentAlignment="Left" Click="ButtonAllUsers_Click">
             Users
         </Button>
         <Button Name="ButtonSignOut" Content="Log Out" Grid.Row="8" Grid.Column="1" HorizontalContentAlignment="Left" Click="ButtonSignOut_Click">
@@ -75,7 +75,9 @@
         <Button Name="ButtonUpdate" Grid.Row="1" Grid.Column="6" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonUpdate_Click">Update</Button>
         <Button Name="ButtonMakeActive" Grid.Row="1" Grid.Column="7" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonMakeActive_Click">Make Active</Button>
         <Button Name="ButtonMakeInactive" Grid.Row="1" Grid.Column="8" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonMakeInactive_Click">Make Inactive</Button>
-        <DataGrid Name="DataGridAssignments" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="7" Grid.RowSpan="7" Background="LightBlue" RowBackground="LightBlue" FontSize="15" BorderBrush="Transparent" IsReadOnly="True" MouseDown="DataGrid_MouseDown" Visibility="Hidden">
+        <Button Name="ButtonRemoveCredits" Grid.Row="1" Grid.Column="7" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonRemoveCredits_Click">Remove Credits</Button>
+        <Button Name="ButtonAddCredits" Grid.Row="1" Grid.Column="8" FontFamily="Poppins" FontSize="20" Background="Transparent" BorderBrush="Transparent" Visibility="Hidden" Click="ButtonAddCredits_Click">Add Credits</Button>
+        <DataGrid Name="DataGridForAll" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="7" Grid.RowSpan="7" Background="LightBlue" RowBackground="LightBlue" FontSize="15" BorderBrush="Transparent" IsReadOnly="True" MouseDown="DataGrid_MouseDown" Visibility="Hidden">
             <DataGrid.Resources>
                 <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
                     <Setter Property="Background" Value="LightBlue" />

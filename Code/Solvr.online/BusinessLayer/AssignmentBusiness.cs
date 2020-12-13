@@ -31,6 +31,59 @@ namespace BusinessLayer
             return _dbAssignment.GetAllAssignments();
         }
 
+        public List<Assignment> GetActiveAssignmentsByPage(int pageNumber)
+        {
+            
+            int start = (pageNumber-1) * 12;
+            return _dbAssignment.GetAssignmentsByPage(start);
+        }
+
+        public List<Assignment> GetAllActiveAssignmentsNotPostedByUserPage(string userId, int pageNumber)
+        {
+
+            int start = (pageNumber - 1) * 12;
+            return _dbAssignment.GetAllActiveAssignmentsNotPostedByUserPage(userId, start);
+        }
+
+        public List<Assignment> GetAllAssignmentsForUserPage(string userId, int pageNumber)
+        {
+
+            int start = (pageNumber - 1) * 12;
+            return _dbAssignment.GetAllAssignmentsForUserPage(userId, start);
+        }
+
+        public int GetAssignmentsCount()
+        {
+            return _dbAssignment.GetAssignmentsCount();
+        }
+
+        public int GetAssignmentsCountNotByUser(string userId)
+        {
+            return _dbAssignment.GetAssignmentsCountNotByUser(userId);
+        }
+
+        public int GetAssignmentsCountForUser(string userId)
+        {
+            return _dbAssignment.GetAssignmentsCountForUser(userId);
+        }
+
+        public object PaginationMetadata(int pageNumber)
+        {
+            int count = GetAssignmentsCount();
+            int totalPages = (int)Math.Ceiling(count / 12.00);
+            bool previousPage = pageNumber > 1 ? true : false;
+            bool nextPage = pageNumber < totalPages ? true : false;
+            var paginationMetadata = new
+            {
+                count,
+                totalPages,
+                previousPage,
+                nextPage
+
+            };
+            return paginationMetadata;
+        }
+
         public List<Assignment> GetAllActiveAssignmentsNotSolvedByUser(string userId)
         {
             return _dbAssignment.GetAllActiveAssignmentsNotSolvedByUser(userId);
@@ -53,11 +106,21 @@ namespace BusinessLayer
         
         public int CreateAssignment(Assignment assignment)
         {
-            if (_assignmentValidation.CheckInput(assignment))
+            try
             {
-                return _dbAssignment.CreateAssignment(assignment);
+                if (_assignmentValidation.CheckInput(assignment))
+                {
+                    
+                    UserBusiness.GetUserBusiness().DecreaseUserCreadits(assignment.Price, assignment.UserId);
+                    return _dbAssignment.CreateAssignment(assignment);
+                }
+                return -1;
             }
-            return -1;
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
         
         public Assignment GetByAssignmentId(int id)
@@ -92,15 +155,15 @@ namespace BusinessLayer
 
                     if (!user.Equals(null))
                     {
-                        Solution solution = SolutionBusiness.GetSolutionBusiness().GetAcceptedSolutionForAssignment(assignmentId);
+                        Solution solution = SolutionBusiness.GetSolutionBusiness().GetSolutionForAssignment(assignmentId);
 
                         if (!solution.Equals(null))
                         {
                             //TODO refactor this nasty code :D
-                            if ((assignment.UserId.Equals(user.Id) && assignment.IsActive == false) || (solution.UserId.Equals(user.Id)))
-                            {
+                            //if (assignment.UserId.Equals(user.Id) || (solution.UserId.Equals(user.Id)))
+                            //{
                                 return new { Assignment = assignment, Solution = solution, User = user };
-                            }
+                            //}
                         }
                     }
                 }
@@ -111,6 +174,39 @@ namespace BusinessLayer
                 throw e;
             }
         }
+
+        public object GetAssignmentCompleteDataWithAcceptedSolution(int assignmentId)
+        {
+            try
+            {
+                Assignment assignment = _dbAssignment.GetByAssignmentId(assignmentId);
+                if (!assignment.Equals(null))
+                {
+                    User user = _userBusiness.GetDisplayDataByUserId(assignment.UserId);
+
+                    if (!user.Equals(null))
+                    {
+                        Solution solution = SolutionBusiness.GetSolutionBusiness().GetAcceptedSolutionForAssignment(assignmentId);
+
+                        if (!solution.Equals(null))
+                        {
+                            //TODO refactor this nasty code :D
+                           // if ((assignment.UserId.Equals(user.Id) && assignment.IsActive == false) || (solution.UserId.Equals(user.Id)))
+                            //{
+                                return new { Assignment = assignment, Solution = solution, User = user };
+                            //}
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
 
         public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)
         {

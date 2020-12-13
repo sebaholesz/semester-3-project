@@ -98,7 +98,7 @@ namespace ASP.NET.Areas.Identity.Pages.Account
                         userName = user.UserName;
 
                         //register last login for the user into the database
-                        user.LastLogin = DateTime.Now.ToString();
+                        user.LastLogin = DateTime.UtcNow.ToString();
                         var lastLoginResult = await _userManager.UpdateAsync(user);
                         if (!lastLoginResult.Succeeded)
                         {
