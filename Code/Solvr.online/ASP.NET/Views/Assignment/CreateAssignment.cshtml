@@ -12,9 +12,11 @@
     <div class="container-fluid">
         <form asp-controller="Assignment" enctype="multipart/form-data" asp-action="CreateAssignment" method="post">
             @Html.AntiForgeryToken()
+
             <div class="row">
                 <div class="col-md-12 screen-1300-full">
                     <div class="boxed-row">
+
                         <div class="row create-assignment-title-block">
                             <div class="col-md-9">
                                 <h3 class="create-assignment-page-title">
@@ -69,7 +71,7 @@
                                     <label for="Price">
                                         Credits
                                     </label>
-                                    <input asp-for="Price" type="number" class="form-control" max="@ViewBag.Credits"/>
+                                    <input asp-for="Price" type="number" class="form-control" max="@ViewBag.Credits" />
                                     <span asp-validation-for="Price" class="text-danger"></span>
                                 </div>
 
@@ -115,9 +117,12 @@
                                 </div>
                             </div>
                         </div>
+                        <input asp-for="CreditConcurrencyStamp" type="hidden" value="@ViewBag.ConcurrencyStamp" />
                     </div>
                 </div>
             </div>
+            @Html.Hidden("kokot", (object)ViewBag.ConcurrencyStamp);
+            
         </form>
     </div>
 </main>

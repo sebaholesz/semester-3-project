@@ -111,7 +111,7 @@ namespace BusinessLayer
                 if (_assignmentValidation.CheckInput(assignment))
                 {
                     
-                    UserBusiness.GetUserBusiness().DecreaseUserCreadits(assignment.Price, assignment.UserId);
+                    //UserBusiness.GetUserBusiness().DecreaseUserCreadits(assignment.Price, assignment.UserId);
                     return _dbAssignment.CreateAssignment(assignment);
                 }
                 return -1;

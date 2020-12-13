@@ -7,6 +7,7 @@ using MimeDetective;
 using Models;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -159,7 +160,6 @@ namespace webApi.Controllers
                                     }
 
 
-                                    //changed to fix it
                                     string urlCreateSolution = "https://localhost:44316/apiV1/solution/";
                                     HttpResponseMessage createSolutionRM = client.PostAsync(urlCreateSolution, new StringContent(JsonConvert.SerializeObject(solution), Encoding.UTF8, "application/json")).Result;
                                     if(createSolutionRM.IsSuccessStatusCode)
@@ -248,12 +248,17 @@ namespace webApi.Controllers
                             case 0:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
-                                string urlGetAllSolutionsForAssignment = $"https://localhost:44316/apiV1/solution/by-assignment/{assignmentId}";
-                                HttpResponseMessage getAllSolutionsForAssignmentRM = client.GetAsync(urlGetAllSolutionsForAssignment).Result;
 
-                                if (getAllSolutionsForAssignmentRM.IsSuccessStatusCode)
+                                string urlGetAllSolutionsForAssignment = $"https://localhost:44316/apiV1/solution/by-assignment/{assignmentId}";
+                                string urlGetUserConcurrencyStamp = "https://localhost:44316/apiV1/user/get-concurrency-stamp/" + userId;
+
+                                HttpResponseMessage getAllSolutionsForAssignmentRM = client.GetAsync(urlGetAllSolutionsForAssignment).Result;
+                                HttpResponseMessage urlGetUserUserConcurrencyStampRM = (client.GetAsync(urlGetUserConcurrencyStamp).Result);
+
+                                if (getAllSolutionsForAssignmentRM.IsSuccessStatusCode && urlGetUserUserConcurrencyStampRM.IsSuccessStatusCode)
                                 {
                                     ViewBag.Solutions = getAllSolutionsForAssignmentRM.Content.ReadAsAsync<List<Solution>>().Result;
+                                    ViewBag.ConcurrencyStamp = urlGetUserUserConcurrencyStampRM.Content.ReadAsStringAsync().Result;
                                     return View("DisplayAllSolutionsForAssignment");
                                 }
                                 else
@@ -296,7 +301,7 @@ namespace webApi.Controllers
          */
         [Route("solution/choose-solution")]
         [HttpPut]
-        public ActionResult ChooseSolutionPut([FromBody] string reqBody)
+        public ActionResult ChooseSolutionPut([FromBody] string reqBody, IFormCollection collection)
         {
             try
             {
@@ -308,6 +313,8 @@ namespace webApi.Controllers
                     string[] reqBodyStringArray = reqBody.Split("*");
                     int solutionId = Convert.ToInt32(reqBodyStringArray[0]);
                     int assignmentId = Convert.ToInt32(reqBodyStringArray[1]);
+                    //string stamp = (reqBodyStringArray[2]);
+
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
@@ -327,15 +334,38 @@ namespace webApi.Controllers
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
                                 string urlChooseSolution = $"https://localhost:44316/apiV1/solution/choose-solution";
-                                List<int> ids = new List<int>() { solutionId, assignmentId };
-                                HttpResponseMessage chooseSolutionRM = client.PostAsync(urlChooseSolution, new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/json")).Result;
-                          
+
+
+                                string urlGetSolution = $"https://localhost:44316/apiV1/solution/{solutionId}";
+                                HttpResponseMessage getSolutionRM = client.GetAsync(urlGetSolution).Result;
+                                Solution s = getSolutionRM.Content.ReadAsAsync<Solution>().Result;
+
+                                //List<int> ids = new List<int>() { solutionId, assignmentId };
+                                ArrayList arList = new ArrayList();
+                                arList.Add(solutionId);
+                                arList.Add(assignmentId);
+
+                                if (getSolutionRM.IsSuccessStatusCode)
+                                {
+                                    string solverId = s.UserId;
+
+                                    string urlGetSolver = $"https://localhost:44316/apiV1/user/get-concurrency-stamp/{solverId}";
+                                    HttpResponseMessage getSolverRM = client.GetAsync(urlGetSolver).Result;
+                                    if (getSolverRM.IsSuccessStatusCode)
+                                    {
+                                        var solverStamp = getSolverRM.Content.ReadAsStringAsync().Result;
+                                        arList.Add(solverStamp);
+                                    }
+                                        
+                                }
+
+
+                                HttpResponseMessage chooseSolutionRM = client.PostAsync(urlChooseSolution, new StringContent(JsonConvert.SerializeObject(arList), Encoding.UTF8, "application/json")).Result;
+
 
                                 if (chooseSolutionRM.IsSuccessStatusCode)
                                 {
-                                    //dunno which one 
                                     string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-accepted-solution/" + assignmentId;
-                                    //string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-solution/" + assignmentId;
                                     HttpResponseMessage getCompleteAssignmentDataWithSolutionRM = client.GetAsync(urlCompleteAssignmentDataWithSolution).Result;
 
                                     if (getCompleteAssignmentDataWithSolutionRM.IsSuccessStatusCode)
@@ -345,8 +375,8 @@ namespace webApi.Controllers
                                         ViewBag.Solution = asu.Solution;
                                         ViewBag.User = asu.User;
 
-                                        //return Redirect("/solution/solution-for-assignment/"+assignmentId);
                                         return View("DisplaySolution");
+                                            
                                     }
                                     else
                                     {

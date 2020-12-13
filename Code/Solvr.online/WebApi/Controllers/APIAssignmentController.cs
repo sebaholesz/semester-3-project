@@ -24,8 +24,9 @@ namespace WebApi.Controllers
             {
                 assignment.PostDate = DateTime.UtcNow;
                 int insertedAssignmentId = AssignmentBusiness.GetAssignmentBusiness().CreateAssignment(assignment);
-
-                if (insertedAssignmentId > 0)
+                //decrease creditu
+                bool successfulyDecreased = UserBusiness.GetUserBusiness().DecreaseUserCredits(assignment.Price, assignment.UserId, assignment.CreditConcurrencyStamp) == 1;
+                if (insertedAssignmentId > 0 && successfulyDecreased)
                 {
                     return Ok(insertedAssignmentId);
                 }
