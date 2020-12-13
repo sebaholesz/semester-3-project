@@ -26,47 +26,95 @@ namespace BusinessLayer
 
         public int CreateSolution(Solution solution)
         {
-            if (_validateSolution.CheckInput(solution))
+            try
             {
-                int result = _dbSolution.CreateSolution(solution);
-                if (result > 0)
+                if (_validateSolution.CheckInput(solution))
                 {
-                    int queueLengthAfter = GetSolutionsCountByAssignmentId(solution.AssignmentId);
-                    return queueLengthAfter;
+                    int result = _dbSolution.CreateSolution(solution);
+                    if (result > 0)
+                    {
+                        int queueLengthAfter = GetSolutionsCountByAssignmentId(solution.AssignmentId);
+                        return queueLengthAfter;
+                    }
                 }
+                return -1;
             }
-            return -1;
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<Solution> GetAllSolutions()
         {
-            return _dbSolution.GetAllSolutions();
+            try
+            {
+                return _dbSolution.GetAllSolutions();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<Solution> GetSolutionsByAssignmentId(int id)
         {
-            return _dbSolution.GetSolutionsByAssignmentId(id);
-        }
+            try
+            {
+                return _dbSolution.GetSolutionsByAssignmentId(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }   
 
         public int GetSolutionsCountByAssignmentId(int assignmentId)
         {
-            return _dbSolution.GetSolutionsCountByAssignmentId(assignmentId);
+            try
+            {
+                return _dbSolution.GetSolutionsCountByAssignmentId(assignmentId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public Solution GetBySolutionId(int id)
         {
-            return _dbSolution.GetBySolutionId(id);
+            try
+            {
+                return _dbSolution.GetBySolutionId(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public int UpdateSolution(Solution solution, int id)
         {
-
-            return _dbSolution.UpdateSolution(solution, id);
+            try
+            {
+                return _dbSolution.UpdateSolution(solution, id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
         
         public int DeleteSolution(int id)
         {
-            return _dbSolution.DeleteSolution(id);
+            try
+            {
+                return _dbSolution.DeleteSolution(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool ChooseSolution(int solutionId, int assignmentId, string stamp)
@@ -93,21 +141,34 @@ namespace BusinessLayer
 
         public Solution GetSolutionByAssignmentId(int assignmentId)
         {
-            Solution solution = _dbSolution.GetSolutionByAssignmentId(assignmentId);
+            try
+            {
+                Solution solution = _dbSolution.GetSolutionByAssignmentId(assignmentId);
 
-            if (!solution.Equals(null))
+                if (!solution.Equals(null))
+                {
+                    return solution;
+                }
+                else
+                {
+                    throw new Exception("Could not find your solution");
+                }
+            catch (Exception e)
             {
-                return solution;
-            }
-            else
-            {
-                throw new Exception("Could not find your solution");
+                throw e;
             }
         }
 
         public List<string> GetAllSolversForAssignment(int assignmentId)
         {
-            return _dbSolution.GetAllSolversForAssignment(assignmentId);
+            try
+            {
+                return _dbSolution.GetAllSolversForAssignment(assignmentId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public Solution GetAcceptedSolutionForAssignment(int assignmentId)
