@@ -13,7 +13,7 @@ namespace DatabaseLayer.RepositoryLayer
         bool CheckIfUserExists(string userId);
         List<User> GetAllUsers();
         string GetUserHashedPasswordByUserName(string userUserName);
-        string GetUserRoleByUserName(string userUserName);
+        string GetRoleByUserName(string userUserName);
         User GetUserByUserName(string userUserName);
         bool AuthenticateUserWithIdAndSecurityStamp(User userToAuthenticate);
         User GetUserById(string userId);

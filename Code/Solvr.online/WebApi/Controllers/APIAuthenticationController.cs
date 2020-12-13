@@ -47,6 +47,31 @@ namespace JWTAuthentication.Controllers
             }
         }
 
+        [Route("login-admin")]
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult LoginAdmin([FromBody] User loginUser)
+        {
+            try
+            {
+                IActionResult response = Unauthorized();
+
+                User loginUserFromDB = UserBusiness.GetUserBusiness().GetUserByUserName(loginUser.UserName);
+                loginUserFromDB.Password = loginUser.Password;
+
+                if (UserBusiness.GetUserBusiness().AuthenticateUser(loginUserFromDB) && UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(loginUserFromDB.UserName))
+                {
+                    var tokenString = GenerateJSONWebToken(loginUserFromDB);
+                    response = Ok(new { token = tokenString });
+                }
+                return response;
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         [Route("login-internal")]
         [AllowAnonymous]
         [HttpPost]
@@ -70,7 +95,7 @@ namespace JWTAuthentication.Controllers
 
             var claims = new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserName),
-                new Claim("Role", UserBusiness.GetUserBusiness().GetUserRoleByUserName(userInfo.UserName)),
+                //new Claim("Role", UserBusiness.GetUserBusiness().GetUserRoleByUserName(userInfo.UserName)),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

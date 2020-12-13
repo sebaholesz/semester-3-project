@@ -125,11 +125,12 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public string GetUserRoleByUserName(string userUserName)
+        public string GetRoleByUserName(string userUserName)
         {
             try
             {
-                return _db.QueryFirst<string>("Select [RoleId] from [Identity].[UserRoles] where UserId=(Select [Id] from [Identity].[User] where UserName=@userUserName )", new { userUserName = userUserName });
+                return _db.QueryFirst<string>("Select [NormalizedName] from [Identity].[Role] where Id = (Select [RoleId] from [Identity].[UserRoles] where " +
+                    "UserId=(Select [Id] from [Identity].[User] where UserName=@userUserName))", new { userUserName = userUserName });
             }
             catch (SqlException e)
             {
