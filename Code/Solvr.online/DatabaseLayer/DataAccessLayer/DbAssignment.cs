@@ -172,7 +172,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.QueryFirst<int>("Select Count(*) from[dbo].[Assignment] where isActive = 1 and userid=@userId", new { userId = userId });
+                return _db.QueryFirst<int>("Select Count(*) from[dbo].[Assignment] where userid=@userId", new { userId = userId });
             }
             catch (SqlException e)
             {
