@@ -40,23 +40,27 @@ namespace WebApi.Controllers
             }
         }
 
-        /*TODO admin check*/
         [Route("assignment")]
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignments();
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                
 
-                if (assignments.Count() > 0)
+
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    return Ok(assignments);
+                    List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignments();
+                    if (assignments.Count() > 0)
+                    {
+                        return Ok(assignments);
+                    }
+                   
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return NotFound();
+                
             }
             catch (Exception)
             {
@@ -192,6 +196,7 @@ namespace WebApi.Controllers
             }
         }
 
+        [AllowAnonymous]
         [Route("assignment/page-all-active/{pageNumber}")]
         [HttpGet]
         public IActionResult GetActiveAssignmentsByPage(int pageNumber)
@@ -511,14 +516,15 @@ namespace WebApi.Controllers
             }
         }
 
-        /*TODO admin check*/
+      
         [Route("assignment/active/{id}")]
         [HttpPut]
-        public IActionResult MakActive(int id, [FromBody]User user)
+        public IActionResult MakActive(int id)
         {
             try
             {
-                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(user.UserName))
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
                     int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeActive(id);
                     if (noOfRowsAffected > 0)

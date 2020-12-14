@@ -14,7 +14,6 @@ namespace WebApi.Controllers
     public class APIUserController : ControllerBase
     {
         /*ONLY THE USER HIMSELF*/
-        /*ADD admin check*/
         [Route("user/add-credit")]
         [HttpPut]
         public IActionResult AddCredits([FromBody] int value)
@@ -39,22 +38,24 @@ namespace WebApi.Controllers
         }
 
         /*ONLY THE ADMIN*/
-        /*ADD admin check*/
         [Route("user-admin/add-credit/{id}")]
         [HttpPut]
         public IActionResult AdminAddCredits([FromBody] int value, string id)
         {
             try
             {
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(value, id);
-                if (noOfRowsAffected > 0)
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    return Ok();
+                    int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(value, id);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok();
+                    }
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return NotFound();
+                
             }
             catch (Exception)
             {
@@ -62,22 +63,25 @@ namespace WebApi.Controllers
             }
         }
 
-        /*ADD admin check*/
+        
         [Route("user-admin/remove-credit/{id}")]
         [HttpPut]
         public IActionResult RemoveCredits([FromBody] int value, string id)
         {
             try
             {
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(value, id);
-                if (noOfRowsAffected > 0)
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    return Ok();
+                    int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(value, id);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok();
+                    }
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return NotFound();
+                
             }
             catch (Exception)
             {
@@ -110,23 +114,25 @@ namespace WebApi.Controllers
             }
         }
 
-        /*ADD admin check*/
+        
         [Route("user")]
         [HttpGet]
         public IActionResult GetAllUsers()
         {
             try
             {
-                List<User> users = UserBusiness.GetUserBusiness().GetAllUsers();
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
 
-                if (users.Count() > 0)
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    return Ok(users);
+                    List<User> users = UserBusiness.GetUserBusiness().GetAllUsers();
+                    if (users.Count() > 0)
+                    {
+                        return Ok(users);
+                    }
                 }
-                else
-                {
                     return NotFound();
-                }
+                
             }
             catch (Exception)
             {

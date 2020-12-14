@@ -13,23 +13,24 @@ namespace WebApi.Controllers
     [Route("apiV1/")]
     public class APISolutionController : ControllerBase
     {
-        /*TODO admin check*/
+        
         [Route("solution")]
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                List<Solution> solutions = SolutionBusiness.GetSolutionBusiness().GetAllSolutions();
-
-                if (solutions.Count > 0)
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+               
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    return Ok(solutions);
+                    List<Solution> solutions = SolutionBusiness.GetSolutionBusiness().GetAllSolutions();
+                    if (solutions.Count > 0)
+                    {
+                        return Ok(solutions);
+                    }
                 }
-                else
-                {
-                    return NotFound("No Solutions found!");
-                }
+                return NotFound("No Solutions found!");
             }
             catch (Exception)
             {
