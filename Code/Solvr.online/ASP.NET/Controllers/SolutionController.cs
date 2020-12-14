@@ -166,14 +166,14 @@ namespace webApi.Controllers
                                     {
                                         int queueOrder = createSolutionRM.Content.ReadAsAsync<int>().Result;
 
-                                        ViewBag.Message = "Solution created successfully";
-                                        ViewBag.ResponseStyleClass = "text-success";
-                                        ViewBag.ButtonText = "Go back to homepage";
-                                        ViewBag.ButtonLink = "/";
-                                        ViewBag.PageTitle = "Solution created!";
-                                        ViewBag.SubMessage = "You are number " + queueOrder + " in the queue";
-                                        ViewBag.Image = "/assets/icons/success.svg";
-                                        return View("UserFeedback");
+                                        TempData["Message"] = "Solution created successfully";
+                                        TempData["ResponseStyleClass"] = "text-success";
+                                        TempData["ButtonText"] = "Go back to homepage";
+                                        TempData["ButtonLink"] = "/";
+                                        TempData["PageTitle"] = "Solution created!";
+                                        TempData["SubMessage"] = "You are number " + queueOrder + " in the queue";
+                                        TempData["Image"] = "/assets/icons/success.svg";
+                                        return Redirect("/success");
                                     }
                                     else
                                     {
@@ -195,14 +195,7 @@ namespace webApi.Controllers
                 }
                 else
                 {
-                    ViewBag.Message = "Solution creation failed";
-                    ViewBag.ResponseStyleClass = "text-danger";
-                    ViewBag.ButtonText = "Go back to the solution form";
-                    ViewBag.ButtonLink = "/solution/assignment/" + collection["Solution.AssignmentId"];
-                    ViewBag.PageTitle = "Solution creation failed!";
-                    ViewBag.SubMessage = "Invalid data inserted \nyou are not in the queue";
-                    ViewBag.Image = "/assets/icons/error.svg";
-                    return View("UserFeedback");
+                    throw new Exception("Solution creation failed");
                 }
             }
             catch (Exception e)
@@ -260,14 +253,14 @@ namespace webApi.Controllers
                                 }
                                 else
                                 {
-                                    ViewBag.Message = "No solutions found";
-                                    ViewBag.ResponseStyleClass = "text-danger";
-                                    ViewBag.ButtonText = "Go back to the assignment";
-                                    ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
-                                    ViewBag.PageTitle = "No solutions found!";
-                                    ViewBag.SubMessage = "No one has solved your assignment yet";
-                                    ViewBag.Image = "/assets/icons/error.svg";
-                                    return View("UserFeedback");
+                                    TempData["Message"] = "No solutions found";
+                                    TempData["ResponseStyleClass"] = "text-danger";
+                                    TempData["ButtonText"] = "Go back to the assignment";
+                                    TempData["ButtonLink"] = "/assignment/display-assignment/" + assignmentId;
+                                    TempData["PageTitle"] = "No solutions found!";
+                                    TempData["SubMessage"] = "No one has solved your assignment yet";
+                                    TempData["Image"] = "/assets/icons/error.svg";
+                                    return Redirect("/nothing-found");
                                 }
                             case 2:
                                 return Redirect("/solution/my-solution-for-assignment/" + assignmentId);

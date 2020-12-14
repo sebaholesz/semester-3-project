@@ -125,13 +125,13 @@ namespace webApi.Controllers
                             if (createAssignmentRM.IsSuccessStatusCode)
                             {
                                 int lastUsedId = createAssignmentRM.Content.ReadAsAsync<int>().Result;
-                                ViewBag.Message = "Assignment created successfully";
-                                ViewBag.ResponseStyleClass = "text-success";
-                                ViewBag.ButtonText = "Display your assignment";
-                                ViewBag.ButtonLink = "/assignment/display-assignment/" + lastUsedId;
-                                ViewBag.PageTitle = "Assignment created!";
-                                ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-                                ViewBag.Image = "/assets/icons/success.svg";
+                                TempData["Message"] = "Assignment created successfully";
+                                TempData["ResponseStyleClass"] = "text-success";
+                                TempData["ButtonText"] = "Display your assignment";
+                                TempData["ButtonLink"] = "/assignment/display-assignment/" + lastUsedId;
+                                TempData["PageTitle"] = "Assignment created!";
+                                TempData["SubMessage"] = "Your assignment now waits for solvers to solve it";
+                                TempData["Image"] = "/assets/icons/success.svg";
                             }
                             else
                             {
@@ -147,7 +147,7 @@ namespace webApi.Controllers
                     {
                         throw new Exception("Invalid data inserted");
                     }
-                    return View("UserFeedback");
+                    return Redirect("/success");
                 }
             }
             catch (Exception e)
@@ -275,14 +275,14 @@ namespace webApi.Controllers
                         }
                         else
                         {
-                            ViewBag.Message = "No assignment found";
-                            ViewBag.ResponseStyleClass = "text-danger";
-                            ViewBag.ButtonText = "Go back to homepage";
-                            ViewBag.ButtonLink = "/";
-                            ViewBag.PageTitle = "No assignments found!";
-                            ViewBag.SubMessage = "There were no assignments \nfor the given query";
-                            ViewBag.Image = "/assets/icons/error.svg";
-                            return View("UserFeedback");
+                            TempData["Message"] = "No assignment found";
+                            TempData["ResponseStyleClass"] = "text-danger";
+                            TempData["ButtonText"] = "Go back to homepage";
+                            TempData["ButtonLink"] = "/";
+                            TempData["PageTitle"] = "No assignments found!";
+                            TempData["SubMessage"] = "There were no assignments \nfor the given query";
+                            TempData["Image"] = "/assets/icons/error.svg";
+                            return Redirect("/nothing-found");
                         }
                     }
                     else
@@ -304,14 +304,14 @@ namespace webApi.Controllers
                         }
                         else
                         {
-                            ViewBag.Message = "No assignment found";
-                            ViewBag.ResponseStyleClass = "text-danger";
-                            ViewBag.ButtonText = "Go back to homepage";
-                            ViewBag.ButtonLink = "/";
-                            ViewBag.PageTitle = "No assignments found!";
-                            ViewBag.SubMessage = "There were no assignments \nfor the given query";
-                            ViewBag.Image = "/assets/icons/error.svg";
-                            return View("UserFeedback");
+                            TempData["Message"] = "No assignment found";
+                            TempData["ResponseStyleClass"] = "text-danger";
+                            TempData["ButtonText"] = "Go back to homepage";
+                            TempData["ButtonLink"] = "/";
+                            TempData["PageTitle"] = "No assignments found!";
+                            TempData["SubMessage"] = "There were no assignments \nfor the given query";
+                            TempData["Image"] = "/assets/icons/error.svg";
+                            return Redirect("/nothing-found");
                         }
                     }
                 }
@@ -379,7 +379,8 @@ namespace webApi.Controllers
                                     {
                                         string urlCheckIfHasAcceptedSolution = "https://localhost:44316/apiV1/assignment/check-if-has-accepted-solution/" + assignmentId;
                                         HttpResponseMessage CheckIfHasAcceptedSolutionRM = client.GetAsync(urlCheckIfHasAcceptedSolution).Result;
-                                        if (CheckIfHasAcceptedSolutionRM.IsSuccessStatusCode)
+                                        if (CheckIfHasAcceptedSolutionRM
+                                            .IsSuccessStatusCode)
                                         {
                                             return Redirect("/solution/solution-for-assignment/" + assignmentId);
                                         }
@@ -473,21 +474,21 @@ namespace webApi.Controllers
                                     //assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
 
                                     string urlUpdateAssignment = "https://localhost:44316/apiV1/assignment/" + assignmentId;
-                                    HttpResponseMessage updateAssignmentRM = client.PutAsync(urlUpdateAssignment, 
+                                    HttpResponseMessage updateAssignmentRM = client.PutAsync(urlUpdateAssignment,
                                         new StringContent(JsonConvert.SerializeObject(assignment), Encoding.UTF8, "application/json")).Result;
 
-                                    if(updateAssignmentRM.IsSuccessStatusCode)
+                                    if (updateAssignmentRM.IsSuccessStatusCode)
                                     {
                                         //TODO notify all solvers of the changes
 
-                                        ViewBag.Message = "Assignment updated successfully";
-                                        ViewBag.ResponseStyleClass = "text-success";
-                                        ViewBag.ButtonText = "Display your assignment";
-                                        ViewBag.ButtonLink = "/assignment/display-assignment/" + assignmentId;
-                                        ViewBag.PageTitle = "Assignment updated!";
-                                        ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-                                        ViewBag.Image = "/assets/icons/success.svg";
-                                        return View("UserFeedback");
+                                        TempData["Message"] = "Assignment updated successfully";
+                                        TempData["ResponseStyleClass"] = "text-success";
+                                        TempData["ButtonText"] = "Display your assignment";
+                                        TempData["ButtonLink"] = "/assignment/display-assignment/" + assignmentId;
+                                        TempData["PageTitle"] = "Assignment updated!";
+                                        TempData["SubMessage"] = "Your assignment now waits for solvers to solve it";
+                                        TempData["Image"] = "/assets/icons/success.svg";
+                                        return Redirect("/success");
                                     }
                                     else
                                     {
@@ -507,15 +508,15 @@ namespace webApi.Controllers
                 }
                 else
                 {
-                    ViewBag.Message = "Assignment update failed";
-                    ViewBag.ResponseStyleClass = "text-danger";
-                    ViewBag.ButtonText = "Go back to the assignment form";
-                    ViewBag.ButtonLink = "/assignment/update-assignment/" + assignmentId;
-                    ViewBag.PageTitle = "Assignment update failed!";
-                    ViewBag.SubMessage = "Invalid data inserted";
-                    ViewBag.Image = "/assets/icons/error.svg";
+                    TempData["Message"] = "Assignment update failed";
+                    TempData["ResponseStyleClass"] = "text-danger";
+                    TempData["ButtonText"] = "Go back to the assignment form";
+                    TempData["ButtonLink"] = "/assignment/update-assignment/" + assignmentId;
+                    TempData["PageTitle"] = "Assignment update failed!";
+                    TempData["SubMessage"] = "Invalid data inserted";
+                    TempData["Image"] = "/assets/icons/error.svg";
                 }
-                return View("UserFeedback");
+                return Redirect("/success");
             }
             catch (Exception e)
             {
@@ -565,15 +566,14 @@ namespace webApi.Controllers
 
                                 if (makeInactiveRM.IsSuccessStatusCode)
                                 {
-                                    ViewBag.Message = "Assignment deleted successfully";
-                                    ViewBag.ResponseStyleClass = "text-success";
-                                    ViewBag.ButtonText = "Go back to homepage";
-                                    ViewBag.ButtonLink = "/";
-                                    ViewBag.PageTitle = "Assignment deleted!";
-                                    ViewBag.SubMessage = "Your assignment is now deleted";
-                                    ViewBag.Image = "/assets/icons/success.svg";
-                                    return View("UserFeedback");
-
+                                    TempData["Message"] = "Assignment deleted successfully";
+                                    TempData["ResponseStyleClass"] = "text-success";
+                                    TempData["ButtonText"] = "Go back to homepage";
+                                    TempData["ButtonLink"] = "/";
+                                    TempData["PageTitle"] = "Assignment deleted!";
+                                    TempData["SubMessage"] = "Your assignment is now deleted";
+                                    TempData["Image"] = "/assets/icons/success.svg";
+                                    return Redirect("/success");
                                 }
                                 else
                                 {
@@ -635,14 +635,14 @@ namespace webApi.Controllers
                     }
                     else
                     {
-                        ViewBag.Message = "No assignment found";
-                        ViewBag.ResponseStyleClass = "text-danger";
-                        ViewBag.ButtonText = "Go back to homepage";
-                        ViewBag.ButtonLink = "/";
-                        ViewBag.PageTitle = "No assignments found!";
-                        ViewBag.SubMessage = "There were no assignments \nfor the given query";
-                        ViewBag.Image = "/assets/icons/error.svg";
-                        return View("UserFeedback");
+                        TempData["Message"] = "No assignment found";
+                        TempData["ResponseStyleClass"] = "text-danger";
+                        TempData["ButtonText"] = "Go back to homepage";
+                        TempData["ButtonLink"] = "/";
+                        TempData["PageTitle"] = "No assignments found!";
+                        TempData["SubMessage"] = "There were no assignments \nfor the given query";
+                        TempData["Image"] = "/assets/icons/error.svg";
+                        return Redirect("/nothing-found");
                     }
                 }
             }
@@ -683,14 +683,14 @@ namespace webApi.Controllers
                     }
                     else
                     {
-                        ViewBag.Message = "No solutions found";
-                        ViewBag.ResponseStyleClass = "text-danger";
-                        ViewBag.ButtonText = "Go back to homepage";
-                        ViewBag.ButtonLink = "/";
-                        ViewBag.PageTitle = "No solutions found!";
-                        ViewBag.SubMessage = "You have not solved \nany assignments yet!";
-                        ViewBag.Image = "/assets/icons/error.svg";
-                        return View("UserFeedback");
+                        TempData["Message"] = "No solutions found";
+                        TempData["ResponseStyleClass"] = "text-danger";
+                        TempData["ButtonText"] = "Go back to homepage";
+                        TempData["ButtonLink"] = "/";
+                        TempData["PageTitle"] = "No solutions found!";
+                        TempData["SubMessage"] = "You have not solved \nany assignments yet!";
+                        TempData["Image"] = "/assets/icons/error.svg";
+                        return Redirect("/nothing-found");
                     }
                 }
             }

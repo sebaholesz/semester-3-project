@@ -78,15 +78,19 @@ namespace ASP.NET.Controllers
                     HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(credit), Encoding.UTF8, "application/json")).Result;
                     if (urlAddCreditsRM.IsSuccessStatusCode)
                     {
-                        ViewBag.Message = "Credit added successfully";
-                        ViewBag.ResponseStyleClass = "text-success";
-                        ViewBag.ButtonText = "Post assignment";
-                        ViewBag.ButtonLink = "/assignment/create-assignment";
-                        ViewBag.PageTitle = "Credit added!";
-                        ViewBag.SubMessage = "You can now post assignments";
-                        ViewBag.Image = "/assets/icons/success.svg";
+                        TempData["Message"] = "Credits added successfuly!";
+                        TempData["ResponseStyleClass"] = "text-success";
+                        TempData["ButtonText"] = "Post Assignment";
+                        TempData["ButtonLink"] = "assignment/create-assignment";
+                        TempData["PageTitle"] = "Credits added successfuly!";
+                        TempData["SubMessage"] = "You can now use your credits \nto post an assignment!";
+                        TempData["Image"] = "/assets/icons/success.svg";
+                        return Redirect("/success");
                     }
-                    return View("UserFeedback");
+                    else
+                    {
+                        throw new Exception("Could not add credits to your account");
+                    }
                 }
             }
             catch (Exception e)
