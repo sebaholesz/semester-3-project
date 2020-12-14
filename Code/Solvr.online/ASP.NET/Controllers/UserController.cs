@@ -37,15 +37,12 @@ namespace ASP.NET.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + userId;
-                    string urlGetUserConcurrencyStamp = "https://localhost:44316/apiV1/user/get-concurrency-stamp/" + userId;
-                    HttpResponseMessage urlGetUserUserConcurrencyStampRM = (client.GetAsync(urlGetUserConcurrencyStamp).Result);
                     HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
 
-                    if (urlGetUserCreditRM.IsSuccessStatusCode && urlGetUserUserConcurrencyStampRM.IsSuccessStatusCode)
+                    if (urlGetUserCreditRM.IsSuccessStatusCode)
                     {
                         ViewBag.Credits = JsonConvert.DeserializeObject<int>(urlGetUserCreditRM.Content.ReadAsStringAsync().Result);
                         ViewBag.userId = userId;
-                        ViewBag.ConcurrencyStamp = urlGetUserUserConcurrencyStampRM.Content.ReadAsStringAsync().Result;
                         return View("AddCredits");
                     }
                     else
@@ -77,9 +74,8 @@ namespace ASP.NET.Controllers
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                    object credits = collection["credits"];
+                    //object credits = collection["credits"];
                     user.Credit = credit;
-                    user.ConcurrencyStamp = collection["ConcurrencyStamp"];
 
                     string urlAddCredits = "https://localhost:44316/apiV1/user/add-credit/" + userId;
                     HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;

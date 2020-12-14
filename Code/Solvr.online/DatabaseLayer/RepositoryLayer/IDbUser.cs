@@ -7,7 +7,7 @@ namespace DatabaseLayer.RepositoryLayer
     {
         User GetDisplayDataByUserId(string userId);
         string GetUserUsername(string userId);
-        int GetUserCredits(string userId);
+        User GetUserCredits(string userId);
         int UpdateUserCredits(int credits, string userId, string concurrencyStamp);
         string GetUserName(string userId);
         bool CheckIfUserExists(string userId);

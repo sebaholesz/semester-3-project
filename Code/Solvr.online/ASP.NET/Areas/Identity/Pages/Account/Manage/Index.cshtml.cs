@@ -37,8 +37,6 @@ namespace ASP.NET.Areas.Identity.Pages.Account.Manage
             public string FirstName { get; set; }
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
-            [Display(Name = "Username")]
-            public string Username { get; set; }
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -48,16 +46,14 @@ namespace ASP.NET.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(User user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
+            
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var firstName = user.FirstName;
             var lastName = user.LastName;
             var profilePicture = user.ProfilePicture;
-            Username = userName;
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
-                Username = userName,
                 FirstName = firstName,
                 LastName = lastName,
                 ProfilePicture = profilePicture
