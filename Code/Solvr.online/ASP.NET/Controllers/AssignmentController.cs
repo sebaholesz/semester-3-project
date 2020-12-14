@@ -371,6 +371,8 @@ namespace webApi.Controllers
                                     {
                                         ViewBag.Assignment = assignment;
                                         ViewBag.AssignmentDeadline = assignment.Deadline.ToString("yyyy-MM-ddTHH:mm:ss");
+                                        ViewBag.AcademicLevel = JsonConvert.DeserializeObject<List<string>>(client.GetAsync("https://localhost:44316/apiV1/academiclevel").Result.Content.ReadAsStringAsync().Result);
+                                        ViewBag.Subject = JsonConvert.DeserializeObject<List<string>>(client.GetAsync("https://localhost:44316/apiV1/subject").Result.Content.ReadAsStringAsync().Result);
                                         string bitString = BitConverter.ToString(assignment.Timestamp);
                                         ViewBag.Timestamp  = bitString;
                                         return View("UpdateAssignment");

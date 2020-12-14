@@ -76,8 +76,18 @@
                                         Academic Level
                                     </label>
                                     <br />
-                                    <select asp-for="AcademicLevel" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
-                                        <option value="@assignment.AcademicLevel" selected>@assignment.AcademicLevel</option>
+                                    <select asp-for="AcademicLevel" class="form-control">
+                                        @foreach (var option in ViewBag.AcademicLevel)
+                                        {
+                                            if (@assignment.AcademicLevel == option)
+                                            {
+                                                <option selected>@option</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@option">@option</option>
+                                            }
+                                        }
                                     </select>
                                     <span asp-validation-for="AcademicLevel" class="text-danger"></span>
                                 </div>
@@ -87,8 +97,18 @@
                                         Subject
                                     </label>
                                     <br />
-                                    <select asp-for="Subject" class="form-control" onfocus="this.size=6" onblur="this.size=1" onchange="this.size = 1; this.blur();">
-                                        <option value="@assignment.Subject" selected>@assignment.Subject</option>
+                                    <select asp-for="Subject" class="form-control">
+                                        @foreach (var option in ViewBag.Subject)
+                                        {
+                                            if (@assignment.Subject == option)
+                                            {
+                                                <option selected>@option</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@option">@option</option>
+                                            }
+                                        }
                                     </select>
                                     <span asp-validation-for="Subject" class="text-danger"></span>
                                 </div>
@@ -98,7 +118,10 @@
                                         Make Anonymous
                                     </label>
                                     <br />
-                                    <input asp-for="@Model.Anonymous" type="checkbox" class="checkbox-make-anonymous" value="@assignment.Anonymous" checked="@assignment.Anonymous" readonly />
+                                    <label class="switch">
+                                        <input asp-for="@Model.Anonymous" type="checkbox" value="true" checked>
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
