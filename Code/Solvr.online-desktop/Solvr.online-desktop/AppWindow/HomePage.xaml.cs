@@ -17,15 +17,13 @@ namespace Solvr.online_desktop.AppWindow
         private readonly MainWindow mw;
         private readonly ApiAssignment _apiAssignment;
         private readonly LoginPage loginPage;
-        private readonly string username;
 
-        public HomePage(string username)
+        public HomePage()
         {
             InitializeComponent();
             _apiAssignment = new ApiAssignment();
             mw = (MainWindow)Application.Current.MainWindow;
             loginPage = new LoginPage();
-            this.username = username;
         }
 
         private void ButtonAllAssignments_Click(object sender, RoutedEventArgs e)
@@ -76,7 +74,7 @@ namespace Solvr.online_desktop.AppWindow
 
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
-                    _apiAssignment.MakeAssignmentActive(assignmentId, username);
+                    _apiAssignment.MakeAssignmentActive(assignmentId);
                     ButtonAllAssignments_Click(sender, e);
                 }
                 else
@@ -100,7 +98,8 @@ namespace Solvr.online_desktop.AppWindow
                 Boolean anonymous = assignment.Anonymous;
                 IEnumerable<string> academicLevel = ApiAssignment.GetAllAcademicLevels();
                 IEnumerable<string> subject = ApiAssignment.GetAllSubjects();
-                mw.FrameDefault.Content = new UpdateAssignmentPage(assignmentId, title, description, price, postDate, deadline, anonymous, academicLevel, subject, username);
+                byte[] timestamp = assignment.Timestamp;
+                mw.FrameDefault.Content = new UpdateAssignmentPage(assignmentId, title, description, price, postDate, deadline, anonymous, academicLevel, subject, timestamp);
             }
         }
 

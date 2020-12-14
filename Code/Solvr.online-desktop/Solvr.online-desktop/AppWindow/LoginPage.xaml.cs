@@ -30,8 +30,7 @@ namespace Solvr.online_desktop.AppWindow
             {
                 if (ApiAuthentication.Login(TextBoxUsername.Text, PasswordBoxPassword.Password))
                 {
-                    string username = TextBoxUsername.Text;
-                    mw.FrameDefault.Content = new HomePage(username);
+                    mw.FrameDefault.Content = new HomePage();
                     mw.Width = 1280;
                     mw.Height = 720;
                 }

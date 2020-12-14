@@ -458,6 +458,33 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("assignment-admin/{assignmentId}")]
+        [HttpPut]
+        public IActionResult UpdateByAdmin([FromBody] Assignment assignment, int assignmentId)
+        {
+            try
+            {
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
+                {
+                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().UpdateAssignment(assignment, assignmentId);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok("Assignment updated successfully!");
+                    }
+                    else
+                    {
+                        return NotFound($"Assignment with id {assignmentId} was not found");
+                    }
+                }
+                return Unauthorized();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         /*ONLY BY AUTHOR*/
         [Route("assignment/check-if-has-accepted-solution/{assignmentId}")]
         [HttpGet]
@@ -516,7 +543,34 @@ namespace WebApi.Controllers
             }
         }
 
-      
+        [Route("assignment-admin/inactive/{assignmentId}")]
+        [HttpPut]
+        public IActionResult MakeInactiveByAdmin(int assignmentId)
+        {
+            try
+            {
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
+                {
+                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeInactive(assignmentId);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                return Unauthorized();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+
         [Route("assignment/active/{id}")]
         [HttpPut]
         public IActionResult MakActive(int id)

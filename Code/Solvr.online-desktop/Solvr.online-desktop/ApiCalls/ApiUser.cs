@@ -33,13 +33,9 @@ namespace Solvr.online_desktop.ApiCalls
             {
                 BaseAddress = new Uri("https://localhost:44316/")
             };
-            var url = "apiV1/user/add-credit/" + userId;
-            User user = new User
-            {
-                Credit = value
-            };
+            var url = "apiV1/user-admin/add-credit/" + userId;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
-            HttpResponseMessage response = client.PutAsJsonAsync(url, user).Result;
+            HttpResponseMessage response = client.PutAsJsonAsync(url, value).Result;
             if (response.IsSuccessStatusCode)
             {
                 client.Dispose();
@@ -59,13 +55,9 @@ namespace Solvr.online_desktop.ApiCalls
             {
                 BaseAddress = new Uri("https://localhost:44316/")
             };
-            var url = "apiV1/user/remove-credit/" + userId;
-            User user = new User
-            {
-                Credit = value
-            };
+            var url = "apiV1/user-admin/remove-credit/" + userId;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
-            HttpResponseMessage response = client.PutAsJsonAsync(url, user).Result;
+            HttpResponseMessage response = client.PutAsJsonAsync(url, value).Result;
             if (response.IsSuccessStatusCode)
             {
                 client.Dispose();
