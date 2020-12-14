@@ -75,12 +75,6 @@
 
             </div>
         </div>
-        @using (Html.BeginForm())
-
-        {
-            @Html.Hidden("kokot", (object)ViewBag.ConcurrencyStamp);
-        }
-
         </div>
    
     </main>
@@ -134,8 +128,7 @@
 
                 const solutionId = collection[currentIndex].SolutionId.toString();
                 const assignmentId = collection[currentIndex].AssignmentId.toString();
-                const stamp = '@ViewBag.ConcurrencyStamp';
-                const reqBody = solutionId + "*" + assignmentId + "*" + stamp;
+                const reqBody = solutionId + "*" + assignmentId;
                 const xhrChooseSolutionBody = reqBody;
                 const xhrGetSolution = new XMLHttpRequest();
                 const xhrChooseSolution = new XMLHttpRequest();

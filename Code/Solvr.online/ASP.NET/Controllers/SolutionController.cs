@@ -250,15 +250,12 @@ namespace webApi.Controllers
                             case 1:
 
                                 string urlGetAllSolutionsForAssignment = $"https://localhost:44316/apiV1/solution/by-assignment/{assignmentId}";
-                                string urlGetUserConcurrencyStamp = "https://localhost:44316/apiV1/user/get-concurrency-stamp/" + user.Id;
-
                                 HttpResponseMessage getAllSolutionsForAssignmentRM = client.GetAsync(urlGetAllSolutionsForAssignment).Result;
-                                HttpResponseMessage urlGetUserUserConcurrencyStampRM = (client.GetAsync(urlGetUserConcurrencyStamp).Result);
+                               
 
-                                if (getAllSolutionsForAssignmentRM.IsSuccessStatusCode && urlGetUserUserConcurrencyStampRM.IsSuccessStatusCode)
+                                if (getAllSolutionsForAssignmentRM.IsSuccessStatusCode)
                                 {
                                     ViewBag.Solutions = getAllSolutionsForAssignmentRM.Content.ReadAsAsync<List<Solution>>().Result;
-                                    ViewBag.ConcurrencyStamp = urlGetUserUserConcurrencyStampRM.Content.ReadAsStringAsync().Result;
                                     return View("DisplayAllSolutionsForAssignment");
                                 }
                                 else
@@ -313,7 +310,6 @@ namespace webApi.Controllers
                     string[] reqBodyStringArray = reqBody.Split("*");
                     int solutionId = Convert.ToInt32(reqBodyStringArray[0]);
                     int assignmentId = Convert.ToInt32(reqBodyStringArray[1]);
-                    //string stamp = (reqBodyStringArray[2]);
 
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
@@ -335,32 +331,9 @@ namespace webApi.Controllers
                             case 1:
                                 string urlChooseSolution = $"https://localhost:44316/apiV1/solution/choose-solution";
 
+                                List<int> ids = new List<int>() { solutionId, assignmentId };
 
-                                string urlGetSolution = $"https://localhost:44316/apiV1/solution/{solutionId}";
-                                HttpResponseMessage getSolutionRM = client.GetAsync(urlGetSolution).Result;
-                                Solution s = getSolutionRM.Content.ReadAsAsync<Solution>().Result;
-
-                                //List<int> ids = new List<int>() { solutionId, assignmentId };
-                                ArrayList arList = new ArrayList();
-                                arList.Add(solutionId);
-                                arList.Add(assignmentId);
-
-                                if (getSolutionRM.IsSuccessStatusCode)
-                                {
-                                    string solverId = s.UserId;
-
-                                    string urlGetSolver = $"https://localhost:44316/apiV1/user/get-concurrency-stamp/{solverId}";
-                                    HttpResponseMessage getSolverRM = client.GetAsync(urlGetSolver).Result;
-                                    if (getSolverRM.IsSuccessStatusCode)
-                                    {
-                                        var solverStamp = getSolverRM.Content.ReadAsStringAsync().Result;
-                                        arList.Add(solverStamp);
-                                    }
-                                        
-                                }
-
-
-                                HttpResponseMessage chooseSolutionRM = client.PostAsync(urlChooseSolution, new StringContent(JsonConvert.SerializeObject(arList), Encoding.UTF8, "application/json")).Result;
+                                HttpResponseMessage chooseSolutionRM = client.PostAsync(urlChooseSolution, new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/json")).Result;
 
 
                                 if (chooseSolutionRM.IsSuccessStatusCode)

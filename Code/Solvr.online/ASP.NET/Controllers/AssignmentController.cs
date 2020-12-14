@@ -15,7 +15,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MimeDetective;
-using Microsoft.AspNetCore.Identity;
 using ASP.NET.Controllers;
 
 namespace webApi.Controllers
@@ -49,21 +48,18 @@ namespace webApi.Controllers
                     string urlGetAllSubjects = "https://localhost:44316/apiV1/subject";
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + userId;
-                    string urlGetUserConcurrencyStamp = "https://localhost:44316/apiV1/user/get-concurrency-stamp/" + userId;
 
 
                     HttpResponseMessage academicLevelsRM = (client.GetAsync(urlGetAllAcademicLevels).Result);
                     HttpResponseMessage subjectsRM = (client.GetAsync(urlGetAllSubjects).Result);
                     HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
-                    HttpResponseMessage urlGetUserUserConcurrencyStampRM = (client.GetAsync(urlGetUserConcurrencyStamp).Result);
 
 
-                    if (academicLevelsRM.IsSuccessStatusCode && subjectsRM.IsSuccessStatusCode && urlGetUserCreditRM.IsSuccessStatusCode && urlGetUserUserConcurrencyStampRM.IsSuccessStatusCode)
+                    if (academicLevelsRM.IsSuccessStatusCode && subjectsRM.IsSuccessStatusCode && urlGetUserCreditRM.IsSuccessStatusCode)
                     {
                         ViewBag.AcademicLevels = JsonConvert.DeserializeObject<List<string>>(academicLevelsRM.Content.ReadAsStringAsync().Result);
                         ViewBag.Subjects = JsonConvert.DeserializeObject<List<string>>(subjectsRM.Content.ReadAsStringAsync().Result);
                         ViewBag.Credits = JsonConvert.DeserializeObject<int>(urlGetUserCreditRM.Content.ReadAsStringAsync().Result);
-                        ViewBag.ConcurrencyStamp = urlGetUserUserConcurrencyStampRM.Content.ReadAsStringAsync().Result;
                         return View("CreateAssignment");
                     }
                     else
@@ -109,7 +105,6 @@ namespace webApi.Controllers
                         assignment.AcademicLevel = collection["AcademicLevel"];
                         assignment.Subject = collection["Subject"];
                         assignment.UserId = user.Id;
-                        assignment.CreditConcurrencyStamp = collection["CreditConcurrencyStamp"];
 
                         //TODO here get the file size and file type and add restrictions
                         if (files != null)
