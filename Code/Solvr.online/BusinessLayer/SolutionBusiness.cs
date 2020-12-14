@@ -139,25 +139,26 @@ namespace BusinessLayer
             }
         }
 
-        public Solution GetSolutionByAssignmentId(int assignmentId)
-        {
-            try
-            {
-                Solution solution = _dbSolution.GetSolutionByAssignmentId(assignmentId);
+        //public Solution GetSolutionByAssignmentId(int assignmentId)
+        //{
+        //    try
+        //    {
+        //        Solution solution = _dbSolution.GetSolutionByAssignmentId(assignmentId);
 
-                if (!solution.Equals(null))
-                {
-                    return solution;
-                }
-                else
-                {
-                    throw new Exception("Could not find your solution");
-                }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //        if (!solution.Equals(null))
+        //        {
+        //            return solution;
+        //        }
+        //        else
+        //        {
+        //            throw new Exception("Could not find your solution");
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
 
         public List<string> GetAllSolversForAssignment(int assignmentId)
         {

@@ -148,17 +148,17 @@ namespace BusinessLayer
             }
         }
        
-        public List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId)
-        {
-            try
-            {
-                return _dbAssignment.GetAllInactiveAssignmentsNotSolvedByUser(userId);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //public List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId)
+        //{
+        //    try
+        //    {
+        //        return _dbAssignment.GetAllInactiveAssignmentsNotSolvedByUser(userId);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
         
         public List<Assignment> GetAllActiveAssignments()
         {
@@ -172,17 +172,17 @@ namespace BusinessLayer
             }
         }
         
-        public List<Assignment> GetAllInactiveAssignments()
-        {
-            try
-            {
-                return _dbAssignment.GetAllInactiveAssignments();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //public List<Assignment> GetAllInactiveAssignments()
+        //{
+        //    try
+        //    {
+        //        return _dbAssignment.GetAllInactiveAssignments();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
         
         public int CreateAssignment(Assignment assignment)
         {
@@ -234,33 +234,33 @@ namespace BusinessLayer
             }
         }
 
-        public object GetAssignmentCompleteDataWithSolution(int assignmentId)
-        {
-            try
-            {
-                Assignment assignment = _dbAssignment.GetByAssignmentId(assignmentId);
-                if (!assignment.Equals(null))
-                {
-                    User user = _userBusiness.GetDisplayDataByUserId(assignment.UserId);
+        //public object GetAssignmentCompleteDataWithSolution(int assignmentId)
+        //{
+        //    try
+        //    {
+        //        Assignment assignment = _dbAssignment.GetByAssignmentId(assignmentId);
+        //        if (!assignment.Equals(null))
+        //        {
+        //            User user = _userBusiness.GetDisplayDataByUserId(assignment.UserId);
 
-                    if (!user.Equals(null))
-                    {
-                        Solution solution = SolutionBusiness.GetSolutionBusiness().GetSolutionForAssignment(assignmentId);
+        //            if (!user.Equals(null))
+        //            {
+        //                Solution solution = SolutionBusiness.GetSolutionBusiness().GetSolutionForAssignment(assignmentId);
 
-                        if (!solution.Equals(null))
-                        {
-                            //TODO add conditional logic 
-                            return new { Assignment = assignment, Solution = solution, User = user };
-                        }
-                    }
-                }
-                return null;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //                if (!solution.Equals(null))
+        //                {
+        //                    //TODO add conditional logic 
+        //                    return new { Assignment = assignment, Solution = solution, User = user };
+        //                }
+        //            }
+        //        }
+        //        return null;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
 
         public object GetAssignmentCompleteDataWithAcceptedSolution(int assignmentId)
         {
@@ -290,29 +290,29 @@ namespace BusinessLayer
             }
         }
 
-        public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)  
-        {
-            try
-            {
-                return _dbAssignment.CheckIfUserAlreadySolvedThisAssignment(asignmentId, userId);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)  
+        //{
+        //    try
+        //    {
+        //        return _dbAssignment.CheckIfUserAlreadySolvedThisAssignment(asignmentId, userId);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
 
-        public bool CheckIfAssignmentIsStillActive(int assignmentId)
-        {
-            try
-            {
-                return _dbAssignment.CheckIfAssignmentIsStillActive(assignmentId);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        //public bool CheckIfAssignmentIsStillActive(int assignmentId)
+        //{
+        //    try
+        //    {
+        //        return _dbAssignment.CheckIfAssignmentIsStillActive(assignmentId);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
        
         public int UpdateAssignment(Assignment assignment, int id)
         {

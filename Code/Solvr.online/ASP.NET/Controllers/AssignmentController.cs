@@ -44,7 +44,6 @@ namespace webApi.Controllers
                 {
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
-                    client.DefaultRequestHeaders.Add("request-token", AuthenticationController.GenerateRequestToken(user));
 
                     string urlGetAllAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
                     string urlGetAllSubjects = "https://localhost:44316/apiV1/subject";
@@ -265,7 +264,7 @@ namespace webApi.Controllers
                         client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                         // MAYBE TODO counts of answers to all assignments in assignment Cards
-                        string urlGetAllAssignments = "https://localhost:44316/apiV1/assignment/all-active-not-posted-by-user";
+                        string urlGetAllAssignments = $"https://localhost:44316/apiV1/assignment/page-all-active-not-posted-by-user/{pageNumber}";
 
                         HttpResponseMessage assignmentsNotPostedByUserRM = client.PostAsync(urlGetAllAssignments, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
                         if (assignmentsNotPostedByUserRM.IsSuccessStatusCode)

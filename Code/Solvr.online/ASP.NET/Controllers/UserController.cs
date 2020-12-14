@@ -78,7 +78,8 @@ namespace ASP.NET.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     object credits = collection["credits"];
-                    User user = new User() { Credit = credit, ConcurrencyStamp=collection["ConcurrencyStamp"] };
+                    user.Credit = credit;
+                    user.ConcurrencyStamp = collection["ConcurrencyStamp"];
 
                     string urlAddCredits = "https://localhost:44316/apiV1/user/add-credit/" + userId;
                     HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;

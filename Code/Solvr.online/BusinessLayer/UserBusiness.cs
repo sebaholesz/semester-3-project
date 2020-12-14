@@ -42,17 +42,17 @@ namespace BusinessLayer
             }
         }
 
-        public string GetUserUsername(string userId)
-        {
-            try
-            {
-                return _dbUser.GetUserUsername(userId);
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
-        }
+        //public string GetUserUsername(string userId)
+        //{
+        //    try
+        //    {
+        //        return _dbUser.GetUserUsername(userId);
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
 
         public User GetUserByUserName(string userUserName)
         {
@@ -89,6 +89,7 @@ namespace BusinessLayer
                 throw e;
             }
         }
+        
         public int IncreaseUserCredits(int credits, string userId, string stamp)
         {
             try
@@ -101,6 +102,7 @@ namespace BusinessLayer
                 throw e;
             }
         }
+        
         public int DecreaseUserCredits(int credits, string userId, string stamp)
         {
             try
@@ -113,17 +115,19 @@ namespace BusinessLayer
                 throw e;
             }
         }
-        public string GetUserName(string userId)
-        {
-            try
-            {
-                return _dbUser.GetUserName(userId);
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
-        }
+        
+        //public string GetUserName(string userId)
+        //{
+        //    try
+        //    {
+        //        return _dbUser.GetUserName(userId);
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
+        
         public bool CheckIfAdminOrModerator(string userUsername)
         {
             try
@@ -141,6 +145,7 @@ namespace BusinessLayer
                 throw e;
             }
         }
+        
         public bool CheckIfUserExists(string userId)
         {
             try

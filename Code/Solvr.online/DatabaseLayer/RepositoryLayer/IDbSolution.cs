@@ -11,7 +11,6 @@ namespace DatabaseLayer.RepositoryLayer
         List<Solution> GetSolutionsByAssignmentId(int id);
         int GetSolutionsCountByAssignmentId(int assignmentId);
         Solution GetBySolutionId(int id);
-        Solution GetSolutionByAssignmentId(int assignmentId);
         int UpdateSolution(Solution solution, int id);
         int DeleteSolution(int id);
         int ChooseSolution(int solutionId);

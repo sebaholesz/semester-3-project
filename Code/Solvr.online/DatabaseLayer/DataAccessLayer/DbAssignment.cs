@@ -155,6 +155,7 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+        
         public int GetAssignmentsCountNotByUser(string userId)
         {
             try

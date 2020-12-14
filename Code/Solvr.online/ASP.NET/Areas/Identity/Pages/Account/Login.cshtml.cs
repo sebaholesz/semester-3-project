@@ -89,35 +89,13 @@ namespace ASP.NET.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var userName = Input.Email;
-                User user;
+                User user = null;
                 if (IsValidEmail(Input.Email))
                 {
                     user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user != null)
                     {
                         userName = user.UserName;
-
-                        //register last login for the user into the database
-                        user.LastLogin = DateTime.UtcNow.ToString();
-                        var lastLoginResult = await _userManager.UpdateAsync(user);
-                        if (!lastLoginResult.Succeeded)
-                        {
-                            throw new Exception($"Unexpected error occurred setting the last login date" +
-                                $" ({lastLoginResult.ToString()}) for user with ID '{user.Id}'.");
-                        }
-                    }
-                }
-                else
-                {
-                    user = await _userManager.FindByNameAsync(userName);
-                    
-                    //register last login for the user into the database
-                    user.LastLogin = DateTime.Now.ToString();
-                    var lastLoginResult = await _userManager.UpdateAsync(user);
-                    if (!lastLoginResult.Succeeded)
-                    {
-                        throw new Exception($"Unexpected error occurred setting the last login date" +
-                            $" ({lastLoginResult.ToString()}) for user with ID '{user.Id}'.");
                     }
                 }
 
@@ -128,6 +106,19 @@ namespace ASP.NET.Areas.Identity.Pages.Account
                     if (AuthenticationController.CreateJWT(_userManager, userName, Input.Password) != null)
                     {
                         _logger.LogInformation("User logged in.");
+
+                        if (user != null)
+                        { 
+                            //register last login for the user into the database
+                            user.LastLogin = DateTime.Now.ToString();
+                            var lastLoginResult = await _userManager.UpdateAsync(user);
+                            if (!lastLoginResult.Succeeded)
+                            {
+                                throw new Exception($"Unexpected error occurred setting the last login date" +
+                                    $" ({lastLoginResult.ToString()}) for user with ID '{user.Id}'.");
+                            }
+                        }
+
                         return LocalRedirect(returnUrl);
                     }
                     else
