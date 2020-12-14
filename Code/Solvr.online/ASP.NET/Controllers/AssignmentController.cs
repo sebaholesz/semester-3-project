@@ -278,6 +278,16 @@ namespace webApi.Controllers
                             ViewBag.NextEnable = page.NextPage == true ? "" : "disabled";
                             ViewBag.PageNumber = pageNumber;
                             ViewBag.TotalPages = page.TotalPages;
+                            //string urlCountOfSolutions = "https://localhost:44316/apiV1/solution/count-by-assignmentId/" + assignmentId;
+                            //HttpResponseMessage solutionCountRM = client.GetAsync(urlCountOfSolutions).Result;
+                            //if (solutionCountRM.IsSuccessStatusCode)
+                            //{
+                            //    ViewBag.SolutionCount = solutionCountRM.Content.ReadAsStringAsync().Result;
+                            //}
+                            //else
+                            //{
+                            //    ViewBag.SolutionCount = "Could not load";
+                            //}
                             return View("AllAssignments");
                         }
                         else
@@ -307,6 +317,16 @@ namespace webApi.Controllers
                             ViewBag.NextEnable = page.NextPage == true ? "" : "disabled";
                             ViewBag.PageNumber = pageNumber;
                             ViewBag.TotalPages = page.TotalPages;
+                            //string urlCountOfSolutions = "https://localhost:44316/apiV1/solution/count-by-assignmentId/" + assignmentId;
+                            //HttpResponseMessage solutionCountRM = client.GetAsync(urlCountOfSolutions).Result;
+                            //if (solutionCountRM.IsSuccessStatusCode)
+                            //{
+                            //    ViewBag.SolutionCount = solutionCountRM.Content.ReadAsStringAsync().Result;
+                            //}
+                            //else
+                            //{
+                            //    ViewBag.SolutionCount = "Could not load";
+                            //}
                             return View("AllAssignments");
                         }
                         else

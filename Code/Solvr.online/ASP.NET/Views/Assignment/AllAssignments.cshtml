@@ -22,7 +22,7 @@
                 <div class="card-columns">
                     @foreach (var assignment in assignments)
                     {
-                        @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml", assignment , new ViewDataDictionary(ViewData))
+                        @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml",  assignment, new ViewDataDictionary(ViewData) { { "SolutionCount", ViewBag.SolutionCount } })
                     }
                 </div>
             </div>

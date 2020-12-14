@@ -516,7 +516,7 @@ namespace webApi.Controllers
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 2:
                                 string urlGetCompleteAssignmentData = $"https://localhost:44316/apiV1/assignment/complete-data-with-solution/{assignmentId}";
-                                HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlGetCompleteAssignmentData).Result;
+                                HttpResponseMessage getCompleteAssignmentDataRM = client.PostAsync(urlGetCompleteAssignmentData, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
 
                                 if (getCompleteAssignmentDataRM.IsSuccessStatusCode)
                                 {
@@ -524,6 +524,17 @@ namespace webApi.Controllers
                                     ViewBag.Assignment = asu.Assignment;
                                     ViewBag.Solution = asu.Solution;
                                     ViewBag.User = asu.User;
+
+                                    string urlCountOfSolutions = "https://localhost:44316/apiV1/solution/count-by-assignmentId/" + assignmentId;
+                                    HttpResponseMessage solutionCountRM = client.GetAsync(urlCountOfSolutions).Result;
+                                    if (solutionCountRM.IsSuccessStatusCode)
+                                    {
+                                        ViewBag.SolutionCount = solutionCountRM.Content.ReadAsStringAsync().Result;
+                                    }
+                                    else
+                                    {
+                                        ViewBag.SolutionCount = "Could not load";
+                                    }
 
                                     return View("DisplaySolution");
                                 }
