@@ -45,12 +45,16 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
         
-        public int GetUserCredits(string userId)
+        public User GetUserCredits(string userId)
         {
+            //with timestamp
             try
             {
-                int credits = Int32.Parse( _db.QueryFirst<string>("Select [Credit] from [Identity].[User] where Id=@userId", new { userId = userId }));
-                return credits;
+               
+                //int credits = Int32.Parse( _db.QueryFirst<string>("Select [Credit] from [Identity].[User] where Id=@userId", new { userId = userId }));
+                //string stamp = this.GetUserConcurrencyStamp(userId);
+                User user = _db.QueryFirst<User>("Select [Credit],[ConcurrencyStamp] from [Identity].[User] where Id=@userId", new { userId = userId });
+                return user;
             }
             catch (SqlException e)
             {
@@ -60,26 +64,38 @@ namespace DatabaseLayer.DataAccessLayer
 
         public int UpdateUserCredits(int credit, string userId, string concurrencyStamp)
         {
-            //mayeb should be in a transaction
-            try
+
+            _db.Open();
+            using (var transaction = _db.BeginTransaction(IsolationLevel.Serializable))
             {
-                
-                int returni = _db.Execute(@"Update [Identity].[User] set credit=@credit WHERE Id = @userId AND ConcurrencyStamp = @ConcurrencyStamp", new { credit = credit ,userId = userId, ConcurrencyStamp = concurrencyStamp });
-                if (returni > 0)
+                try
                 {
-                    int generated = this.GenerateNewConcurrencyStamp(userId);
-                    if (generated > 0)
+
+                    int returni = _db.Execute(@"Update [Identity].[User] set credit=@credit WHERE Id = @userId AND ConcurrencyStamp = @ConcurrencyStamp", new { credit = credit, userId = userId, ConcurrencyStamp = concurrencyStamp }, transaction: transaction);
+                    if (returni > 0)
                     {
-                        return returni;
+                        //int generated = this.GenerateNewConcurrencyStamp(userId);
+                        string newGuid = Guid.NewGuid().ToString();
+                        int generated = _db.Execute(@"Update [Identity].[User] set ConcurrencyStamp=@concurrencystamp WHERE Id = @userId", new { userId = userId, concurrencystamp = newGuid }, transaction: transaction);
+                        if (generated > 0)
+                        {
+                            transaction.Commit();
+                            _db.Close();
+                            return returni;
+
+                        }
                     }
+                    transaction.Rollback();
+                    _db.Close();
+                    return -1;
+
                 }
-
-                return -1;
-            }
-            catch (SqlException e)
-            {
-
-                throw e;
+                catch (SqlException e)
+                {
+                    transaction.Rollback();
+                    _db.Close();
+                    throw e;
+                }
             }
         }
 

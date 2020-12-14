@@ -20,7 +20,7 @@ namespace WebApi.Controllers
             try
             {
                 int credit = (int)user.Credit;
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(credit, id, user.ConcurrencyStamp);
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(credit, id);
                 if (noOfRowsAffected > 0)
                 {
                     return Ok();
@@ -43,7 +43,7 @@ namespace WebApi.Controllers
             try
             {
                 int credit = (int)user.Credit;
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(credit, id, user.ConcurrencyStamp);
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(credit, id);
                 if (noOfRowsAffected > 0)
                 {
                     return Ok();

@@ -127,7 +127,7 @@ namespace BusinessLayer
                     bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeAssignmentInactive(assignmentId) == 1;
                     Solution solution = GetBySolutionId(solutionId);
                     Assignment assignment = AssignmentBusiness.GetAssignmentBusiness().GetByAssignmentId(assignmentId);
-                    bool successfulyAdded = UserBusiness.GetUserBusiness().IncreaseUserCredits(assignment.Price, solution.UserId, stamp) == 1;
+                    bool successfulyAdded = UserBusiness.GetUserBusiness().IncreaseUserCredits(assignment.Price, solution.UserId) == 1;
                     return successfulyAccepted && successfulyMadeInactive && successfulyAdded;
                     //return successfulyAccepted;
                 }

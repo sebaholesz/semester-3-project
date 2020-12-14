@@ -138,7 +138,7 @@ namespace webApi.Controllers
                                 ViewBag.ButtonLink = "/assignment/display-assignment/" + lastUsedId;
                                 ViewBag.PageTitle = "Assignment created!";
                                 ViewBag.SubMessage = "Your assignment now waits for solvers to solve it";
-                                ViewBag.Image = "/assets/icons/success.svg";;
+                                ViewBag.Image = "/assets/icons/success.svg";
                             }
                             else
                             {

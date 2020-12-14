@@ -82,7 +82,8 @@ namespace BusinessLayer
         {
             try
             {
-                return _dbUser.GetUserCredits(userId);
+                User creditInfo = _dbUser.GetUserCredits(userId);
+                return (int)creditInfo.Credit;
             }
             catch(Exception e)
             {
@@ -90,12 +91,14 @@ namespace BusinessLayer
             }
         }
         
-        public int IncreaseUserCredits(int credits, string userId, string stamp)
+        public int IncreaseUserCredits(int credits, string userId)
         {
             try
             {
-                int currentCredits = _dbUser.GetUserCredits(userId);
-                return _dbUser.UpdateUserCredits(credits + currentCredits, userId, stamp);
+                User concurrencyInfo = _dbUser.GetUserCredits(userId);
+                //int currentCredits = ;
+                //string stamp = _dbUser.GetUserConcurrencyStamp(userId);
+                return _dbUser.UpdateUserCredits(credits + (int)concurrencyInfo.Credit, userId, concurrencyInfo.ConcurrencyStamp);
             }
             catch (Exception e)
             {
@@ -103,12 +106,13 @@ namespace BusinessLayer
             }
         }
         
-        public int DecreaseUserCredits(int credits, string userId, string stamp)
+        public int DecreaseUserCredits(int credits, string userId)
         {
             try
             {
-                int currentCredits = _dbUser.GetUserCredits(userId);
-                return _dbUser.UpdateUserCredits(currentCredits - credits, userId, stamp);
+                User concurrencyInfo = _dbUser.GetUserCredits(userId);
+
+                return _dbUser.UpdateUserCredits((int)concurrencyInfo.Credit - credits, userId, concurrencyInfo.ConcurrencyStamp);
             }
             catch(Exception e)
             {
