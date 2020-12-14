@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Application = System.Windows.Application;
 
 namespace Solvr.online_desktop.AppWindow
 {
@@ -28,7 +29,7 @@ namespace Solvr.online_desktop.AppWindow
         }
 
         private void ButtonAllAssignments_Click(object sender, RoutedEventArgs e)
-        {
+        {           
             if (ApiAssignment.GetAllAssignments() != null)
             {
                 DataGridForAll.ItemsSource = ApiAssignment.GetAllAssignments();
@@ -42,7 +43,8 @@ namespace Solvr.online_desktop.AppWindow
             }
             else
             {
-                TextBlockNoAssignments.Visibility = Visibility.Visible;
+                TextBlockNoMessage.Text = "There are no assignments yet!";
+                TextBlockNoMessage.Visibility = Visibility.Visible;
             }
         }
 
@@ -119,14 +121,23 @@ namespace Solvr.online_desktop.AppWindow
 
         internal void ButtonAllUsers_Click(object sender, RoutedEventArgs e)
         {
-            DataGridForAll.ItemsSource = ApiUser.GetAllUsers();
-            DataGridForAll.Columns[0].Visibility = Visibility.Hidden;
-            DataGridForAll.Visibility = Visibility.Visible;
-            ButtonUpdate.Visibility = Visibility.Visible;
-            ButtonMakeActive.Visibility = Visibility.Hidden;
-            ButtonMakeInactive.Visibility = Visibility.Hidden;
-            ButtonRemoveCredits.Visibility = Visibility.Visible;
-            ButtonAddCredits.Visibility = Visibility.Visible;
+            if (ApiAssignment.GetAllAssignments() != null)
+            {
+                DataGridForAll.ItemsSource = ApiUser.GetAllUsers();
+                DataGridForAll.Columns[0].Visibility = Visibility.Hidden;
+                DataGridForAll.Visibility = Visibility.Visible;
+                ButtonUpdate.Visibility = Visibility.Visible;
+                ButtonMakeActive.Visibility = Visibility.Hidden;
+                ButtonMakeInactive.Visibility = Visibility.Hidden;
+                ButtonRemoveCredits.Visibility = Visibility.Visible;
+                ButtonAddCredits.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TextBlockNoMessage.Text = "There are no users yet!";
+                TextBlockNoMessage.Visibility = Visibility.Visible;
+            }
+
         }
 
         private void ButtonRemoveCredits_Click(object sender, RoutedEventArgs e)

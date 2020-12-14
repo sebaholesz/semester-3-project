@@ -8,7 +8,6 @@ namespace Solvr.online_desktop.Models
     {
         public string Id { get; set; }
         public string UserName { get; set; }
-        public string LastLogin { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Title { get; set; }

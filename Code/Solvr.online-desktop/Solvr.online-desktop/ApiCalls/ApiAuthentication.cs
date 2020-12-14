@@ -41,24 +41,22 @@ namespace Solvr.online_desktop.ApiCalls
 
         public static bool Login(string username, string password)
         {
-            using (HttpClient client = new HttpClient())
+            using HttpClient client = new HttpClient();
+            string urlCreateJWT = "https://localhost:44316/apiV1/login-admin";
+            HttpResponseMessage createJWTRM = client.PostAsync(urlCreateJWT, new StringContent(JsonConvert.SerializeObject(new { username, password }), Encoding.UTF8, "application/json")).Result;
+
+            if (createJWTRM.IsSuccessStatusCode)
             {
-                string urlCreateJWT = "https://localhost:44316/apiV1/login-admin";
-                HttpResponseMessage createJWTRM = client.PostAsync(urlCreateJWT, new StringContent(JsonConvert.SerializeObject(new { username, password }), Encoding.UTF8, "application/json")).Result;
+                dynamic tokenObject = createJWTRM.Content.ReadAsAsync<object>().Result;
+                string token = tokenObject.token;
 
-                if (createJWTRM.IsSuccessStatusCode)
+                if (!token.Equals("") && token.Length > 0)
                 {
-                    dynamic tokenObject = createJWTRM.Content.ReadAsAsync<object>().Result;
-                    string token = tokenObject.token;
-
-                    if (!token.Equals("") && token.Length > 0)
-                    {
-                        Logintoken = token;
-                        return true;
-                    }
+                    Logintoken = token;
+                    return true;
                 }
-                return false;
             }
+            return false;
         }
     }
 }
