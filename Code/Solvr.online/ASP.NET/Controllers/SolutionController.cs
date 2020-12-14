@@ -46,7 +46,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
@@ -130,7 +130,7 @@ namespace webApi.Controllers
                         client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                         string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                        HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                        HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                         if (returnCodeRM.IsSuccessStatusCode)
                         {
@@ -232,7 +232,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
@@ -298,7 +298,7 @@ namespace webApi.Controllers
          */
         [Route("solution/choose-solution")]
         [HttpPut]
-        public ActionResult ChooseSolutionPut([FromBody] string reqBody, IFormCollection collection)
+        public ActionResult ChooseSolutionPut([FromBody] string reqBody)
         {
             try
             {
@@ -313,7 +313,7 @@ namespace webApi.Controllers
 
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
@@ -399,7 +399,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
@@ -470,7 +470,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
@@ -489,7 +489,7 @@ namespace webApi.Controllers
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 2:
                                 string urlGetCompleteAssignmentData = $"https://localhost:44316/apiV1/assignment/complete-data-with-solution/{assignmentId}";
-                                HttpResponseMessage getCompleteAssignmentDataRM = client.PostAsync(urlGetCompleteAssignmentData, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                                HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlGetCompleteAssignmentData).Result;
 
                                 if (getCompleteAssignmentDataRM.IsSuccessStatusCode)
                                 {
@@ -551,7 +551,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlGetFileForDownload = $"https://localhost:44316/apiV1/solution/get-file/{solutionId}";
-                    HttpResponseMessage getFileForDownloadRM = client.PostAsync(urlGetFileForDownload, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage getFileForDownloadRM = client.GetAsync(urlGetFileForDownload).Result;
 
                     if (getFileForDownloadRM.IsSuccessStatusCode)
                     {

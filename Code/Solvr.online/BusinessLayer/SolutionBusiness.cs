@@ -93,11 +93,11 @@ namespace BusinessLayer
             }
         }
 
-        public int UpdateSolution(Solution solution, int id)
+        public int UpdateSolution(Solution solution, int solutionId)
         {
             try
             {
-                return _dbSolution.UpdateSolution(solution, id);
+                return _dbSolution.UpdateSolution(solution, solutionId);
             }
             catch (Exception e)
             {
@@ -186,24 +186,22 @@ namespace BusinessLayer
             }
         }
 
-        public byte[] GetFileFromDB(int solutionId, User user)
+        public byte[] GetFileFromDB(int solutionId)
         {
             try
             {
-                Solution solution = GetBySolutionId(solutionId);
-                if (user.Id == solution.UserId || (AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(solution.AssignmentId, user.Id) == 1 && solution.Accepted))
-                {
-                    return _dbSolution.GetFileFromDB(solutionId);
-                }
-                else
-                {
-                    return null;
-                }
+                return _dbSolution.GetFileFromDB(solutionId);
             }
             catch (Exception e)
             {
                 throw e;
             }
+        }
+
+        public bool CheckIfUserCanDownloadSolutionFile(int solutionId, string userId)
+        {
+            Solution solution = GetBySolutionId(solutionId);
+            return (userId == solution.UserId || (AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(solution.AssignmentId, userId) == 1 && solution.Accepted));
         }
 
         public Solution GetSolutionForAssignment(int assignmentId)
@@ -225,6 +223,18 @@ namespace BusinessLayer
             {
                 Solution solution = _dbSolution.GetSolutionForAssignmentByUser(assignmentId, userId);
                 return solution ?? null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public bool CheckIfUserIsSolutionAuthor(string userId, int solutionId)
+        {
+            try
+            {
+                return _dbSolution.CheckIfUserIsSolutionAuthor(userId, solutionId);
             }
             catch (Exception e)
             {

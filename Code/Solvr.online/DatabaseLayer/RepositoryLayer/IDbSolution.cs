@@ -19,5 +19,6 @@ namespace DatabaseLayer.RepositoryLayer
         byte[] GetFileFromDB(int solutionId);
         Solution GetSolutionForAssignment(int assignmentId);
         Solution GetSolutionForAssignmentByUser(int assignmentId, string userId);
+        bool CheckIfUserIsSolutionAuthor(string userId, int solutionId);
     }
 }

@@ -45,7 +45,7 @@ namespace webApi.Controllers
                     string urlGetAllAcademicLevels = "https://localhost:44316/apiV1/academiclevel";
                     string urlGetAllSubjects = "https://localhost:44316/apiV1/subject";
                     string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + userId;
+                    string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit";
 
 
                     HttpResponseMessage academicLevelsRM = (client.GetAsync(urlGetAllAcademicLevels).Result);
@@ -113,7 +113,7 @@ namespace webApi.Controllers
                             dataStream.Close();
                         }
 
-                        string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit/" + user.Id;
+                        string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit";
                         HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
                         int userCredits = JsonConvert.DeserializeObject<int>(urlGetUserCreditRM.Content.ReadAsStringAsync().Result);
 
@@ -178,7 +178,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
@@ -259,7 +259,7 @@ namespace webApi.Controllers
                         // MAYBE TODO counts of answers to all assignments in assignment Cards
                         string urlGetAllAssignments = $"https://localhost:44316/apiV1/assignment/page-all-active-not-posted-by-user/{pageNumber}";
 
-                        HttpResponseMessage assignmentsNotPostedByUserRM = client.PostAsync(urlGetAllAssignments, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                        HttpResponseMessage assignmentsNotPostedByUserRM = client.GetAsync(urlGetAllAssignments).Result;
                         if (assignmentsNotPostedByUserRM.IsSuccessStatusCode)
                         {
                             ViewBag.Assignments = assignmentsNotPostedByUserRM.Content.ReadAsAsync<List<Assignment>>().Result;
@@ -271,16 +271,6 @@ namespace webApi.Controllers
                             ViewBag.NextEnable = page.NextPage == true ? "" : "disabled";
                             ViewBag.PageNumber = pageNumber;
                             ViewBag.TotalPages = page.TotalPages;
-                            //string urlCountOfSolutions = "https://localhost:44316/apiV1/solution/count-by-assignmentId/" + assignmentId;
-                            //HttpResponseMessage solutionCountRM = client.GetAsync(urlCountOfSolutions).Result;
-                            //if (solutionCountRM.IsSuccessStatusCode)
-                            //{
-                            //    ViewBag.SolutionCount = solutionCountRM.Content.ReadAsStringAsync().Result;
-                            //}
-                            //else
-                            //{
-                            //    ViewBag.SolutionCount = "Could not load";
-                            //}
                             return View("AllAssignments");
                         }
                         else
@@ -310,16 +300,6 @@ namespace webApi.Controllers
                             ViewBag.NextEnable = page.NextPage == true ? "" : "disabled";
                             ViewBag.PageNumber = pageNumber;
                             ViewBag.TotalPages = page.TotalPages;
-                            //string urlCountOfSolutions = "https://localhost:44316/apiV1/solution/count-by-assignmentId/" + assignmentId;
-                            //HttpResponseMessage solutionCountRM = client.GetAsync(urlCountOfSolutions).Result;
-                            //if (solutionCountRM.IsSuccessStatusCode)
-                            //{
-                            //    ViewBag.SolutionCount = solutionCountRM.Content.ReadAsStringAsync().Result;
-                            //}
-                            //else
-                            //{
-                            //    ViewBag.SolutionCount = "Could not load";
-                            //}
                             return View("AllAssignments");
                         }
                         else
@@ -363,7 +343,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
@@ -397,7 +377,16 @@ namespace webApi.Controllers
                                     }
                                     else
                                     {
-                                        return Redirect("/solution/solution-for-assignment/" + assignmentId);
+                                        string urlCheckIfHasAcceptedSolution = "https://localhost:44316/apiV1/assignment/check-if-has-accepted-solution/" + assignmentId;
+                                        HttpResponseMessage CheckIfHasAcceptedSolutionRM = client.GetAsync(urlCheckIfHasAcceptedSolution).Result;
+                                        if (CheckIfHasAcceptedSolutionRM.IsSuccessStatusCode)
+                                        {
+                                            return Redirect("/solution/solution-for-assignment/" + assignmentId);
+                                        }
+                                        else
+                                        {
+                                            return Redirect("/assignment/display-assignment/" + assignmentId);
+                                        }
                                     }
                                 }
                                 else
@@ -446,7 +435,7 @@ namespace webApi.Controllers
                         client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                         string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                        HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                        HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                         if (returnCodeRM.IsSuccessStatusCode)
                         {
@@ -555,7 +544,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
-                    HttpResponseMessage returnCodeRM = client.PostAsync(urlCheckUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
                     {
@@ -628,7 +617,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlGetAllAssignmentsForLoggedInUser = "https://localhost:44316/apiV1/assignment/page-user/" + pageNumber;
-                    HttpResponseMessage getAllAssignmentsForLoggedInUserRM = client.PostAsync(urlGetAllAssignmentsForLoggedInUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage getAllAssignmentsForLoggedInUserRM = client.GetAsync(urlGetAllAssignmentsForLoggedInUser).Result;
                     
                     if(getAllAssignmentsForLoggedInUserRM.IsSuccessStatusCode)
                     {
@@ -683,7 +672,7 @@ namespace webApi.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlGetAllAssignmentsSolvedByLoggedInUser = "https://localhost:44316/apiV1/assignment/solved-by-user";
-                    HttpResponseMessage getAllAssignmentsSolvedByLoggedInUserRM = client.PostAsync(urlGetAllAssignmentsSolvedByLoggedInUser, new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                    HttpResponseMessage getAllAssignmentsSolvedByLoggedInUserRM = client.GetAsync(urlGetAllAssignmentsSolvedByLoggedInUser).Result;
 
                     if (getAllAssignmentsSolvedByLoggedInUserRM.IsSuccessStatusCode)
                     {
@@ -698,7 +687,7 @@ namespace webApi.Controllers
                         ViewBag.ResponseStyleClass = "text-danger";
                         ViewBag.ButtonText = "Go back to homepage";
                         ViewBag.ButtonLink = "/";
-                        ViewBag.PageTitle = "No soluitons found!";
+                        ViewBag.PageTitle = "No solutions found!";
                         ViewBag.SubMessage = "You have not solved \nany assignments yet!";
                         ViewBag.Image = "/assets/icons/error.svg";
                         return View("UserFeedback");

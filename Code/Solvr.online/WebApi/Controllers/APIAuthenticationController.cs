@@ -112,7 +112,7 @@ namespace WebApi.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public static string GetUserIdFromAuthorizationHeader(IHeaderDictionary requestHeader)
+        public static string GetUserIdFromRequestHeader(IHeaderDictionary requestHeader)
         {
             try
             {

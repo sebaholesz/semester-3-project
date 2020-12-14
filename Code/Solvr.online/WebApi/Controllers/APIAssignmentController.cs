@@ -6,9 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Web;
-using Utility.RequestAuthenticator;
+
 
 namespace WebApi.Controllers
 {
@@ -42,6 +40,7 @@ namespace WebApi.Controllers
             }
         }
 
+        /*TODO admin check*/
         [Route("assignment")]
         [HttpGet]
         public IActionResult Get()
@@ -88,22 +87,29 @@ namespace WebApi.Controllers
             }
         }
 
+        /*ONLY SOLVER*/
         [Route("assignment/complete-data-with-solution/{assignmentId}")]
-        [HttpPost]
-        public IActionResult GetCompleteDataWithSolution([FromBody] User user, int assignmentId)
+        [HttpGet]
+        public IActionResult GetCompleteDataWithSolution(int assignmentId)
         {
             try
             {
-                object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithSolution(assignmentId, user.Id);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                bool isSolver = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, userId) == 2;
+                if (isSolver)
+                {
+                    object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithSolution(assignmentId, userId);
 
-                if (assignmentCompleteDataWithSolution != null)
-                {
-                    return Ok(assignmentCompleteDataWithSolution);
+                    if (assignmentCompleteDataWithSolution != null)
+                    {
+                        return Ok(assignmentCompleteDataWithSolution);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return Unauthorized();
             }
             catch (Exception)
             {
@@ -111,22 +117,50 @@ namespace WebApi.Controllers
             }
         }
 
+        /*ONLY AUTHOR OR ACCEPTED SOLUTION AUTHOR*/
         [Route("assignment/complete-data-with-accepted-solution/{assignmentId}")]
         [HttpGet]
         public IActionResult GetCompleteDataWithAcceptedSolution(int assignmentId)
         {
             try
             {
-                object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithAcceptedSolution(assignmentId);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                bool isAuthor = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, userId) == 1;
+                bool isSolutionAuthor = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, userId) == 2;
+                if (isAuthor)
+                {
+                    object assignmentCompleteDataWithAcceptedSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithAcceptedSolution(assignmentId);
 
-                if (assignmentCompleteDataWithSolution != null)
-                {
-                    return Ok(assignmentCompleteDataWithSolution);
+                    if (assignmentCompleteDataWithAcceptedSolution != null)
+                    {
+                        return Ok(assignmentCompleteDataWithAcceptedSolution);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
-                else
+                if (isSolutionAuthor)
                 {
-                    return NotFound();
+                    dynamic assignmentCompleteDataWithAcceptedSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithAcceptedSolution(assignmentId);
+
+                    if (assignmentCompleteDataWithAcceptedSolution != null)
+                    {
+                        if (assignmentCompleteDataWithAcceptedSolution.Solution.UserId == userId)
+                        {
+                            return Ok(assignmentCompleteDataWithAcceptedSolution);
+                        }
+                        else
+                        {
+                            return Unauthorized();
+                        }
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
+                return Unauthorized();
             }
             catch (Exception)
             {
@@ -195,12 +229,13 @@ namespace WebApi.Controllers
         }
 
         [Route("assignment/all-active-not-posted-by-user")]
-        [HttpPost]
-        public IActionResult GetAllActiveAssignmentsNotPostedByUser([FromBody] User user)
+        [HttpGet]
+        public IActionResult GetAllActiveAssignmentsNotPostedByUser()
         {
             try
             {
-                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotPostedByUser(user.Id);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotPostedByUser(userId);
 
                 if (assignments.Count() > 0)
                 {
@@ -218,16 +253,17 @@ namespace WebApi.Controllers
         }
 
         [Route("assignment/page-all-active-not-posted-by-user/{pageNumber}")]
-        [HttpPost]
-        public IActionResult GetAllActiveAssignmentsNotPostedByUserPage([FromBody] User user, int pageNumber)
+        [HttpGet]
+        public IActionResult GetAllActiveAssignmentsNotPostedByUserPage(int pageNumber)
         {
             try
             {
-                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotPostedByUserPage(user.Id, pageNumber);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotPostedByUserPage(userId, pageNumber);
 
                 if (assignments.Count() > 0)
                 {
-                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCountNotByUser(user.Id);
+                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCountNotByUser(userId);
                     int totalPages = (int)Math.Ceiling(count / 12.00);
                     bool previousPage = pageNumber > 1 ? true : false;
                     bool nextPage = pageNumber < totalPages ? true : false;
@@ -253,13 +289,14 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("assignment/user")]
-        [HttpPost]
-        public IActionResult GetAllAssignmentsForUser([FromBody] User user)
+        [Route("assignment/user/{username}")]
+        [HttpGet]
+        public IActionResult GetAllAssignmentsForUser(string username)
         {
             try
             {
-                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsForUser(user.Id);
+                string userId = UserBusiness.GetUserBusiness().GetUserByUserName(username).Id;
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsForUser(userId);
 
                 if (assignments.Count() > 0)
                 {
@@ -277,16 +314,17 @@ namespace WebApi.Controllers
         }
 
         [Route("assignment/page-user/{pageNumber}")]
-        [HttpPost]
-        public IActionResult GetAllAssignmentsForUserPage([FromBody] User user, int pageNumber)
+        [HttpGet]
+        public IActionResult GetAllAssignmentsForUserPage(int pageNumber)
         {
             try
             {
-                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsForUserPage(user.Id, pageNumber);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsForUserPage(userId, pageNumber);
 
                 if (assignments.Count() > 0)
                 {
-                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCountForUser(user.Id);
+                    int count = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentsCountForUser(userId);
                     int totalPages = (int)Math.Ceiling(count / 12.00);
                     bool previousPage = pageNumber > 1 ? true : false;
                     bool nextPage = pageNumber < totalPages ? true : false;
@@ -312,13 +350,16 @@ namespace WebApi.Controllers
             }
         }
 
+        /*ONLY SOLVER = CAN ONLY ACCESS HIS INFO*/
         [Route("assignment/solved-by-user")]
-        [HttpPost]
-        public IActionResult GetAllAssignmentsSolvedByUser([FromBody] User user)
+        [HttpGet]
+        public IActionResult GetAllAssignmentsSolvedByUser()
         {
             try
             {
-                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsSolvedByUser(user.Id);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsSolvedByUser(userId);
 
                 if (assignments.Count() > 0)
                 {
@@ -335,13 +376,16 @@ namespace WebApi.Controllers
             }
         }
 
+        /*ONLY BY THE "NOT SOLVER" = CAN ONLY ACCESS HIS INFO*/
         [Route("assignment/get-active-not-solved-by-user")]
         [HttpGet]
-        public IActionResult GetAllActiveAssignmentsNotSolvedByUser([FromBody] User user)
+        public IActionResult GetAllActiveAssignmentsNotSolvedByUser()
         {
             try
             {
-                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotSolvedByUser(user.Id);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+
+                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotSolvedByUser(userId);
 
                 if (assignments.Count() > 0)
                 {
@@ -380,21 +424,28 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("assignment/{id}")]
+        /*ONLY BY AUTHOR*/
+        [Route("assignment/{assignmentId}")]
         [HttpPut]
-        public IActionResult Put([FromBody] Assignment assignment, int id)
+        public IActionResult Put([FromBody] Assignment assignment, int assignmentId)
         {
             try
             {
-                int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().UpdateAssignment(assignment, id);
-                if (noOfRowsAffected > 0)
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                bool isAuthor = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, userId) == 1;
+                if (isAuthor)
                 {
-                    return Ok("Assignment updated successfully!");
+                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().UpdateAssignment(assignment, assignmentId);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok("Assignment updated successfully!");
+                    }
+                    else
+                    {
+                        return NotFound($"Assignment with id {assignmentId} was not found");
+                    }
                 }
-                else
-                {
-                    return NotFound($"Assignment with id {id} was not found");
-                }
+                return Unauthorized();
             }
             catch (Exception)
             {
@@ -402,21 +453,28 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("assignment/inactive/{id}")]
-        [HttpPut]
-        public IActionResult MakeInactive(int id)
+        /*ONLY BY AUTHOR*/
+        [Route("assignment/check-if-has-accepted-solution/{assignmentId}")]
+        [HttpGet]
+        public IActionResult CheckIfHasAcceptedSolution(int assignmentId)
         {
             try
             {
-                int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeInactive(id);
-                if (noOfRowsAffected > 0)
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                bool isAuthor = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, userId) == 1;
+                if (isAuthor)
                 {
-                    return Ok();
+                    bool hasAcceptedSolution = AssignmentBusiness.GetAssignmentBusiness().CheckIfHasAcceptedSolution(assignmentId);
+                    if (hasAcceptedSolution)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return Unauthorized();
             }
             catch (Exception)
             {
@@ -424,6 +482,36 @@ namespace WebApi.Controllers
             }
         }
 
+        /*ONLY BY AUTHOR*/
+        [Route("assignment/inactive/{assignmentId}")]
+        [HttpPut]
+        public IActionResult MakeInactive(int assignmentId)
+        {
+            try
+            {
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                bool isAuthor = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, userId) == 1;
+                if (isAuthor)
+                {
+                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeInactive(assignmentId);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                return Unauthorized();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /*TODO admin check*/
         [Route("assignment/active/{id}")]
         [HttpPut]
         public IActionResult MakActive(int id, [FromBody]User user)
@@ -452,7 +540,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                string userId = APIAuthenticationController.GetUserIdFromAuthorizationHeader(Request.Headers);
                 List<string> levels = AssignmentBusiness.GetAssignmentBusiness().GetAllAcademicLevels();
 
                 if (levels.Count() > 0)
@@ -494,12 +581,13 @@ namespace WebApi.Controllers
         }
 
         [Route("check-user-vs-assignment/{assignmentId}")]
-        [HttpPost]
-        public IActionResult CheckUserVsAssignment([FromBody] User user, int assignmentId)
+        [HttpGet]
+        public IActionResult CheckUserVsAssignment(int assignmentId)
         {
             try
             {
-                int returnCode = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, user.Id);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                int returnCode = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, userId);
 
                 if (new[] { 0, 1, 2 }.Contains(returnCode))
                 {

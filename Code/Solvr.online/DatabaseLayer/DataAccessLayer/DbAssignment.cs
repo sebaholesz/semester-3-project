@@ -393,5 +393,17 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+
+        public bool CheckIfHasAcceptedSolution(int assignmentId)
+        {
+            try
+            {
+                return _db.QueryFirst<bool>("SELECT COUNT(solutionId) FROM [dbo].[Solution] where assignmentId=@assignmentId and accepted=1", new { assignmentId = assignmentId });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
     }
 }

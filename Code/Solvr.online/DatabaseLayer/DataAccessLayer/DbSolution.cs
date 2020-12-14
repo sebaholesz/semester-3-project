@@ -264,6 +264,18 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+
+        public bool CheckIfUserIsSolutionAuthor(string userId, int solutionId)
+        {
+            try
+            {
+                return _db.QueryFirst<bool>("Select COUNT([solutionId]) from [dbo].[Solution] where solutionId=@solutionId and userId=@userId", new { solutionId = solutionId, userId = userId });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
     }
 }
     

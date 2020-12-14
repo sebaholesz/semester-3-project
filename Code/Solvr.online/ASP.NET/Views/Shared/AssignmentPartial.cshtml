@@ -27,10 +27,11 @@
                 <img alt="Default user avatar" src="/assets/images/default-avatar.png" />
             </div>
             <div class="col-md-10">
-                <p>@user.UserName</p>
+                    <span>@user.UserName</span>
                 @if (!assignment.Anonymous)
                 {
-                    <p>@user.FirstName @user.LastName</p>
+                    <br />
+                    <span>@user.FirstName @user.LastName</span>
                 }
             </div>
         </div>

@@ -13,14 +13,16 @@ namespace WebApi.Controllers
     [Route("apiV1/")]
     public class APIUserController : ControllerBase
     {
-        [Route("user/add-credit/{id}")]
+        /*ONLY THE USER HIMSELF*/
+        /*ADD admin check*/
+        [Route("user/add-credit")]
         [HttpPut]
-        public IActionResult AddCredits([FromBody] User user, string id)
+        public IActionResult AddCredits([FromBody] int value)
         {
             try
             {
-                int credit = (int)user.Credit;
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(credit, id);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(value, userId);
                 if (noOfRowsAffected > 0)
                 {
                     return Ok();
@@ -36,14 +38,15 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("user/remove-credit/{id}")]
+        /*ONLY THE ADMIN*/
+        /*ADD admin check*/
+        [Route("user-admin/add-credit/{id}")]
         [HttpPut]
-        public IActionResult RemoveCredits([FromBody] User user, string id)
+        public IActionResult AdminAddCredits([FromBody] int value, string id)
         {
             try
             {
-                int credit = (int)user.Credit;
-                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(credit, id);
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(value, id);
                 if (noOfRowsAffected > 0)
                 {
                     return Ok();
@@ -59,13 +62,38 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("user/get-credit/{id}")]
+        /*ADD admin check*/
+        [Route("user-admin/remove-credit/{id}")]
+        [HttpPut]
+        public IActionResult RemoveCredits([FromBody] int value, string id)
+        {
+            try
+            {
+                int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(value, id);
+                if (noOfRowsAffected > 0)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /*ONLY THE USER HIMSELF*/
+        [Route("user/get-credit")]
         [HttpGet]
-        public IActionResult GetUserCredit(string id)
+        public IActionResult GetUserCredit()
         {
             try
             {
-                int credit = UserBusiness.GetUserBusiness().GetUserCredits(id);
+                string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
+                int credit = UserBusiness.GetUserBusiness().GetUserCredits(userId);
 
                 if (credit >= 0)
                 {
@@ -82,6 +110,7 @@ namespace WebApi.Controllers
             }
         }
 
+        /*ADD admin check*/
         [Route("user")]
         [HttpGet]
         public IActionResult GetAllUsers()
@@ -93,29 +122,6 @@ namespace WebApi.Controllers
                 if (users.Count() > 0)
                 {
                     return Ok(users);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
-        }
-
-        [Route("user/get-concurrency-stamp/{id}")]
-        [HttpGet]
-        public IActionResult GetUserConcurrencyStamp(string id)
-        {
-            try
-            {
-                string stamp = UserBusiness.GetUserBusiness().GetUserConcurrencyStamp(id);
-
-                if (stamp.Length >= 0)
-                {
-                    return Ok(stamp);
                 }
                 else
                 {

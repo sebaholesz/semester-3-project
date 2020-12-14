@@ -277,7 +277,6 @@ namespace BusinessLayer
 
                         if (!solution.Equals(null))
                         {
-                            //TODO add conditional logic 
                             return new { Assignment = assignment, Solution = solution, User = user };
                         }
                     }
@@ -475,6 +474,18 @@ namespace BusinessLayer
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        public bool CheckIfHasAcceptedSolution(int assignmentId)
+        {
+            try
+            {
+                return _dbAssignment.CheckIfHasAcceptedSolution(assignmentId);
+            }
+            catch (Exception e)
+            {
+                throw e;    
             }
         }
     }
