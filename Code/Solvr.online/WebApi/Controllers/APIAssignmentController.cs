@@ -88,28 +88,28 @@ namespace WebApi.Controllers
             }
         }
 
-        //[Route("assignment/complete-data-with-solution/{assignmentId}")]
-        //[HttpGet]
-        //public IActionResult GetCompleteDataWithSolution(int assignmentId)
-        //{
-        //    try
-        //    {
-        //        object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithSolution(assignmentId);
+        [Route("assignment/complete-data-with-solution/{assignmentId}")]
+        [HttpPost]
+        public IActionResult GetCompleteDataWithSolution([FromBody] User user, int assignmentId)
+        {
+            try
+            {
+                object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithSolution(assignmentId, user.Id);
 
-        //        if (assignmentCompleteDataWithSolution != null)
-        //        {
-        //            return Ok(assignmentCompleteDataWithSolution);
-        //        }
-        //        else
-        //        {
-        //            return NotFound();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(500);
-        //    }
-        //}
+                if (assignmentCompleteDataWithSolution != null)
+                {
+                    return Ok(assignmentCompleteDataWithSolution);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
 
         [Route("assignment/complete-data-with-accepted-solution/{assignmentId}")]
         [HttpGet]

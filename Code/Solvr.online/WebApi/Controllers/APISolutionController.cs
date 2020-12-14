@@ -106,19 +106,17 @@ namespace WebApi.Controllers
 
         [Route("solution/choose-solution")]
         [HttpPost]
-        public IActionResult ChooseSolution([FromBody] ArrayList listOfIdsWithStamp )
+        public IActionResult ChooseSolution([FromBody] List<int> ids)
         {
             try
             {
-                //var kokot = listOfIdsWithStamp[0].ToString();
-                int solutionId = Convert.ToInt32(listOfIdsWithStamp[0].ToString());
 
-                int assignmentId = Convert.ToInt32(listOfIdsWithStamp[1].ToString());
-                string stamp = listOfIdsWithStamp[2].ToString();
-                //int solutionId = Convert.ToInt32(listOfIdsWithStamp.va);
-                //int assignmentId = Convert.ToInt32(listOfIdsWithStamp[1]);
-                //string stamp = (string)listOfIdsWithStamp[2];
-                bool response = SolutionBusiness.GetSolutionBusiness().ChooseSolution(solutionId, assignmentId, stamp);
+                //var kokot = listOfIdsWithStamp[0].ToString();
+                int solutionId = ids[0];
+                int assignmentId = ids[1];
+                //string stamp = listOfIdsWithStamp[2].ToString();
+
+                bool response = SolutionBusiness.GetSolutionBusiness().ChooseSolution(solutionId, assignmentId);
                 if(response)
                 {
                     return Ok();

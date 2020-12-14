@@ -13,6 +13,7 @@ namespace Solvr.online_desktop.ApiCalls
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.GetAsync("https://localhost:44316/apiV1/user").Result;
             if (response.IsSuccessStatusCode)
             {
@@ -33,7 +34,12 @@ namespace Solvr.online_desktop.ApiCalls
                 BaseAddress = new Uri("https://localhost:44316/")
             };
             var url = "apiV1/user/add-credit/" + userId;
-            HttpResponseMessage response = client.PutAsJsonAsync(url, value).Result;
+            User user = new User
+            {
+                Credit = value
+            };
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
+            HttpResponseMessage response = client.PutAsJsonAsync(url, user).Result;
             if (response.IsSuccessStatusCode)
             {
                 client.Dispose();
@@ -54,7 +60,12 @@ namespace Solvr.online_desktop.ApiCalls
                 BaseAddress = new Uri("https://localhost:44316/")
             };
             var url = "apiV1/user/remove-credit/" + userId;
-            HttpResponseMessage response = client.PutAsJsonAsync(url, value).Result;
+            User user = new User
+            {
+                Credit = value
+            };
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
+            HttpResponseMessage response = client.PutAsJsonAsync(url, user).Result;
             if (response.IsSuccessStatusCode)
             {
                 client.Dispose();

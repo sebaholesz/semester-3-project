@@ -13,6 +13,7 @@ namespace Solvr.online_desktop.ApiCalls
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.GetAsync("https://localhost:44316/apiV1/assignment").Result;
             if (response.IsSuccessStatusCode)
             {
@@ -35,6 +36,7 @@ namespace Solvr.online_desktop.ApiCalls
             Assignment assignment = new Assignment(title, description, price, deadline, anonymous, academicLevel, subject);
 
             string url = "apiV1/assignment/" + assignmentId;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.PutAsJsonAsync(url, assignment).Result;
             if (response.IsSuccessStatusCode)
             {
@@ -61,7 +63,9 @@ namespace Solvr.online_desktop.ApiCalls
             {
                 UserName = username
             };
+            
             var url = "apiV1/assignment/active/" + assignmentId;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.PutAsJsonAsync(url, user).Result;
             if (response.IsSuccessStatusCode)
             {
@@ -83,6 +87,7 @@ namespace Solvr.online_desktop.ApiCalls
                 BaseAddress = new Uri("https://localhost:44316/")
             };
             var url = "apiV1/assignment/inactive/" + assignmentId;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.PutAsJsonAsync(url, assignmentId).Result;
             if (response.IsSuccessStatusCode)
             {
@@ -101,6 +106,7 @@ namespace Solvr.online_desktop.ApiCalls
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.GetAsync("https://localhost:44316/apiV1/academiclevel").Result;
             if (response.IsSuccessStatusCode)
             {
@@ -118,6 +124,7 @@ namespace Solvr.online_desktop.ApiCalls
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.GetAsync("https://localhost:44316/apiV1/subject").Result;
             if (response.IsSuccessStatusCode)
             {

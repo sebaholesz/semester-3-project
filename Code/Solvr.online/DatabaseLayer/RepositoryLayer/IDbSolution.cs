@@ -18,5 +18,6 @@ namespace DatabaseLayer.RepositoryLayer
         Solution GetAcceptedSolutionForAssignment(int assignmentId);
         byte[] GetFileFromDB(int solutionId);
         Solution GetSolutionForAssignment(int assignmentId);
+        Solution GetSolutionForAssignmentByUser(int assignmentId, string userId);
     }
 }

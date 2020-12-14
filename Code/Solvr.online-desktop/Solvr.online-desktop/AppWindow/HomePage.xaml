@@ -87,8 +87,6 @@
                 </Style>
             </DataGrid.Resources>
         </DataGrid>
-        <TextBlock Name="TextBlockNoAssignments" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="7" FontSize="55" Visibility="Hidden">
-            There are no assignments yet!
-        </TextBlock>
+        <TextBlock Name="TextBlockNoMessage" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="7" FontSize="55" Visibility="Hidden"/>
     </Grid>
 </Page>

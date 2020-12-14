@@ -42,37 +42,42 @@ namespace DatabaseLayer.DataAccessLayer
                             userId = assignment.UserId
                         }, transaction: transaction);
 
-                    if (assignment.AssignmentFile != null && lastUsedId > 0)
-                    {
-                        int noOfRowsAffectedForFileInsert = _db.Execute(
-                            @"Insert into [dbo].[AssignmentFile] (assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)",
-                            new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile }, transaction: transaction);
 
-                        if (lastUsedId > 0 && noOfRowsAffectedForFileInsert == 1)
+                    if (lastUsedId > 0)
+                    {
+                        if (assignment.AssignmentFile != null)
+                        {
+                            int noOfRowsAffectedForFileInsert = _db.Execute(
+                                @"Insert into [dbo].[AssignmentFile] (assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)",
+                                new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile }, transaction: transaction);
+
+                            if (noOfRowsAffectedForFileInsert == 1)
+                            {
+                                transaction.Commit();
+                                _db.Close();
+                                return lastUsedId;
+                            }
+                            else
+                            {
+                                transaction.Rollback();
+                                _db.Close();
+                                return 0;
+                            }
+
+                        }
+                        else
                         {
                             transaction.Commit();
                             _db.Close();
                             return lastUsedId;
                         }
-                        else 
-                        {
-                            transaction.Rollback();
-                            _db.Close();
-                            return 0;
-                        }
+                        
                     }
 
-                    if (lastUsedId > 0)
-                    {
-                        transaction.Commit();
-                        _db.Close();
-                        return lastUsedId;
-                    }
-                    {
-                        transaction.Rollback();
-                        _db.Close();
-                        return 0;
-                    }
+                    transaction.Rollback();
+                    _db.Close();
+                    return 0;
+                    
                 }
                 catch (SqlException e)
                 {
@@ -357,7 +362,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where assignmentId = (Select assignmentId from [dbo].[Solution] where userId=@userId) Order By [postDate] Desc", new { userId = userId }).ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where assignmentId in (Select assignmentId from [dbo].[Solution] where userId=@userId) Order By [postDate] Desc", new { userId = userId }).ToList();
             }
             catch (SqlException e)
             {
