@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
+using Utility.RequestAuthenticator;
 
 namespace WebApi.Controllers
 {
@@ -451,6 +452,7 @@ namespace WebApi.Controllers
         {
             try
             {
+                string userId = APIAuthenticationController.GetUserIdFromAuthorizationHeader(Request.Headers);
                 List<string> levels = AssignmentBusiness.GetAssignmentBusiness().GetAllAcademicLevels();
 
                 if (levels.Count() > 0)

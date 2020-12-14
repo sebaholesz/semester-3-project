@@ -8,16 +8,20 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using System.Linq;
+using System.Security.Authentication;
 
-namespace JWTAuthentication.Controllers
+namespace WebApi.Controllers
 {
     [Route("apiV1/")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class APIAuthenticationController : ControllerBase
     {
         private IConfiguration _config;
 
-        public LoginController(IConfiguration config)
+        public APIAuthenticationController(IConfiguration config)
         {
             _config = config;
         }
@@ -95,7 +99,7 @@ namespace JWTAuthentication.Controllers
 
             var claims = new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserName),
-                //new Claim("Role", UserBusiness.GetUserBusiness().GetUserRoleByUserName(userInfo.UserName)),
+                new Claim(JwtRegisteredClaimNames.NameId, userInfo.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -106,6 +110,24 @@ namespace JWTAuthentication.Controllers
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public static string GetUserIdFromAuthorizationHeader(IHeaderDictionary requestHeader)
+        {
+            try
+            {
+                StringValues jwtWithPrefix;
+                if (requestHeader.TryGetValue("Authorization", out jwtWithPrefix))
+                {
+                    var handler = new JwtSecurityTokenHandler();
+                    return handler.ReadJwtToken(jwtWithPrefix[0].Substring("Bearer ".Length)).Claims.Where(c => c.Type == JwtRegisteredClaimNames.NameId).ToList()[0].Value;
+                }
+                throw new AuthenticationException();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }
