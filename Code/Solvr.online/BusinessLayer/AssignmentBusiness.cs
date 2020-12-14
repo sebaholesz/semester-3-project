@@ -234,33 +234,33 @@ namespace BusinessLayer
             }
         }
 
-        //public object GetAssignmentCompleteDataWithSolution(int assignmentId)
-        //{
-        //    try
-        //    {
-        //        Assignment assignment = _dbAssignment.GetByAssignmentId(assignmentId);
-        //        if (!assignment.Equals(null))
-        //        {
-        //            User user = _userBusiness.GetDisplayDataByUserId(assignment.UserId);
+        public object GetAssignmentCompleteDataWithSolution(int assignmentId, string userId)
+        {
+            try
+            {
+                Assignment assignment = _dbAssignment.GetByAssignmentId(assignmentId);
+                if (!assignment.Equals(null))
+                {
+                    User user = _userBusiness.GetDisplayDataByUserId(assignment.UserId);
 
-        //            if (!user.Equals(null))
-        //            {
-        //                Solution solution = SolutionBusiness.GetSolutionBusiness().GetSolutionForAssignment(assignmentId);
+                    if (!user.Equals(null))
+                    {
+                        Solution solution = SolutionBusiness.GetSolutionBusiness().GetSolutionForAssignmentByUser(assignmentId, userId);
 
-        //                if (!solution.Equals(null))
-        //                {
-        //                    //TODO add conditional logic 
-        //                    return new { Assignment = assignment, Solution = solution, User = user };
-        //                }
-        //            }
-        //        }
-        //        return null;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
+                        if (!solution.Equals(null))
+                        {
+                            //TODO add conditional logic 
+                            return new { Assignment = assignment, Solution = solution, User = user };
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         public object GetAssignmentCompleteDataWithAcceptedSolution(int assignmentId)
         {

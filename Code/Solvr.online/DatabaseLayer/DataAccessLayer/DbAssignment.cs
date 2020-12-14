@@ -362,7 +362,7 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where assignmentId = (Select assignmentId from [dbo].[Solution] where userId=@userId) Order By [postDate] Desc", new { userId = userId }).ToList();
+                return _db.Query<Assignment>("Select * from [dbo].[Assignment] where assignmentId in (Select assignmentId from [dbo].[Solution] where userId=@userId) Order By [postDate] Desc", new { userId = userId }).ToList();
             }
             catch (SqlException e)
             {

@@ -218,5 +218,18 @@ namespace BusinessLayer
                 throw e;
             }
         }
+
+        public Solution GetSolutionForAssignmentByUser(int assignmentId, string userId)
+        {
+            try
+            {
+                Solution solution = _dbSolution.GetSolutionForAssignmentByUser(assignmentId, userId);
+                return solution ?? null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

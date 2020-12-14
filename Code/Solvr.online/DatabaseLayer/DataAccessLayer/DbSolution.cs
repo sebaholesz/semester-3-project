@@ -252,6 +252,18 @@ namespace DatabaseLayer.DataAccessLayer
                 throw e;
             }
         }
+
+        public Solution GetSolutionForAssignmentByUser(int assignmentId, string userId)
+        {
+            try
+            {
+                return _db.QueryFirst<Solution>("Select * from [dbo].[Solution] where assignmentId=@assignmentId and userId=@userId", new { assignmentId = assignmentId, userId=userId });
+            }
+            catch (SqlException e)
+            {
+                throw e;
+            }
+        }
     }
 }
     
