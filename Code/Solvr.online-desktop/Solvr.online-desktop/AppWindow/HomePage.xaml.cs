@@ -24,6 +24,7 @@ namespace Solvr.online_desktop.AppWindow
             _apiAssignment = new ApiAssignment();
             mw = (MainWindow)Application.Current.MainWindow;
             loginPage = new LoginPage();
+            Mouse.OverrideCursor = Cursors.Arrow;
         }
 
         private void ButtonAllAssignments_Click(object sender, RoutedEventArgs e)
@@ -143,8 +144,7 @@ namespace Solvr.online_desktop.AppWindow
         {
             if (DataGridForAll.SelectedItem is User user)
             {
-                string userId = user.Id;
-                CreditsWindow cw = new CreditsWindow(userId)
+                CreditsWindow cw = new CreditsWindow(user.Id, user.Credit)
                 {
                     Title = "Remove Credits"
                 };
@@ -157,8 +157,7 @@ namespace Solvr.online_desktop.AppWindow
         {
             if (DataGridForAll.SelectedItem is User user)
             {
-                string userId = user.Id;
-                CreditsWindow cw = new CreditsWindow(userId)
+                CreditsWindow cw = new CreditsWindow(user.Id, user.Credit)
                 {
                     Title = "Add Credits"
                 };
