@@ -26,6 +26,6 @@
         <Button Name="ButtonClose" Content="Close" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Width="100" Click="ButtonClose_Click"/>
         <Button Name="ButtonAdd" Content="Add" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" Width="100" Visibility="Hidden" Click="ButtonAdd_Click"/>
         <Button Name="ButtonRemove" Content="Remove" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" Width="100" Visibility="Hidden" Click="ButtonRemove_Click"/>
-        <TextBlock Name="TextBlockEnterNumber" Text="Enter number!" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="Hidden"/>
+        <TextBlock Name="TextBlockEnterNumber" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="Hidden"/>
     </Grid>
 </Window>

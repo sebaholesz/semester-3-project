@@ -21,11 +21,13 @@ namespace Solvr.online_desktop.AppWindow
     {
         private static readonly Regex _regex = new Regex("[^0-9.-]+");
         private readonly string _userId;
+        private readonly int _credit;
 
-        public CreditsWindow(string userId)
+        public CreditsWindow(string userId, int credit)
         {
             InitializeComponent();
             _userId = userId;
+            _credit = credit;
         }
         
         private static bool IsTextAllowed(string text)
@@ -49,6 +51,7 @@ namespace Solvr.online_desktop.AppWindow
             }
             else
             {
+                TextBlockEnterNumber.Text = "Enter number!";
                 TextBlockEnterNumber.Visibility = Visibility.Visible;
             }
         }
@@ -59,11 +62,20 @@ namespace Solvr.online_desktop.AppWindow
             if (IsTextAllowed(value))
             {
                 int creditValue = Convert.ToInt32(value);
-                ApiUser.RemoveCredits(creditValue, _userId);
-                this.Close();
+                if (_credit - creditValue >= 0)
+                {
+                    ApiUser.RemoveCredits(creditValue, _userId);                    
+                    this.Close();
+                }
+                else
+                {
+                    TextBlockEnterNumber.Text = "Credits cannot go below zero!";
+                    TextBlockEnterNumber.Visibility = Visibility.Visible;
+                }
             }
             else
             {
+                TextBlockEnterNumber.Text = "Enter number!";
                 TextBlockEnterNumber.Visibility = Visibility.Visible;
             }
         }

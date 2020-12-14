@@ -15,8 +15,9 @@ namespace Solvr.online_desktop.Models
         public string AcademicLevel { get; set; }
         public string Subject { get; set; }
         public bool IsActive { get; set; }
+        public byte[] Timestamp { get; set; }
 
-        public Assignment(string title, string description, int price, DateTime deadline, bool anonymous, string academicLevel, string subject)
+        public Assignment(string title, string description, int price, DateTime deadline, bool anonymous, string academicLevel, string subject, byte[] timestamp)
         {
             Title = title;
             Description = description;
@@ -26,6 +27,7 @@ namespace Solvr.online_desktop.Models
             Anonymous = anonymous;
             AcademicLevel = academicLevel;
             Subject = subject;
+            Timestamp = timestamp;
         }
     }
 }

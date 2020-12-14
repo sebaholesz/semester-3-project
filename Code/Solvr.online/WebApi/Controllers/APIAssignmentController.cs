@@ -40,23 +40,27 @@ namespace WebApi.Controllers
             }
         }
 
-        /*TODO admin check*/
         [Route("assignment")]
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignments();
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                
 
-                if (assignments.Count() > 0)
+
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    return Ok(assignments);
+                    List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignments();
+                    if (assignments.Count() > 0)
+                    {
+                        return Ok(assignments);
+                    }
+                   
                 }
-                else
-                {
-                    return NotFound();
-                }
+                return NotFound();
+                
             }
             catch (Exception)
             {
@@ -192,6 +196,7 @@ namespace WebApi.Controllers
             }
         }
 
+        [AllowAnonymous]
         [Route("assignment/page-all-active/{pageNumber}")]
         [HttpGet]
         public IActionResult GetActiveAssignmentsByPage(int pageNumber)
@@ -453,6 +458,33 @@ namespace WebApi.Controllers
             }
         }
 
+        [Route("assignment-admin/{assignmentId}")]
+        [HttpPut]
+        public IActionResult UpdateByAdmin([FromBody] Assignment assignment, int assignmentId)
+        {
+            try
+            {
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
+                {
+                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().UpdateAssignment(assignment, assignmentId);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok("Assignment updated successfully!");
+                    }
+                    else
+                    {
+                        return NotFound($"Assignment with id {assignmentId} was not found");
+                    }
+                }
+                return Unauthorized();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
         /*ONLY BY AUTHOR*/
         [Route("assignment/check-if-has-accepted-solution/{assignmentId}")]
         [HttpGet]
@@ -511,14 +543,42 @@ namespace WebApi.Controllers
             }
         }
 
-        /*TODO admin check*/
-        [Route("assignment/active/{id}")]
+        [Route("assignment-admin/inactive/{assignmentId}")]
         [HttpPut]
-        public IActionResult MakActive(int id, [FromBody]User user)
+        public IActionResult MakeInactiveByAdmin(int assignmentId)
         {
             try
             {
-                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(user.UserName))
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
+                {
+                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeInactive(assignmentId);
+                    if (noOfRowsAffected > 0)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                return Unauthorized();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+
+        [Route("assignment/active/{id}")]
+        [HttpPut]
+        public IActionResult MakActive(int id)
+        {
+            try
+            {
+                string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
+                if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
                     int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeActive(id);
                     if (noOfRowsAffected > 0)

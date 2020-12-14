@@ -1,6 +1,7 @@
 ﻿using Solvr.online_desktop.ApiCalls;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Solvr.online_desktop.AppWindow
@@ -19,6 +20,7 @@ namespace Solvr.online_desktop.AppWindow
 
         private void ButtonLogin_Click(object sender, RoutedEventArgs e)
         {
+            Mouse.OverrideCursor = Cursors.Wait;
             if (TextBoxUsername.Text.Length == 0)
             {
                 TextBlockMessage.Text = "Enter username!";
@@ -29,9 +31,8 @@ namespace Solvr.online_desktop.AppWindow
             else
             {
                 if (ApiAuthentication.Login(TextBoxUsername.Text, PasswordBoxPassword.Password))
-                {
-                    string username = TextBoxUsername.Text;
-                    mw.FrameDefault.Content = new HomePage(username);
+                {                    
+                    mw.FrameDefault.Content = new HomePage();
                     mw.Width = 1280;
                     mw.Height = 720;
                 }

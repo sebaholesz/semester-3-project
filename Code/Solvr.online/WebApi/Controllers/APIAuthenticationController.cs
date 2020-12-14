@@ -129,5 +129,25 @@ namespace WebApi.Controllers
                 throw e;
             }
         }
+
+
+        public static string GetUserNameFromRequestHeader(IHeaderDictionary requestHeader)
+        {
+            try
+            {
+                StringValues jwtWithPrefix;
+                if (requestHeader.TryGetValue("Authorization", out jwtWithPrefix))
+                {
+                    var handler = new JwtSecurityTokenHandler();
+                    return handler.ReadJwtToken(jwtWithPrefix[0].Substring("Bearer ".Length)).Claims.Where(c => c.Type == JwtRegisteredClaimNames.Sub).ToList()[0].Value;
+                }
+                throw new AuthenticationException();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

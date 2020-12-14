@@ -27,15 +27,15 @@ namespace Solvr.online_desktop.ApiCalls
             }
         }
 
-        public static HttpResponseMessage UpdateAssignment(int assignmentId, string title, string description, int price, DateTime deadline, Boolean anonymous, string academicLevel, string subject)
+        public static HttpResponseMessage UpdateAssignment(int assignmentId, string title, string description, int price, DateTime deadline, Boolean anonymous, string academicLevel, string subject, byte[] timestamp)
         {
             HttpClient client = new HttpClient
             {
                 BaseAddress = new Uri("https://localhost:44316/")
             };
-            Assignment assignment = new Assignment(title, description, price, deadline, anonymous, academicLevel, subject);
+            Assignment assignment = new Assignment(title, description, price, deadline, anonymous, academicLevel, subject, timestamp);
 
-            string url = "apiV1/assignment/" + assignmentId;
+            string url = "apiV1/assignment-admin/" + assignmentId;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.PutAsJsonAsync(url, assignment).Result;
             if (response.IsSuccessStatusCode)
@@ -51,22 +51,16 @@ namespace Solvr.online_desktop.ApiCalls
             }
         }
 
-        public HttpResponseMessage MakeAssignmentActive(int assignmentId, string username)
+        public HttpResponseMessage MakeAssignmentActive(int assignmentId)
         {
             HttpClient client = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:44316/"),
-                
-                
-            };
-            User user = new User
-            {
-                UserName = username
+                BaseAddress = new Uri("https://localhost:44316/"),               
             };
             
             var url = "apiV1/assignment/active/" + assignmentId;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
-            HttpResponseMessage response = client.PutAsJsonAsync(url, user).Result;
+            HttpResponseMessage response = client.PutAsJsonAsync(url, assignmentId).Result;
             if (response.IsSuccessStatusCode)
             {
                 client.Dispose();
@@ -86,7 +80,7 @@ namespace Solvr.online_desktop.ApiCalls
             {
                 BaseAddress = new Uri("https://localhost:44316/")
             };
-            var url = "apiV1/assignment/inactive/" + assignmentId;
+            var url = "apiV1/assignment-admin/inactive/" + assignmentId;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.PutAsJsonAsync(url, assignmentId).Result;
             if (response.IsSuccessStatusCode)
