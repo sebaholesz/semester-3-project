@@ -104,7 +104,6 @@ namespace webApi.Controllers
                         assignment.Subject = collection["Subject"];
                         assignment.UserId = user.Id;
 
-                        //TODO here get the file size and file type and add restrictions
                         if (files != null)
                         {
                             var dataStream = new MemoryStream();
@@ -256,7 +255,6 @@ namespace webApi.Controllers
                         User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                         client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                        // MAYBE TODO counts of answers to all assignments in assignment Cards
                         string urlGetAllAssignments = $"https://localhost:44316/apiV1/assignment/page-all-active-not-posted-by-user/{pageNumber}";
 
                         HttpResponseMessage assignmentsNotPostedByUserRM = client.GetAsync(urlGetAllAssignments).Result;
@@ -470,7 +468,6 @@ namespace webApi.Controllers
                                     assignment.Timestamp = array;
 
 
-                                    //TODO check if the file should be updated
                                     //assignment.AssignmentFile = Encoding.ASCII.GetBytes(collection["AssignmentFile"]);
 
                                     string urlUpdateAssignment = "https://localhost:44316/apiV1/assignment/" + assignmentId;
@@ -479,8 +476,6 @@ namespace webApi.Controllers
 
                                     if (updateAssignmentRM.IsSuccessStatusCode)
                                     {
-                                        //TODO notify all solvers of the changes
-
                                         TempData["Message"] = "Assignment updated successfully";
                                         TempData["ResponseStyleClass"] = "text-success";
                                         TempData["ButtonText"] = "Display your assignment";

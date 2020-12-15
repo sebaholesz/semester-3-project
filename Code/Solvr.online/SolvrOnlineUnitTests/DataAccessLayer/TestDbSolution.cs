@@ -49,13 +49,6 @@ namespace SolvrOnlineUnitTests
             assignmentForTestingId = dba.CreateAssignment(assignment);
         }
 
-        //TODO change DB on cascade
-
-        //[TearDown]
-        //public void TearDown()
-        //{
-        //    dba.DeleteAssignment(assignmentForTestingId);
-        //}
 
         [Test]
         public void TestConnection()

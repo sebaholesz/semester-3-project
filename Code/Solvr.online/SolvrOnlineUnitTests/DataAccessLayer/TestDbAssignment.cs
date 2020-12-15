@@ -95,7 +95,6 @@ namespace SolvrOnlineUnitTests
         }
 
         [Test]
-        //TODO: REDO
         public void TestUpdateConcurrency()
         {
             List<Assignment> listOfItems = dba.GetAllAssignments();

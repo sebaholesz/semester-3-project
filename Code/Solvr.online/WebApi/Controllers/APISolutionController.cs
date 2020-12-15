@@ -68,30 +68,33 @@ namespace WebApi.Controllers
                 return StatusCode(500);
             }
         }
+       
+        #region unused GetSolutionById
 
-        /*TODO check where this is used*/
-        [Route("solution/{id}")]
-        [HttpGet]
-        public IActionResult Get(int id)
-        {
-            try
-            {
-                Solution solution = SolutionBusiness.GetSolutionBusiness().GetBySolutionId(id);
-                if (solution != null)
-                {
-                    return Ok(solution);
-                }
-                else
-                {
-                    return NotFound("Solution with that ID not found!");
-                }
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
-        }
+        //[Route("solution/{id}")]
+        //[HttpGet]
+        //public IActionResult Get(int id)
+        //{
+        //    try
+        //    {
+        //        Solution solution = SolutionBusiness.GetSolutionBusiness().GetBySolutionId(id);
+        //        if (solution != null)
+        //        {
+        //            return Ok(solution);
+        //        }
+        //        else
+        //        {
+        //            return NotFound("Solution with that ID not found!");
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500);
+        //    }
+        //}
 
+        #endregion
+        
         /*ONLY AUTHOR*/
         [Route("solution/by-assignment/{assignmentId}")]
         [HttpGet]

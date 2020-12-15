@@ -236,7 +236,6 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                // TODO handle getting "empty" ids
                 return _db.QueryFirst<Assignment>("Select * from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (SqlException e)
