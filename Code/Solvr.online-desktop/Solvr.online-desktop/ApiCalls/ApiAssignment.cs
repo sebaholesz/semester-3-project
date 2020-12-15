@@ -58,7 +58,7 @@ namespace Solvr.online_desktop.ApiCalls
                 BaseAddress = new Uri("https://localhost:44316/"),               
             };
             
-            var url = "apiV1/assignment/active/" + assignmentId;
+            var url = "apiV1/assignment-admin/active/" + assignmentId;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.PutAsJsonAsync(url, assignmentId).Result;
             if (response.IsSuccessStatusCode)
