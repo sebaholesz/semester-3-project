@@ -1,0 +1,15 @@
+FILE UPLOAD RESTRICTIONS - 
+SOLUTION COUNT ON THE ASSIGNMENT CARD - 
+CHECK THE NEED TO UPDATE FILE ON UPDATE ASSIGNMENT/SOLUTION - 
+NOTIFY ALL SOLVERS OF THE CHANGE TO AN ASSIGNMENT -
+CHANGE ADMIN ROUTES TO "SMTH-ADMIN" -
+
+Error message when posting solution which is not active anymore
+Display error message after fail because of concurrency for Update Assignment
+Add download button on solution page
+Change formatting on the assignment page (buttons)
+Add pagination to My solved assignments
+
+
+FOCUS ON TESTS - 
+Refresh token if its outdated
