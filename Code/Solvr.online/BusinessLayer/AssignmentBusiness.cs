@@ -249,7 +249,6 @@ namespace BusinessLayer
 
                         if (!solution.Equals(null))
                         {
-                            //TODO add conditional logic 
                             return new { Assignment = assignment, Solution = solution, User = user };
                         }
                     }
@@ -317,8 +316,11 @@ namespace BusinessLayer
         {
             try
             {
-                //TODO validators 
-                return _dbAssignment.UpdateAssignment(assignment, id);
+                if (_assignmentValidation.CheckInput(assignment))
+                {
+                    return _dbAssignment.UpdateAssignment(assignment, id);
+                }
+                return -1;
             }
             catch (Exception e)
             {

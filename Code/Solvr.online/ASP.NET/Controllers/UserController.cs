@@ -62,7 +62,6 @@ namespace ASP.NET.Controllers
             }
         }
 
-        //TODO refactor
         [Route("user/add-credits")]
         [HttpPost]
         public ActionResult AddCredits(int credit)

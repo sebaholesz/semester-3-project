@@ -570,8 +570,7 @@ namespace WebApi.Controllers
             }
         }
 
-
-        [Route("assignment/active/{id}")]
+        [Route("assignment-admin/active/{id}")]
         [HttpPut]
         public IActionResult MakActive(int id)
         {
