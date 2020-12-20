@@ -50,7 +50,8 @@ title (the one you can apply for)
 feedback/rating
 educationInfo
 interests
-facebookAccountUrl</panel_attributes>
+facebookAccountUrl
+credit</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -146,20 +147,6 @@ anonymous</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>686</x>
-      <y>231</y>
-      <w>147</w>
-      <h>49</h>
-    </coordinates>
-    <panel_attributes>Balance
---
-credit
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>Relation</id>
     <coordinates>
       <x>1043</x>
@@ -173,20 +160,6 @@ m2=0..*
 makes v
 fg=black</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;120.0;460.0;120.0;460.0;440.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>826</x>
-      <y>245</y>
-      <w>154</w>
-      <h>35</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=1
-m2=1
-belongs to &gt;</panel_attributes>
-    <additional_attributes>200.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -292,14 +265,14 @@ has attached v</panel_attributes>
     <coordinates>
       <x>532</x>
       <y>245</y>
-      <w>168</w>
+      <w>448</w>
       <h>35</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..*
 m2=0..*
 manages &gt;</panel_attributes>
-    <additional_attributes>10.0;20.0;220.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;620.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
