@@ -18,11 +18,13 @@ namespace ASP.NET.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly string _baseUrl;
 
         public UserController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _baseUrl = "https://localhost:44316/apiV1/";
         }
 
         [Route("user/add-credits")]
@@ -36,7 +38,7 @@ namespace ASP.NET.Controllers
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                    string urlGetUserCredit = "https://localhost:44316/apiV1/user/get-credit";
+                    string urlGetUserCredit = _baseUrl + "user/get-credit";
                     HttpResponseMessage urlGetUserCreditRM = (client.GetAsync(urlGetUserCredit).Result);
 
                     if (urlGetUserCreditRM.IsSuccessStatusCode)
@@ -73,7 +75,7 @@ namespace ASP.NET.Controllers
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                    string urlAddCredits = "https://localhost:44316/apiV1/user/add-credit";
+                    string urlAddCredits = _baseUrl + "user/add-credit";
                     HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(credit), Encoding.UTF8, "application/json")).Result;
                     if (urlAddCreditsRM.IsSuccessStatusCode)
                     {

@@ -42,15 +42,10 @@ namespace Solvr.online_desktop.AppWindow
                     TextBlockMessage.FontSize = 15;
                     TextBlockMessage.Visibility = Visibility.Visible;
                     TextBoxUsername.Focus();
+                    Mouse.OverrideCursor = Cursors.Arrow;
                 }
 
-            }
-            //else if(TextBoxUsername.Text == "superadmin")
-            //{
-            //    mw.FrameDefault.Content = new HomePage();
-            //    mw.Width = 1280;
-            //    mw.Height = 720;                
-            //}          
+            }     
         }
 
         private void ButtonClear_Click(object sender, RoutedEventArgs e)

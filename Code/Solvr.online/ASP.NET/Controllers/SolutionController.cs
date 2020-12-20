@@ -23,11 +23,13 @@ namespace webApi.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly string _baseUrl;
 
         public SolutionController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _baseUrl = "https://localhost:44316/apiV1/";
         }
         /*can be accessed by everybody who 
          * hasnt posted the assignment  
@@ -45,7 +47,7 @@ namespace webApi.Controllers
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                    string urlCheckUser = _baseUrl + $"check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -60,7 +62,7 @@ namespace webApi.Controllers
                         switch (returnCode)
                         {
                             case 0:
-                                string urlCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data/" + assignmentId;
+                                string urlCompleteAssignmentData = _baseUrl + "assignment/complete-data/" + assignmentId;
                                 HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlCompleteAssignmentData).Result;
                                 
                                 if(getCompleteAssignmentDataRM.IsSuccessStatusCode)
@@ -69,7 +71,7 @@ namespace webApi.Controllers
                                     ViewBag.Assignment = asu.Assignment;
                                     ViewBag.User = asu.User;
 
-                                    string urlCountOfSolutions = "https://localhost:44316/apiV1/solution/count-by-assignmentId/" + assignmentId;
+                                    string urlCountOfSolutions = _baseUrl + "solution/count-by-assignmentId/" + assignmentId;
                                     HttpResponseMessage solutionCountRM = client.GetAsync(urlCountOfSolutions).Result;
                                     if (solutionCountRM.IsSuccessStatusCode)
                                     {
@@ -129,7 +131,7 @@ namespace webApi.Controllers
                         User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                         client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                        string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                        string urlCheckUser = _baseUrl + $"check-user-vs-assignment/{assignmentId}";
                         HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                         if (returnCodeRM.IsSuccessStatusCode)
@@ -160,7 +162,7 @@ namespace webApi.Controllers
                                     }
 
 
-                                    string urlCreateSolution = "https://localhost:44316/apiV1/solution/";
+                                    string urlCreateSolution = _baseUrl + "solution/";
                                     HttpResponseMessage createSolutionRM = client.PostAsync(urlCreateSolution, new StringContent(JsonConvert.SerializeObject(solution), Encoding.UTF8, "application/json")).Result;
                                     if(createSolutionRM.IsSuccessStatusCode)
                                     {
@@ -224,7 +226,7 @@ namespace webApi.Controllers
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                    string urlCheckUser = _baseUrl + $"check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -242,7 +244,7 @@ namespace webApi.Controllers
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
 
-                                string urlGetAllSolutionsForAssignment = $"https://localhost:44316/apiV1/solution/by-assignment/{assignmentId}";
+                                string urlGetAllSolutionsForAssignment = _baseUrl + $"solution/by-assignment/{assignmentId}";
                                 HttpResponseMessage getAllSolutionsForAssignmentRM = client.GetAsync(urlGetAllSolutionsForAssignment).Result;
                                
 
@@ -305,7 +307,7 @@ namespace webApi.Controllers
                     int assignmentId = Convert.ToInt32(reqBodyStringArray[1]);
 
 
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                    string urlCheckUser = _baseUrl + $"check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -322,7 +324,7 @@ namespace webApi.Controllers
                             case 0:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
-                                string urlChooseSolution = $"https://localhost:44316/apiV1/solution/choose-solution";
+                                string urlChooseSolution = _baseUrl + $"solution/choose-solution";
 
                                 List<int> ids = new List<int>() { solutionId, assignmentId };
 
@@ -331,7 +333,7 @@ namespace webApi.Controllers
 
                                 if (chooseSolutionRM.IsSuccessStatusCode)
                                 {
-                                    string urlCompleteAssignmentDataWithSolution = "https://localhost:44316/apiV1/assignment/complete-data-with-accepted-solution/" + assignmentId;
+                                    string urlCompleteAssignmentDataWithSolution = _baseUrl + "assignment/complete-data-with-accepted-solution/" + assignmentId;
                                     HttpResponseMessage getCompleteAssignmentDataWithSolutionRM = client.GetAsync(urlCompleteAssignmentDataWithSolution).Result;
 
                                     if (getCompleteAssignmentDataWithSolutionRM.IsSuccessStatusCode)
@@ -391,7 +393,7 @@ namespace webApi.Controllers
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                    string urlCheckUser = _baseUrl + $"check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -408,7 +410,7 @@ namespace webApi.Controllers
                             case 0:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 1:
-                                string urlGetCompleteAssignmentData = "https://localhost:44316/apiV1/assignment/complete-data-with-accepted-solution/" + assignmentId;
+                                string urlGetCompleteAssignmentData = _baseUrl + "assignment/complete-data-with-accepted-solution/" + assignmentId;
                                 HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlGetCompleteAssignmentData).Result;
                                
                                 if(getCompleteAssignmentDataRM.IsSuccessStatusCode)
@@ -462,7 +464,7 @@ namespace webApi.Controllers
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                    string urlCheckUser = $"https://localhost:44316/apiV1/check-user-vs-assignment/{assignmentId}";
+                    string urlCheckUser = _baseUrl + $"check-user-vs-assignment/{assignmentId}";
                     HttpResponseMessage returnCodeRM = client.GetAsync(urlCheckUser).Result;
 
                     if (returnCodeRM.IsSuccessStatusCode)
@@ -481,7 +483,7 @@ namespace webApi.Controllers
                             case 1:
                                 return Redirect("/assignment/display-assignment/" + assignmentId);
                             case 2:
-                                string urlGetCompleteAssignmentData = $"https://localhost:44316/apiV1/assignment/complete-data-with-solution/{assignmentId}";
+                                string urlGetCompleteAssignmentData = _baseUrl + $"assignment/complete-data-with-solution/{assignmentId}";
                                 HttpResponseMessage getCompleteAssignmentDataRM = client.GetAsync(urlGetCompleteAssignmentData).Result;
 
                                 if (getCompleteAssignmentDataRM.IsSuccessStatusCode)
@@ -491,7 +493,7 @@ namespace webApi.Controllers
                                     ViewBag.Solution = asu.Solution;
                                     ViewBag.User = asu.User;
 
-                                    string urlCountOfSolutions = "https://localhost:44316/apiV1/solution/count-by-assignmentId/" + assignmentId;
+                                    string urlCountOfSolutions = _baseUrl + "solution/count-by-assignmentId/" + assignmentId;
                                     HttpResponseMessage solutionCountRM = client.GetAsync(urlCountOfSolutions).Result;
                                     if (solutionCountRM.IsSuccessStatusCode)
                                     {
@@ -543,7 +545,7 @@ namespace webApi.Controllers
                     User user = _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)).Result;
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
-                    string urlGetFileForDownload = $"https://localhost:44316/apiV1/solution/get-file/{solutionId}";
+                    string urlGetFileForDownload = _baseUrl + $"solution/get-file/{solutionId}";
                     HttpResponseMessage getFileForDownloadRM = client.GetAsync(urlGetFileForDownload).Result;
 
                     if (getFileForDownloadRM.IsSuccessStatusCode)

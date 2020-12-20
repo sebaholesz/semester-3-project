@@ -9,12 +9,14 @@ namespace Solvr.online_desktop.ApiCalls
 {
     class ApiUser
     {
+        private static readonly string _baseUrl = "https://localhost:44316/apiV1/";
+
         public static IEnumerable<User> GetAllUsers()
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
-            HttpResponseMessage response = client.GetAsync("https://localhost:44316/apiV1/user").Result;
+            HttpResponseMessage response = client.GetAsync(_baseUrl + "user").Result;
             if (response.IsSuccessStatusCode)
             {
                 client.Dispose();
@@ -29,11 +31,8 @@ namespace Solvr.online_desktop.ApiCalls
 
         public static HttpResponseMessage AddCredits(int value, string userId)
         {
-            HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:44316/")
-            };
-            var url = "apiV1/user-admin/add-credit/" + userId;
+            HttpClient client = new HttpClient();
+            var url = _baseUrl + "user-admin/add-credit/" + userId;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.PutAsJsonAsync(url, value).Result;
             if (response.IsSuccessStatusCode)
@@ -51,11 +50,8 @@ namespace Solvr.online_desktop.ApiCalls
 
         public static HttpResponseMessage RemoveCredits(int value, string userId)
         {
-            HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:44316/")
-            };
-            var url = "apiV1/user-admin/remove-credit/" + userId;
+            HttpClient client = new HttpClient();
+            var url = _baseUrl + "user-admin/remove-credit/" + userId;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiAuthentication.Logintoken);
             HttpResponseMessage response = client.PutAsJsonAsync(url, value).Result;
             if (response.IsSuccessStatusCode)

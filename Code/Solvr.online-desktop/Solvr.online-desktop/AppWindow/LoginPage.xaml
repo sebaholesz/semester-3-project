@@ -28,7 +28,7 @@
         <TextBox Name="TextBoxUsername" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
         <PasswordBox Name="PasswordBoxPassword" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
         <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            Email or Username
+            Username
         </TextBlock>
         <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             Password
