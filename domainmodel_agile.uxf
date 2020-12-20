@@ -99,7 +99,7 @@ fg=black</panel_attributes>
       <x>504</x>
       <y>462</y>
       <w>168</w>
-      <h>105</h>
+      <h>112</h>
     </coordinates>
     <panel_attributes>Assignment
 --
@@ -109,7 +109,8 @@ assignemntId
 price
 queue
 deadline
-anonymous</panel_attributes>
+anonymous
+AssignmentFile</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -133,7 +134,7 @@ fg=black</panel_attributes>
       <x>959</x>
       <y>588</y>
       <w>147</w>
-      <h>98</h>
+      <h>112</h>
     </coordinates>
     <panel_attributes>Solution
 --
@@ -143,7 +144,8 @@ name
 description
 timestamp
 solutionRating
-anonymous</panel_attributes>
+anonymous
+SolutionFile</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -250,15 +252,15 @@ text</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>574</x>
-      <y>560</y>
+      <y>567</y>
       <w>84</w>
-      <h>301</h>
+      <h>294</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m2=0..*
 has attached v</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;410.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;400.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -349,15 +351,15 @@ text</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>602</x>
-      <y>560</y>
+      <y>567</y>
       <w>175</w>
-      <h>301</h>
+      <h>294</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m2=0..*
 can have v</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0;210.0;100.0;210.0;410.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0;210.0;90.0;210.0;400.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -599,59 +601,5 @@ bg=yellow</panel_attributes>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>140.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>350</x>
-      <y>847</y>
-      <w>147</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>AssignmentFile
---
-file</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>420</x>
-      <y>560</y>
-      <w>140</w>
-      <h>301</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=1
-m2=0..1
-has attached v</panel_attributes>
-    <additional_attributes>170.0;10.0;170.0;80.0;10.0;80.0;10.0;410.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>952</x>
-      <y>847</y>
-      <w>147</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>AssignmentFile
---
-file</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1022</x>
-      <y>679</y>
-      <w>84</w>
-      <h>182</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=1
-m2=0..1
-has attached v</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;240.0</additional_attributes>
   </element>
 </diagram>
