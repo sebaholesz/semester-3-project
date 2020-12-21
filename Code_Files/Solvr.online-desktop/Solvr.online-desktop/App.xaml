@@ -1,0 +1,9 @@
+﻿<Application x:Class="Solvr.online_desktop.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Solvr.online_desktop"
+             StartupUri="AppWindow/MainWindow.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

@@ -1,0 +1,138 @@
+﻿@model Models.Assignment
+
+@{
+    ViewData["Title"] = "Update Assignment";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
+    var assignment = ViewBag.Assignment;
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="/css/create-assignment.css" />
+}
+
+<main>
+    <div class="container-fluid">
+        <form class="create-assignment-form" asp-controller="Assignment" asp-action="UpdateAssignment" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-12 screen-1300-full">
+                    <div class="boxed-row">
+                        <div class="row create-assignment-title-block">
+                            <div class="col-md-6">
+                                <input asp-for="Title" value="@assignment.Title" class="assignment-title-text-field" readonly>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                                <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center justify-content-end">
+                                <div>
+                                    <a href="/solution/solution-queue/@assignment.AssignmentId" class="btn btn-default-style">
+                                        Show Solutions
+                                    </a>
+                                </div>
+                                <div class="btn-block-with-left-margin">
+                                    <button type="submit" class="btn btn-update">
+                                        Update
+                                    </button>
+                                </div>
+                                <div class="btn-block-with-left-margin">
+                                    <button type="button" onclick="deleteAssignment(@assignment.AssignmentId)" class="btn btn-delete">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row assignment-description-detail-container">
+                        <div class="col-md-7 height-max">
+                            <div class="assignment-description">
+                                <input asp-for="Timestamp" type="hidden" value="@ViewBag.Timestamp"/>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                                <textarea name="@Html.NameFor(m => m.Description)" class="textarea-assignment-description" readonly>@assignment.Description</textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5 height-max">
+                            <div class="assignment-details-panel">
+                                <h4>Details</h4>
+                                <div class="form-group">
+                                    <label for="Deadline">
+                                        Deadline
+                                    </label>
+                                    <input asp-for="Deadline" type="datetime-local" value="@ViewBag.AssignmentDeadline" class="form-control" />
+                                    <span asp-validation-for="Deadline" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Price">
+                                        Credits
+                                    </label>
+                                    <input asp-for="Price" type="number" value="@assignment.Price" class="form-control" readonly/>
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="AcademicLevel">
+                                        Academic Level
+                                    </label>
+                                    <br />
+                                    <select asp-for="AcademicLevel" class="form-control">
+                                        @foreach (var option in ViewBag.AcademicLevel)
+                                        {
+                                            if (@assignment.AcademicLevel == option)
+                                            {
+                                                <option selected>@option</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@option">@option</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="AcademicLevel" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Subject">
+                                        Subject
+                                    </label>
+                                    <br />
+                                    <select asp-for="Subject" class="form-control">
+                                        @foreach (var option in ViewBag.Subject)
+                                        {
+                                            if (@assignment.Subject == option)
+                                            {
+                                                <option selected>@option</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@option">@option</option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Subject" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Anonymous">
+                                        Make Anonymous
+                                    </label>
+                                    <br />
+                                    <label class="switch">
+                                        <input asp-for="@Model.Anonymous" type="checkbox" value="true" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/js/update-assignment.js"></script>
+}

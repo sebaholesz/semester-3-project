@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<ul class="nav navigation-list">
+    @if (!SignInManager.IsSignedIn(User))
+    {
+        <li class="navigation-list-item">
+            <a class="nav-register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="navigation-list-item">
+            <a class="nav-login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>

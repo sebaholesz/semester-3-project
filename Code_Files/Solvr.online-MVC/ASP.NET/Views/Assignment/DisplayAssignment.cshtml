@@ -1,0 +1,50 @@
+﻿@model Models.Assignment
+
+@{
+    ViewData["Title"] = "Display Assignment";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
+    var assignment = ViewBag.Assignment;
+}
+
+@section Stylesheets {
+    <link rel="stylesheet" href="/css/display-assignment.css" />
+}
+
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 screen-1300-full">
+                <div class="boxed-row">
+                    <div class="row display-assignment-title-block">
+                        <div class="col-md-6">
+                            <h3 class="display-assignment-page-title">
+                                @assignment.Title
+                            </h3>
+                            <span class="@ViewBag.ResponseStyleClass">@ViewBag.Message</span>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center justify-content-end">
+                            <div>
+                                <a href="/assignment/download-file/@assignment.AssignmentId" class="btn btn-default-style">
+                                    Download Attachment
+                                </a>
+                            </div>
+                           @if (assignment.IsActive)
+                            {
+                            <div class="btn-block-with-left-margin">
+                                <a class="btn btn-solve-assignment" href="/solution/assignment/@assignment.AssignmentId/">
+                                    Solve Assignment
+                                </a>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                @await Html.PartialAsync("~/Views/Shared/AssignmentPartial.cshtml")
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

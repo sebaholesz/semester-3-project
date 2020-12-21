@@ -1,0 +1,31 @@
+﻿@model Models.User;
+@{
+    ViewData["Title"] = "AddCredits";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
+}
+
+<main>
+    <div class="container-fluid">
+        <form asp-controller="User" enctype="multipart/form-data" asp-action="AddCredits" asp-route-id="@ViewBag.userId" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-12 screen-1300-full">
+                    <div class="d-block boxed-row h-100 w-100">
+                        <div class="w-100 text-center">
+                            <h2>Add Credits</h2>
+                            <h3>You have @ViewBag.Credits credits in your account</h3>
+                        </div>
+                        <div class="w-100 text-center m-1">
+                            <input name="credit" type="number" class="form-control add-credit-input" min="1" max="10000" />
+                        </div>
+                        <div class="w-100 text-center">
+                            <button type="submit" class="btn-lrg btn btn-default-style feedback-back-to-home-btn">
+                                Add Credits
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>

@@ -1,0 +1,49 @@
+﻿@model Models.AssignmentSolutionUser
+
+@{
+    var assignment = ViewBag.Assignment;
+    var user = ViewBag.User;
+    var solutionCount = ViewBag.SolutionCount;
+}
+
+<div class="row d-flex align-items-stretch">
+    <div class="col-md-8 d-inline-block align-items-stretch">
+        <div class="boxed-row display-assignment-details">
+            <div class="just-grid">
+                <span class="details-text-format grid-area-post-date">Post Date: @assignment.PostDate</span>
+                <span class="details-text-format grid-area-price">Credits: @assignment.Price</span>
+                <span class="details-text-format grid-area-academic-level">Academic Level: @assignment.AcademicLevel</span>
+                <span class="details-text-format grid-area-deadline">Deadline: @assignment.Deadline</span>
+                <span class="details-text-format grid-area-answers">Answers: @solutionCount</span>
+                <span class="details-text-format grid-area-subject">Subject: @assignment.Subject</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 assignment-profile d-inline-block align-items-stretch">
+        <div class="boxed-row display-author-details">
+            <div class="col-md-2 assignment-profile-image">
+                @* Some conditional logic where if there is no image URL, we go to the fallback *@
+                @*<img alt="User avatar" src="Assets/Images/hunterek.png" />*@
+                <img alt="Default user avatar" src="/assets/images/default-avatar.png" />
+            </div>
+            <div class="col-md-10">
+                    <span>@user.UserName</span>
+                @if (!assignment.Anonymous)
+                {
+                    <br />
+                    <span>@user.FirstName @user.LastName</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row assignment-description-detail-container">
+    <div class="col-md-12 height-max">
+        <div class="assignment-description">
+            <p>
+                @assignment.Description
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿@model Models.Assignment
+
+@{
+    ViewData["Title"] = "Assignments";
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
+    List<Models.Assignment> assignments = ViewBag.Assignments;
+}
+
+@section Stylesheets {
+    <link href="~/css/display-assignment.css" rel="stylesheet" />
+}
+
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 screen-1300-full">
+                @if(ViewBag.ShowPagination)
+                {
+                    <div class="d-flex justify-content-between mb-2">
+                        <a type="button" class="btn btn-info @ViewBag.PreviousEnable" href="@ViewBag.Link@ViewBag.PreviousPage" role="button" >Previous</a>
+                        <h5>Page @ViewBag.PageNumber out of @ViewBag.TotalPages</h5>
+                        <a type="button" class="btn btn-info @ViewBag.NextEnable" href="@ViewBag.Link@ViewBag.NextPage" role="button" >Next</a>
+                    </div>
+                }
+                <div class="card-group">
+                    @foreach (var assignment in assignments)
+                    {
+                        @await Html.PartialAsync("~/Views/Shared/AssignmentCard.cshtml",  assignment, new ViewDataDictionary(ViewData) { { "SolutionCount", ViewBag.SolutionCount } })
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,10 @@
+﻿<Window x:Class="Solvr.online_desktop.AppWindow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Solvr.online_desktop"
+        mc:Ignorable="d"
+        Title="Solvr.online" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="300" Width="550" WindowStyle="ToolWindow" >
+    <Frame x:Name="FrameDefault" Background="LightBlue" NavigationUIVisibility="Hidden"/>
+</Window>

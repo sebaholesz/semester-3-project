@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = @ViewBag.PageTitle;
+    Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
+}
+
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 screen-1300-full">
+                <div class="d-block boxed-row h-100 w-100">
+                    <div class="w-100 text-center">
+                        <h2>@ViewBag.Message</h2>
+                        <h3 class="@ViewBag.ResponseStyleClass">@ViewBag.SubMessage</h3>
+                    </div>
+                    <div class="w-100 text-center">
+                        <img class="feedback-view-image" src="@ViewBag.Image" />
+                    </div>
+                    <div class="w-100 text-center">
+                        <a class="btn-lrg btn btn-default-style feedback-back-to-home-btn" href="@ViewBag.ButtonLink">@ViewBag.ButtonText</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
