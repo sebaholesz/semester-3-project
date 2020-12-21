@@ -47,12 +47,8 @@ namespace DatabaseLayer.DataAccessLayer
         
         public User GetUserCredits(string userId)
         {
-            //with timestamp
             try
             {
-               
-                //int credits = Int32.Parse( _db.QueryFirst<string>("Select [Credit] from [Identity].[User] where Id=@userId", new { userId = userId }));
-                //string stamp = this.GetUserConcurrencyStamp(userId);
                 User user = _db.QueryFirst<User>("Select [Credit],[ConcurrencyStamp] from [Identity].[User] where Id=@userId", new { userId = userId });
                 return user;
             }
@@ -70,18 +66,16 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 try
                 {
-
-                    int returni = _db.Execute(@"Update [Identity].[User] set credit=@credit WHERE Id = @userId AND ConcurrencyStamp = @ConcurrencyStamp", new { credit = credit, userId = userId, ConcurrencyStamp = concurrencyStamp }, transaction: transaction);
-                    if (returni > 0)
+                    int noOfRowsAffectedForUpdateCredit = _db.Execute(@"Update [Identity].[User] set credit=@credit WHERE Id = @userId AND ConcurrencyStamp = @ConcurrencyStamp", new { credit = credit, userId = userId, ConcurrencyStamp = concurrencyStamp }, transaction: transaction);
+                    if (noOfRowsAffectedForUpdateCredit == 1)
                     {
-                        //int generated = this.GenerateNewConcurrencyStamp(userId);
                         string newGuid = Guid.NewGuid().ToString();
-                        int generated = _db.Execute(@"Update [Identity].[User] set ConcurrencyStamp=@concurrencystamp WHERE Id = @userId", new { userId = userId, concurrencystamp = newGuid }, transaction: transaction);
-                        if (generated > 0)
+                        int noOfGUIDGenerated = _db.Execute(@"Update [Identity].[User] set ConcurrencyStamp=@concurrencystamp WHERE Id = @userId", new { userId = userId, concurrencystamp = newGuid }, transaction: transaction);
+                        if (noOfGUIDGenerated == 1)
                         {
                             transaction.Commit();
                             _db.Close();
-                            return returni;
+                            return noOfRowsAffectedForUpdateCredit;
 
                         }
                     }

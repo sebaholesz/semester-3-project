@@ -23,8 +23,7 @@ namespace WebApi.Controllers
             {
                 assignment.PostDate = DateTime.UtcNow;
                 int insertedAssignmentId = AssignmentBusiness.GetAssignmentBusiness().CreateAssignment(assignment);
-                bool successfulyDecreased = UserBusiness.GetUserBusiness().DecreaseUserCredits(assignment.Price, assignment.UserId) == 1;
-                if (insertedAssignmentId > 0 && successfulyDecreased)
+                if (insertedAssignmentId > 0)
                 {
                     return Ok(insertedAssignmentId);
                 }

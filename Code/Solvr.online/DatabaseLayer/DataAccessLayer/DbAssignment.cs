@@ -26,54 +26,57 @@ namespace DatabaseLayer.DataAccessLayer
             {
                 try
                 {
-                    int lastUsedId = _db.ExecuteScalar<int>(
-                        @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive, userId) output inserted.assignmentId values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive, @userId)",
-                        new
-                        {
-                            title = assignment.Title,
-                            description = assignment.Description,
-                            price = assignment.Price,
-                            postDate = assignment.PostDate,
-                            deadline = assignment.Deadline,
-                            anonymous = assignment.Anonymous,
-                            academicLevel = assignment.AcademicLevel,
-                            subject = assignment.Subject,
-                            isActive = true,
-                            userId = assignment.UserId
-                        }, transaction: transaction);
+                    User userConcurrencyInfo = _db.QueryFirst<User>("Select [Credit],[ConcurrencyStamp] from [Identity].[User] where Id=@userId", new { userId = assignment.UserId }, transaction: transaction);
 
-                    if (lastUsedId > 0)
+                    int returni = _db.Execute(@"Update [Identity].[User] set credit=@credit WHERE Id = @userId AND ConcurrencyStamp = @ConcurrencyStamp",
+                        new { credit = userConcurrencyInfo.Credit - assignment.Price, userId = assignment.UserId, ConcurrencyStamp = userConcurrencyInfo.ConcurrencyStamp }, transaction: transaction);
+                    if (returni == 1)
                     {
-                        if (assignment.AssignmentFile != null)
+                        string newGuid = Guid.NewGuid().ToString();
+                        int generated = _db.Execute(@"Update [Identity].[User] set ConcurrencyStamp=@concurrencystamp WHERE Id = @userId", new { userId = assignment.UserId, concurrencystamp = newGuid }, transaction: transaction);
+                        if (generated == 1)
                         {
-                            int noOfRowsAffectedForFileInsert = _db.Execute(
-                                @"Insert into [dbo].[AssignmentFile] (assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)",
-                                new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile }, transaction: transaction);
+                            int lastUsedId = _db.ExecuteScalar<int>(
+                                @"Insert into [dbo].[Assignment](title,description, price, postDate, deadline, anonymous, academicLevel, subject, isActive, userId) output inserted.assignmentId values (@title, @description, @price, @postDate, @deadline, @anonymous, @academicLevel, @subject, @isActive, @userId)",
+                                new
+                                {
+                                    title = assignment.Title,
+                                    description = assignment.Description,
+                                    price = assignment.Price,
+                                    postDate = assignment.PostDate,
+                                    deadline = assignment.Deadline,
+                                    anonymous = assignment.Anonymous,
+                                    academicLevel = assignment.AcademicLevel,
+                                    subject = assignment.Subject,
+                                    isActive = true,
+                                    userId = assignment.UserId
+                                }, transaction: transaction);
 
-                            if (noOfRowsAffectedForFileInsert == 1)
+                            if (lastUsedId > 0)
                             {
-                                transaction.Commit();
-                                _db.Close();
-                                return lastUsedId;
+                                if (assignment.AssignmentFile != null)
+                                {
+                                    int noOfRowsAffectedForFileInsert = _db.Execute(
+                                        @"Insert into [dbo].[AssignmentFile] (assignmentId, assignmentFile) values (@assignmentId, @assignmentFile)",
+                                        new { assignmentId = lastUsedId, assignmentFile = assignment.AssignmentFile }, transaction: transaction);
+
+                                    if (noOfRowsAffectedForFileInsert == 1)
+                                    {
+                                        transaction.Commit();
+                                        _db.Close();
+                                        return lastUsedId;
+                                    }
+                                }
+                                else
+                                {
+                                    transaction.Commit();
+                                    _db.Close();
+                                    return lastUsedId;
+                                }
                             }
-                            else
-                            {
-                                transaction.Rollback();
-                                _db.Close();
-                                return 0;
-                            }
-                        }
-                        else
-                        {
-                            transaction.Commit();
-                            _db.Close();
-                            return lastUsedId;
                         }
                     }
-
-                    transaction.Rollback();
-                    _db.Close();
-                    return 0;
+                    throw new Exception("SQL error occured");
                 }
                 catch (SqlException e)
                 {

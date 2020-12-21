@@ -183,7 +183,6 @@ namespace DatabaseLayer.DataAccessLayer
         {
             try
             {
-                //mark the one solution as accepted
                 return _db.Execute("UPDATE [dbo].[Solution]  SET accepted=1 WHERE solutionId=@solutionId", new { solutionId = solutionId });
             }
             catch (Exception e)

@@ -85,8 +85,6 @@ namespace BusinessLayer
             try
             {
                 User concurrencyInfo = _dbUser.GetUserCredits(userId);
-                //int currentCredits = ;
-                //string stamp = _dbUser.GetUserConcurrencyStamp(userId);
                 return _dbUser.UpdateUserCredits(credits + (int)concurrencyInfo.Credit, userId, concurrencyInfo.ConcurrencyStamp);
             }
             catch (Exception e)
@@ -100,7 +98,6 @@ namespace BusinessLayer
             try
             {
                 User concurrencyInfo = _dbUser.GetUserCredits(userId);
-
                 return _dbUser.UpdateUserCredits((int)concurrencyInfo.Credit - credits, userId, concurrencyInfo.ConcurrencyStamp);
             }
             catch(Exception e)
