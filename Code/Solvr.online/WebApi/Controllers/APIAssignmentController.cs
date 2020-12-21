@@ -23,7 +23,6 @@ namespace WebApi.Controllers
             {
                 assignment.PostDate = DateTime.UtcNow;
                 int insertedAssignmentId = AssignmentBusiness.GetAssignmentBusiness().CreateAssignment(assignment);
-                //decrease creditu
                 bool successfulyDecreased = UserBusiness.GetUserBusiness().DecreaseUserCredits(assignment.Price, assignment.UserId) == 1;
                 if (insertedAssignmentId > 0 && successfulyDecreased)
                 {
@@ -31,7 +30,7 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    return StatusCode(417);
+                    return Conflict("A conflict occured while we were processing your request");
                 }
             }
             catch (Exception)
@@ -42,14 +41,11 @@ namespace WebApi.Controllers
 
         [Route("assignment")]
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetAllAssignments()
         {
             try
             {
                 string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
-                
-
-
                 if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
                     List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignments();
@@ -57,10 +53,12 @@ namespace WebApi.Controllers
                     {
                         return Ok(assignments);
                     }
-                   
+                    else
+                    {
+                        return NotFound("No assignments found");
+                    }
                 }
-                return NotFound();
-                
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -70,19 +68,18 @@ namespace WebApi.Controllers
 
         [Route("assignment/complete-data/{assignmentId}")]
         [HttpGet]   
-        public IActionResult GetCompleteData(int assignmentId)
+        public IActionResult GetCompleteAssignmentData(int assignmentId)
         {
             try
             {
                 object assignmentCompleteData = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteData(assignmentId);
-
                 if (assignmentCompleteData != null)
                 {
                     return Ok(assignmentCompleteData);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("Assignment with this assignmentID was not found");
                 }
             }
             catch (Exception)
@@ -94,7 +91,7 @@ namespace WebApi.Controllers
         /*ONLY SOLVER*/
         [Route("assignment/complete-data-with-solution/{assignmentId}")]
         [HttpGet]
-        public IActionResult GetCompleteDataWithSolution(int assignmentId)
+        public IActionResult GetCompleteAssignmentDataWithSolution(int assignmentId)
         {
             try
             {
@@ -103,17 +100,16 @@ namespace WebApi.Controllers
                 if (isSolver)
                 {
                     object assignmentCompleteDataWithSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithSolution(assignmentId, userId);
-
                     if (assignmentCompleteDataWithSolution != null)
                     {
                         return Ok(assignmentCompleteDataWithSolution);
                     }
                     else
                     {
-                        return NotFound();
+                        return NotFound("Assignment with this assignmentID was not found");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -124,7 +120,7 @@ namespace WebApi.Controllers
         /*ONLY AUTHOR OR ACCEPTED SOLUTION AUTHOR*/
         [Route("assignment/complete-data-with-accepted-solution/{assignmentId}")]
         [HttpGet]
-        public IActionResult GetCompleteDataWithAcceptedSolution(int assignmentId)
+        public IActionResult GetCompleteAssignmentDataWithAcceptedSolution(int assignmentId)
         {
             try
             {
@@ -141,30 +137,30 @@ namespace WebApi.Controllers
                     }
                     else
                     {
-                        return NotFound();
-                    }
-                }
-                if (isSolutionAuthor)
-                {
+                        return NotFound("Assignment with this assignmentId was not found");
+                    }                   
+                }                       
+                if (isSolutionAuthor)   
+                {                       
                     dynamic assignmentCompleteDataWithAcceptedSolution = AssignmentBusiness.GetAssignmentBusiness().GetAssignmentCompleteDataWithAcceptedSolution(assignmentId);
-
+                                        
                     if (assignmentCompleteDataWithAcceptedSolution != null)
-                    {
+                    {                   
                         if (assignmentCompleteDataWithAcceptedSolution.Solution.UserId == userId)
-                        {
+                        {               
                             return Ok(assignmentCompleteDataWithAcceptedSolution);
-                        }
-                        else
-                        {
-                            return Unauthorized();
-                        }
-                    }
-                    else
-                    {
-                        return NotFound();
+                        }               
+                        else            
+                        {               
+                            return Unauthorized("You are not allowed to access this resource");
+                        }               
+                    }                   
+                    else                
+                    {                   
+                        return NotFound("Assignment with this assignmentId was not found");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -180,14 +176,13 @@ namespace WebApi.Controllers
             try
             {
                 List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignments();
-
                 if (assignments.Count() > 0)
                 {
                     return Ok(assignments);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No active assignments found");
                 }
             }
             catch (Exception)
@@ -217,14 +212,13 @@ namespace WebApi.Controllers
                         totalPages,
                         previousPage,
                         nextPage
-
                     };
                     HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata)); 
                     return Ok(assignments);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No active assignments found");
                 }
             }
             catch (Exception)
@@ -241,14 +235,13 @@ namespace WebApi.Controllers
             {
                 string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
                 List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotPostedByUser(userId);
-
                 if (assignments.Count() > 0)
                 {
                     return Ok(assignments);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No active assignments found");
                 }
             }
             catch (Exception)
@@ -278,14 +271,13 @@ namespace WebApi.Controllers
                         totalPages,
                         previousPage,
                         nextPage
-
                     };
                     HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata));
                     return Ok(assignments);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No active assignments found");
                 }
             }
             catch (Exception)
@@ -309,7 +301,7 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No assignments for a user with this userId found");
                 }
             }
             catch (Exception)
@@ -339,14 +331,13 @@ namespace WebApi.Controllers
                         totalPages,
                         previousPage,
                         nextPage
-
                     };
                     HttpContext.Response.Headers.Add("PagingHeaders", JsonConvert.SerializeObject(paginationMetadata));
                     return Ok(assignments);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No assignments for a user with this userId found");
                 }
             }
             catch (Exception)
@@ -363,16 +354,14 @@ namespace WebApi.Controllers
             try
             {
                 string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
-
                 List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllAssignmentsSolvedByUser(userId);
-
                 if (assignments.Count() > 0)
                 {
                     return Ok(assignments);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No assignments solved by a user with this userId found");
                 }
             }
             catch (Exception)
@@ -389,16 +378,14 @@ namespace WebApi.Controllers
             try
             {
                 string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
-
                 List<Assignment> assignments = AssignmentBusiness.GetAssignmentBusiness().GetAllActiveAssignmentsNotSolvedByUser(userId);
-
                 if (assignments.Count() > 0)
                 {
                     return Ok(assignments);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No assignments solved by a user with this userId found");
                 }
             }
             catch (Exception)
@@ -407,20 +394,20 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("assignment/{id}")]
+        [Route("assignment/{assignmentId}")]
         [HttpGet]
-        public IActionResult GetByAssignmentId(int id)
+        public IActionResult GetByAssignmentId(int assignmentId)
         {
             try
             {
-                Assignment assignment = AssignmentBusiness.GetAssignmentBusiness().GetByAssignmentId(id);
+                Assignment assignment = AssignmentBusiness.GetAssignmentBusiness().GetByAssignmentId(assignmentId);
                 if (!assignment.Equals(null))
                 {
                     return Ok(assignment);
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No assignment with this assignmentID was found");
                 }
             }
             catch (Exception)
@@ -441,16 +428,16 @@ namespace WebApi.Controllers
                 if (isAuthor)
                 {
                     int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().UpdateAssignment(assignment, assignmentId);
-                    if (noOfRowsAffected > 0)
+                    if (noOfRowsAffected == 1)
                     {
                         return Ok("Assignment updated successfully!");
                     }
                     else
                     {
-                        return NotFound($"Assignment with id {assignmentId} was not found");
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -468,16 +455,16 @@ namespace WebApi.Controllers
                 if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
                     int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().UpdateAssignment(assignment, assignmentId);
-                    if (noOfRowsAffected > 0)
+                    if (noOfRowsAffected == 1)
                     {
                         return Ok("Assignment updated successfully!");
                     }
                     else
                     {
-                        return NotFound($"Assignment with id {assignmentId} was not found");
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -499,14 +486,14 @@ namespace WebApi.Controllers
                     bool hasAcceptedSolution = AssignmentBusiness.GetAssignmentBusiness().CheckIfHasAcceptedSolution(assignmentId);
                     if (hasAcceptedSolution)
                     {
-                        return Ok();
+                        return Ok("This assignment has accepted solution");
                     }
                     else
                     {
-                        return NotFound();
+                        return NotFound("This assignment does not have accepted solution");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -526,16 +513,16 @@ namespace WebApi.Controllers
                 if (isAuthor)
                 {
                     int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeInactive(assignmentId);
-                    if (noOfRowsAffected > 0)
+                    if (noOfRowsAffected == 1)
                     {
-                        return Ok();
+                        return Ok("Assignment made inactive");
                     }
                     else
                     {
-                        return NotFound();
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -553,16 +540,16 @@ namespace WebApi.Controllers
                 if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
                     int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeInactive(assignmentId);
-                    if (noOfRowsAffected > 0)
+                    if (noOfRowsAffected == 1)
                     {
-                        return Ok();
+                        return Ok("Assignment made inactive");
                     }
                     else
                     {
-                        return NotFound();
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -570,19 +557,23 @@ namespace WebApi.Controllers
             }
         }
 
-        [Route("assignment-admin/active/{id}")]
+        [Route("assignment-admin/active/{assignmentId}")]
         [HttpPut]
-        public IActionResult MakActive(int id)
+        public IActionResult MakActive(int assignmentId)
         {
             try
             {
                 string userName = APIAuthenticationController.GetUserNameFromRequestHeader(Request.Headers);
                 if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeActive(id);
-                    if (noOfRowsAffected > 0)
+                    int noOfRowsAffected = AssignmentBusiness.GetAssignmentBusiness().MakeActive(assignmentId);
+                    if (noOfRowsAffected == 1)
                     {
-                        return Ok();
+                        return Ok("Assignment made active");
+                    }
+                    else
+                    {
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
                 return NotFound("Neither admin nor moderator!");
@@ -600,14 +591,13 @@ namespace WebApi.Controllers
             try
             {
                 List<string> levels = AssignmentBusiness.GetAssignmentBusiness().GetAllAcademicLevels();
-
                 if (levels.Count() > 0)
                 {
                     return Ok(levels);
                 }
                 else
                 {
-                    return NotFound("No Academic levels Found!");
+                    return NotFound("No academic levels found");
                 }
             }
             catch (Exception)
@@ -623,14 +613,13 @@ namespace WebApi.Controllers
             try
             {
                 List<string> subjects = AssignmentBusiness.GetAssignmentBusiness().GetAllSubjects();
-
                 if (subjects.Count() > 0)
                 {
                     return Ok(subjects);
                 }
                 else
                 {
-                    return NotFound("No Subjects Found!");
+                    return NotFound("No subjects found");
                 }
             }
             catch (Exception)
@@ -647,7 +636,6 @@ namespace WebApi.Controllers
             {
                 string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
                 int returnCode = AssignmentBusiness.GetAssignmentBusiness().CheckUserVsAssignment(assignmentId, userId);
-
                 if (new[] { 0, 1, 2 }.Contains(returnCode))
                 {
                     return Ok(returnCode);
@@ -676,7 +664,7 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No file found for an assignment with this assignmentId");
                 }
             }
             catch (Exception)

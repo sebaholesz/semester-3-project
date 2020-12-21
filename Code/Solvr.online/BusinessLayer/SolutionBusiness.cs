@@ -57,11 +57,11 @@ namespace BusinessLayer
             }
         }
 
-        public List<Solution> GetSolutionsByAssignmentId(int id)
+        public List<Solution> GetSolutionsByAssignmentId(int assignmentId)
         {
             try
             {
-                return _dbSolution.GetSolutionsByAssignmentId(id);
+                return _dbSolution.GetSolutionsByAssignmentId(assignmentId);
             }
             catch (Exception e)
             {
@@ -81,11 +81,11 @@ namespace BusinessLayer
             }
         }
 
-        public Solution GetBySolutionId(int id)
+        public Solution GetBySolutionId(int solutionId)
         {
             try
             {
-                return _dbSolution.GetBySolutionId(id);
+                return _dbSolution.GetBySolutionId(solutionId);
             }
             catch (Exception e)
             {
@@ -105,11 +105,11 @@ namespace BusinessLayer
             }
         }
         
-        public int DeleteSolution(int id)
+        public int DeleteSolution(int solutionId)
         {
             try
             {
-                return _dbSolution.DeleteSolution(id);
+                return _dbSolution.DeleteSolution(solutionId);
             }
             catch (Exception e)
             {
@@ -124,7 +124,7 @@ namespace BusinessLayer
                 bool successfulyAccepted = _dbSolution.ChooseSolution(solutionId) == 1;
                 if (successfulyAccepted)
                 {
-                    bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeAssignmentInactive(assignmentId) == 1;
+                    bool successfulyMadeInactive = AssignmentBusiness.GetAssignmentBusiness().MakeInactive(assignmentId) == 1;
                     Solution solution = GetBySolutionId(solutionId);
                     
                     Assignment assignment = AssignmentBusiness.GetAssignmentBusiness().GetByAssignmentId(assignmentId);
@@ -139,27 +139,6 @@ namespace BusinessLayer
                 throw e;
             }
         }
-
-        //public Solution GetSolutionByAssignmentId(int assignmentId)
-        //{
-        //    try
-        //    {
-        //        Solution solution = _dbSolution.GetSolutionByAssignmentId(assignmentId);
-
-        //        if (!solution.Equals(null))
-        //        {
-        //            return solution;
-        //        }
-        //        else
-        //        {
-        //            throw new Exception("Could not find your solution");
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
 
         public List<string> GetAllSolversForAssignment(int assignmentId)
         {

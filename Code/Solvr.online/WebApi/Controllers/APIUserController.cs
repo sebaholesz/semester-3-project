@@ -22,13 +22,13 @@ namespace WebApi.Controllers
             {
                 string userId = APIAuthenticationController.GetUserIdFromRequestHeader(Request.Headers);
                 int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(value, userId);
-                if (noOfRowsAffected > 0)
+                if (noOfRowsAffected == 1)
                 {
-                    return Ok();
+                    return Ok("Credits added succesfully");
                 }
                 else
                 {
-                    return NotFound();
+                    return Conflict("A conflict occured while we were processing your request");
                 }
             }
             catch (Exception)
@@ -38,9 +38,9 @@ namespace WebApi.Controllers
         }
 
         /*ONLY THE ADMIN*/
-        [Route("user-admin/add-credit/{id}")]
+        [Route("user-admin/add-credit/{userId}")]
         [HttpPut]
-        public IActionResult AdminAddCredits([FromBody] int value, string id)
+        public IActionResult AdminAddCredits([FromBody] int value, string userId)
         {
             try
             {
@@ -48,14 +48,17 @@ namespace WebApi.Controllers
                 
                 if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(value, id);
-                    if (noOfRowsAffected > 0)
+                    int noOfRowsAffected = UserBusiness.GetUserBusiness().IncreaseUserCredits(value, userId);
+                    if (noOfRowsAffected == 1)
                     {
-                        return Ok();
+                        return Ok("Credits added successfully");
+                    }
+                    else
+                    {
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return NotFound();
-                
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -64,9 +67,9 @@ namespace WebApi.Controllers
         }
 
         
-        [Route("user-admin/remove-credit/{id}")]
+        [Route("user-admin/remove-credit/{userId}")]
         [HttpPut]
-        public IActionResult RemoveCredits([FromBody] int value, string id)
+        public IActionResult RemoveCredits([FromBody] int value, string userId)
         {
             try
             {
@@ -74,14 +77,17 @@ namespace WebApi.Controllers
 
                 if (UserBusiness.GetUserBusiness().CheckIfAdminOrModerator(userName))
                 {
-                    int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(value, id);
-                    if (noOfRowsAffected > 0)
+                    int noOfRowsAffected = UserBusiness.GetUserBusiness().DecreaseUserCredits(value, userId);
+                    if (noOfRowsAffected == 1)
                     {
-                        return Ok();
+                        return Ok("Credits removed successfully");
+                    }
+                    else
+                    {
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return NotFound();
-                
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -105,7 +111,7 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound("No info about credits for a user with this userId found");
                 }
             }
             catch (Exception)
@@ -130,9 +136,12 @@ namespace WebApi.Controllers
                     {
                         return Ok(users);
                     }
+                    else
+                    {
+                        return NotFound("No users found");
+                    }
                 }
-                    return NotFound();
-                
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {

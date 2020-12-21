@@ -147,18 +147,6 @@ namespace BusinessLayer
                 throw e;
             }
         }
-       
-        //public List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId)
-        //{
-        //    try
-        //    {
-        //        return _dbAssignment.GetAllInactiveAssignmentsNotSolvedByUser(userId);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
         
         public List<Assignment> GetAllActiveAssignments()
         {
@@ -171,18 +159,6 @@ namespace BusinessLayer
                 throw e;
             }
         }
-        
-        //public List<Assignment> GetAllInactiveAssignments()
-        //{
-        //    try
-        //    {
-        //        return _dbAssignment.GetAllInactiveAssignments();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
         
         public int CreateAssignment(Assignment assignment)
         {
@@ -200,11 +176,11 @@ namespace BusinessLayer
             }
         }
         
-        public Assignment GetByAssignmentId(int id)
+        public Assignment GetByAssignmentId(int assignmentId)
         {
             try
             {
-                return _dbAssignment.GetByAssignmentId(id);
+                return _dbAssignment.GetByAssignmentId(assignmentId);
             }
             catch (Exception e)
             {
@@ -287,38 +263,14 @@ namespace BusinessLayer
                 throw e;
             }
         }
-
-        //public bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId)  
-        //{
-        //    try
-        //    {
-        //        return _dbAssignment.CheckIfUserAlreadySolvedThisAssignment(asignmentId, userId);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
-
-        //public bool CheckIfAssignmentIsStillActive(int assignmentId)
-        //{
-        //    try
-        //    {
-        //        return _dbAssignment.CheckIfAssignmentIsStillActive(assignmentId);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
        
-        public int UpdateAssignment(Assignment assignment, int id)
+        public int UpdateAssignment(Assignment assignment, int assignmentId)
         {
             try
             {
                 if (_assignmentValidation.CheckInput(assignment))
                 {
-                    return _dbAssignment.UpdateAssignment(assignment, id);
+                    return _dbAssignment.UpdateAssignment(assignment, assignmentId);
                 }
                 return -1;
             }
@@ -328,11 +280,11 @@ namespace BusinessLayer
             }
         }
 
-        public int MakeInactive(int id)
+        public int MakeInactive(int assignmentId)
         {
             try
             {
-                return _dbAssignment.MakeAssignmentInactive(id);
+                return _dbAssignment.MakeAssignmentInactive(assignmentId);
             }
             catch (Exception e)
             {
@@ -353,23 +305,11 @@ namespace BusinessLayer
             }        
         }
 
-        public int MakeAssignmentInactive(int id)
+        public int MakeActive(int assignmentId)
         {
             try
             {
-                return _dbAssignment.MakeAssignmentInactive(id);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }        
-        }
-
-        public int MakeActive(int id)
-        {
-            try
-            {
-                return _dbAssignment.MakeAssignmentActive(id);
+                return _dbAssignment.MakeAssignmentActive(assignmentId);
             }
             catch (Exception e)
             {

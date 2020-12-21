@@ -19,9 +19,5 @@ namespace DatabaseLayer.RepositoryLayer
         User GetUserById(string userId);
         string GetUserConcurrencyStamp(string userId);
         int GenerateNewConcurrencyStamp(string userId);
-        //int InsertUser(User user);
-        //int UpdateUser(User user, int id);
-        //User GetUserById(int id);
-        //int DeleteUser(int id);
     }
 }

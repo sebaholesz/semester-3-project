@@ -8,11 +8,11 @@ namespace DatabaseLayer.RepositoryLayer
     {
         int CreateSolution(Solution solution);
         List<Solution> GetAllSolutions();
-        List<Solution> GetSolutionsByAssignmentId(int id);
+        List<Solution> GetSolutionsByAssignmentId(int assignmentId);
         int GetSolutionsCountByAssignmentId(int assignmentId);
-        Solution GetBySolutionId(int id);
-        int UpdateSolution(Solution solution, int id);
-        int DeleteSolution(int id);
+        Solution GetBySolutionId(int solutionId);
+        int UpdateSolution(Solution solution, int solutionId);
+        int DeleteSolution(int solutionId);
         int ChooseSolution(int solutionId);
         List<string> GetAllSolversForAssignment(int assignmentId);
         Solution GetAcceptedSolutionForAssignment(int assignmentId);

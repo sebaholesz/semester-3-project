@@ -344,7 +344,6 @@ namespace webApi.Controllers
                                         ViewBag.User = asu.User;
 
                                         return View("DisplaySolution");
-                                            
                                     }
                                     else
                                     {

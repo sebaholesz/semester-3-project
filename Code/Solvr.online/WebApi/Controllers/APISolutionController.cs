@@ -16,7 +16,7 @@ namespace WebApi.Controllers
         
         [Route("solution")]
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetAllSolutions()
         {
             try
             {
@@ -29,8 +29,12 @@ namespace WebApi.Controllers
                     {
                         return Ok(solutions);
                     }
+                    else
+                    {
+                        return NotFound("No solutions found");
+                    }
                 }
-                return NotFound("No Solutions found!");
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -54,14 +58,14 @@ namespace WebApi.Controllers
 
                     if (queuePosition > 0)
                     {
-                        return StatusCode(201, queuePosition);
+                        return Ok(queuePosition);
                     }
                     else
                     {
-                        return StatusCode(409);
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -114,10 +118,10 @@ namespace WebApi.Controllers
                     }
                     else
                     {
-                        return NotFound("Solutions with that AssignmentID not found!");
+                        return NotFound("Solutions with that AssignmentID not found");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -144,10 +148,10 @@ namespace WebApi.Controllers
                     }
                     else
                     {
-                        return NotFound("Solutions with that AssignmentID not found!");
+                        return NotFound("Solutions with that AssignmentID not found");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -172,14 +176,14 @@ namespace WebApi.Controllers
                     bool response = SolutionBusiness.GetSolutionBusiness().ChooseSolution(solutionId, assignmentId);
                     if (response)
                     {
-                        return Ok();
+                        return Ok("Solution chosen succesfully");
                     }
                     else
                     {
-                        return StatusCode(409);
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -205,10 +209,10 @@ namespace WebApi.Controllers
                     }
                     else
                     {
-                        return NotFound("Solution was not found!");
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -230,14 +234,14 @@ namespace WebApi.Controllers
                     int noOfRowsAffected = SolutionBusiness.GetSolutionBusiness().DeleteSolution(solutionid);
                     if (noOfRowsAffected == 1)
                     {
-                        return Ok("Solution Deleted Successfuly!");
+                        return Ok("Solution Deleted Successfuly");
                     }
                     else
                     {
-                        return NotFound("Solution was not found!");
+                        return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {
@@ -247,7 +251,7 @@ namespace WebApi.Controllers
 
         /*ONLY SOLVER OR AUTHOR AFTER ACCEPTATION*/
         [Route("solution/get-file/{solutionId}")]
-        [HttpPost]
+        [HttpGet]
         public IActionResult GetFileFromDB(int solutionId)
         {
             try
@@ -262,10 +266,10 @@ namespace WebApi.Controllers
                     }
                     else
                     {
-                        return NotFound();
+                        return NotFound("File for this solution was not found");
                     }
                 }
-                return Unauthorized();
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {

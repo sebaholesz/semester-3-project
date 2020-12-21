@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                IActionResult response = Unauthorized();
+                IActionResult response = Unauthorized("You are not allowed to access this resource");
 
                 User loginUserFromDB = UserBusiness.GetUserBusiness().GetUserByUserName(loginUser.UserName);
                 loginUserFromDB.Password = loginUser.Password;
@@ -58,7 +58,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                IActionResult response = Unauthorized();
+                IActionResult response = Unauthorized("You are not allowed to access this resource");
 
                 User loginUserFromDB = UserBusiness.GetUserBusiness().GetUserByUserName(loginUser.UserName);
                 loginUserFromDB.Password = loginUser.Password;
@@ -81,7 +81,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult LoginWithIdAndSecurityStamp([FromBody] User loginUser)
         {
-            IActionResult response = Unauthorized();
+            IActionResult response = Unauthorized("You are not allowed to access this resource");
 
             if (UserBusiness.GetUserBusiness().AuthenticateUserWithIdAndSecurityStamp(loginUser))
             {

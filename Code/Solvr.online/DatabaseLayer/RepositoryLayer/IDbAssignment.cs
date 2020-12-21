@@ -6,7 +6,7 @@ namespace DatabaseLayer.RepositoryLayer
     public interface IDbAssignment
     {
         int CreateAssignment(Assignment assignment);
-        byte[] GetFileFromDB(int id);
+        byte[] GetFileFromDB(int assignmentId);
         List<Assignment> GetAllAssignments();
         int GetAssignmentsCount();
         int GetAssignmentsCountNotByUser(string userId);
@@ -18,15 +18,15 @@ namespace DatabaseLayer.RepositoryLayer
         List<Assignment> GetAllInactiveAssignmentsNotSolvedByUser(string userId);
         List<Assignment> GetAllActiveAssignments();
         List<Assignment> GetAllInactiveAssignments();
-        Assignment GetByAssignmentId(int id);
+        Assignment GetByAssignmentId(int assignmentId);
         bool CheckIfUserAlreadySolvedThisAssignment(int asignmentId, string userId);
         bool CheckIfAssignmentIsStillActive(int assignmentId);
-        int UpdateAssignment(Assignment assignment, int id);
-        int MakeAssignmentInactive(int id);
-        int MakeAssignmentActive(int id);
+        int UpdateAssignment(Assignment assignment, int assignmentId);
+        int MakeAssignmentInactive(int assignmentId);
+        int MakeAssignmentActive(int assignmentId);
         List<string> GetAllAcademicLevels();
         List<string> GetAllSubjects();
-        int DeleteAssignment(int id);
+        int DeleteAssignment(int assignmentId);
         List<Assignment> GetAllAssignmentsForUser(string userId);
         List<Assignment> GetAllAssignmentsSolvedByUser(string userId);
         string GetAuthorUserId(int assignmentId);

@@ -42,7 +42,6 @@ namespace DatabaseLayer.DataAccessLayer
                             userId = assignment.UserId
                         }, transaction: transaction);
 
-
                     if (lastUsedId > 0)
                     {
                         if (assignment.AssignmentFile != null)
@@ -63,7 +62,6 @@ namespace DatabaseLayer.DataAccessLayer
                                 _db.Close();
                                 return 0;
                             }
-
                         }
                         else
                         {
@@ -71,13 +69,11 @@ namespace DatabaseLayer.DataAccessLayer
                             _db.Close();
                             return lastUsedId;
                         }
-                        
                     }
 
                     transaction.Rollback();
                     _db.Close();
                     return 0;
-                    
                 }
                 catch (SqlException e)
                 {
@@ -88,11 +84,11 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public byte[] GetFileFromDB(int id)
+        public byte[] GetFileFromDB(int assignmentId)
         {
             try
             {
-                byte[] fileData = _db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = id });
+                byte[] fileData = _db.QueryFirst<byte[]>("select assignmentFile from [dbo].[AssignmentFile] where assignmentId=@assignmentId", new { assignmentId = assignmentId });
                 return fileData;
             }
             catch (Exception e)
@@ -296,11 +292,11 @@ namespace DatabaseLayer.DataAccessLayer
             }
         }
 
-        public int MakeAssignmentActive(int id)
+        public int MakeAssignmentActive(int assignmentId)
         {
             try
             {
-                return _db.Execute("Update [dbo].[Assignment] set isActive=1 where assignmentId=@assignmentId", new { assignmentId = id });
+                return _db.Execute("Update [dbo].[Assignment] set isActive=1 where assignmentId=@assignmentId", new { assignmentId = assignmentId });
             }
             catch (SqlException e)
             {

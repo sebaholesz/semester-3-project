@@ -462,7 +462,6 @@ namespace webApi.Controllers
                                     assignment.AcademicLevel = collection["AcademicLevel"];
                                     assignment.Subject = collection["Subject"];
 
-                                    //code from Stackoverflow
                                     String[] arr = collection["Timestamp"].ToString().Split('-');
                                     byte[] array = new byte[arr.Length];
                                     for (int i = 0; i < arr.Length; i++) array[i] = Convert.ToByte(arr[i], 16);

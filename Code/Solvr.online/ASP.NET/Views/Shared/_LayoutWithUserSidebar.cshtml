@@ -104,7 +104,7 @@
     @inject SignInManager<User> SignInManager
     @inject UserManager<User> UserManager
 
-    <div class="container-fluid">
+    <div class="container-fluid top-60">
         <div class="row">
             @if (SignInManager.IsSignedIn(User))
             {
@@ -194,7 +194,7 @@
                     </div>
                 </div>
             }
-            <div class="@columnLayoutClass mobile-full screen-1500-full-with-sidebar">
+            <div class="@columnLayoutClass mobile-full screen-1500-full-with-sidebar left-16">
                 @RenderBody()
             </div>
         </div>

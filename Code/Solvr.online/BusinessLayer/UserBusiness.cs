@@ -42,17 +42,6 @@ namespace BusinessLayer
             }
         }
 
-        //public string GetUserUsername(string userId)
-        //{
-        //    try
-        //    {
-        //        return _dbUser.GetUserUsername(userId);
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
 
         public User GetUserByUserName(string userUserName)
         {
@@ -119,18 +108,6 @@ namespace BusinessLayer
                 throw e;
             }
         }
-        
-        //public string GetUserName(string userId)
-        //{
-        //    try
-        //    {
-        //        return _dbUser.GetUserName(userId);
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        throw e;
-        //    }
-        //}
         
         public bool CheckIfAdminOrModerator(string userUsername)
         {
@@ -212,25 +189,5 @@ namespace BusinessLayer
                 throw e;
             }
         }
-
-        //public int InsertUser(User user)
-        //{
-        //    return dbUser.InsertUser(user);
-        //}
-
-        //public int UpdateUser(User user, int id)
-        //{
-        //    return dbUser.UpdateUser(user, id);
-        //}
-
-        //public User GetUserById(int id)
-        //{
-        //    return dbUser.GetUserById(id);
-        //}
-
-        //public int DeleteUser(int id)
-        //{
-        //    return dbUser.DeleteUser(id);
-        //}
     }
 }

@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_LayoutWithUserSidebar.cshtml";
     var assignment = ViewBag.Assignment;
     var solution = ViewBag.Solution;
+    var user = ViewBag.User;
 }
 
 @section Stylesheets {
@@ -36,17 +37,21 @@
                                 <div class="boxed-row d-flex align-items-center">
                                     @if (solution.Anonymous)
                                     {
-                                        <p>This solution was posted anonymously</p>
+                                        <p><strong>Author:</strong> @user.UserName</p>
                                     }
                                     else
                                     {
-                                        <p>This solution was posted publicly</p>
+                                        <span><strong>Author:</strong> @user.FirstName @user.LastName</span>
                                     }
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="boxed-row">
-                                    download file
+                                    <div>
+                                        <a href="/solution/download-file/@solution.SolutionId" class="btn btn-default-style">
+                                            Download Attachment
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
