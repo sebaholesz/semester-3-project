@@ -22,7 +22,7 @@ namespace DatabaseLayer.DataAccessLayer
         public int CreateAssignment(Assignment assignment)
         {
             _db.Open();
-            using (var transaction = _db.BeginTransaction(IsolationLevel.ReadCommitted))
+            using (var transaction = _db.BeginTransaction(IsolationLevel.ReadUncommitted))
             {
                 try
                 {
@@ -76,7 +76,9 @@ namespace DatabaseLayer.DataAccessLayer
                             }
                         }
                     }
-                    throw new Exception("SQL error occured");
+                    transaction.Rollback();
+                    _db.Close();
+                    return -1;
                 }
                 catch (SqlException e)
                 {

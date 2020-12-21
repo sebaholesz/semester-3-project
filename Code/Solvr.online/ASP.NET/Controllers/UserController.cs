@@ -76,8 +76,8 @@ namespace ASP.NET.Controllers
                     client.DefaultRequestHeaders.Authorization = AuthenticationController.GetAuthorizationHeaderAsync(_userManager, _signInManager, user).Result;
 
                     string urlAddCredits = _baseUrl + "user/add-credit";
-                    HttpResponseMessage urlAddCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(credit), Encoding.UTF8, "application/json")).Result;
-                    if (urlAddCreditsRM.IsSuccessStatusCode)
+                    HttpResponseMessage addCreditsRM = client.PutAsync(urlAddCredits, new StringContent(JsonConvert.SerializeObject(credit), Encoding.UTF8, "application/json")).Result;
+                    if (addCreditsRM.IsSuccessStatusCode)
                     {
                         TempData["Message"] = "Credits added successfuly!";
                         TempData["ResponseStyleClass"] = "text-success";
@@ -90,7 +90,7 @@ namespace ASP.NET.Controllers
                     }
                     else
                     {
-                        throw new Exception("Could not add credits to your account");
+                        throw new Exception(addCreditsRM.Content.ReadAsStringAsync().Result);
                     }
                 }
             }

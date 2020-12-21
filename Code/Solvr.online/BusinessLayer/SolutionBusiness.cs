@@ -30,14 +30,9 @@ namespace BusinessLayer
             {
                 if (_validateSolution.CheckInput(solution))
                 {
-                    int result = _dbSolution.CreateSolution(solution);
-                    if (result > 0)
-                    {
-                        int queueLengthAfter = GetSolutionsCountByAssignmentId(solution.AssignmentId);
-                        return queueLengthAfter;
-                    }
+                    return _dbSolution.CreateSolution(solution);
                 }
-                return -1;
+                return -2;
             }
             catch (Exception e)
             {

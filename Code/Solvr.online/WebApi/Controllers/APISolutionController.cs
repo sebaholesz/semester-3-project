@@ -45,7 +45,7 @@ namespace WebApi.Controllers
         /*ONLY NOT-SOLVERS AND NOT-AUTHORS*/
         [Route("solution")]
         [HttpPost]
-        public IActionResult Post([FromBody] Solution solution)
+        public IActionResult CreateSolution([FromBody] Solution solution)
         {
             try
             {
@@ -60,9 +60,13 @@ namespace WebApi.Controllers
                     {
                         return Ok(queuePosition);
                     }
-                    else
+                    else if (queuePosition == -1)
                     {
                         return Conflict("A conflict occured while we were processing your request");
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid data inserted");
                     }
                 }
                 return Unauthorized("You are not allowed to access this resource");
@@ -194,7 +198,7 @@ namespace WebApi.Controllers
         /*ONLY SOLVER*/
         [Route("solution/{solutionid}")]
         [HttpPut]
-        public IActionResult Put([FromBody] Solution solution, int solutionid)
+        public IActionResult UpdateSolution([FromBody] Solution solution, int solutionid)
         {
             try
             {
@@ -223,7 +227,7 @@ namespace WebApi.Controllers
         /*ONLY SOLVER*/
         [Route("solution/{solutionid}")]
         [HttpDelete]
-        public IActionResult Delete(int solutionid)
+        public IActionResult DeleteSolution(int solutionid)
         {
             try
             {

@@ -2,7 +2,7 @@
     string columnLayoutClass = "col-md-12";
     @if (SignInManager.IsSignedIn(User))
     {
-        columnLayoutClass = "col-md-10";
+        columnLayoutClass = "col-md-10 left-16";
     }
 }
 <!DOCTYPE html>
@@ -194,7 +194,7 @@
                     </div>
                 </div>
             }
-            <div class="@columnLayoutClass mobile-full screen-1500-full-with-sidebar left-16">
+            <div class="@columnLayoutClass mobile-full screen-1500-full-with-sidebar">
                 @RenderBody()
             </div>
         </div>

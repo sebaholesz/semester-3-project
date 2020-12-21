@@ -24,9 +24,10 @@ namespace DatabaseLayer.DataAccessLayer
             try
             {
                 int lastUsedId;
+                //this closing of the dbConnection is due to tests
                 _db.Close();
                 _db.Open();
-                using (var transaction = _db.BeginTransaction())
+                using (var transaction = _db.BeginTransaction(IsolationLevel.Serializable))
                 {
                     try
                     {
@@ -44,33 +45,28 @@ namespace DatabaseLayer.DataAccessLayer
                                                             anonymous = solution.Anonymous
                                                         }, transaction: transaction);
 
-
                         if (solution.SolutionFile != null)
                         {
                             _db.Execute(@"INSERT INTO [dbo].[SolutionFile](solutionId, solutionFile) values (@solutionId, @solutionFile)",
                                 new { solutionId = lastUsedId, solutionFile = solution.SolutionFile }, transaction: transaction);
                         }
 
-
-
-
-                        //doesn't actually check if the input was successful
                         if (lastUsedId > 0)
                         {
                             int noOfSolutions = _db.QueryFirst<int>("SELECT COUNT(*) FROM [dbo].[Solution] where assignmentId=@assignmentId", new { assignmentId = solution.AssignmentId }, transaction: transaction);
                             //check if solution is the first in the queue
-                            if (noOfSolutions==1)
+                            if (noOfSolutions == 1)
                             {
                                 transaction.Commit();
                                 _db.Close();
-                                return lastUsedId;
+                                return 1;
                             }
                             
                             if (noOfSolutions>1)
                             {
-                                Solution lastPostedSolution = _db.QueryFirst<Solution>("SELECT * FROM [dbo].[Solution] where assignmentId=@assignmentId order by timestamp DESC", new { assignmentId = solution.AssignmentId }, transaction: transaction);
+                                int lastPostedSolutionId = _db.QueryFirst<int>("SELECT [solutionId] FROM [dbo].[Solution] where assignmentId=@assignmentId order by timestamp DESC", new { assignmentId = solution.AssignmentId }, transaction: transaction);
                                 //checks if the Id put into the DB really is last
-                                if (lastPostedSolution.SolutionId == lastUsedId)
+                                if (lastPostedSolutionId == lastUsedId)
                                 {
                                     bool isAssignmentActive = _db.QueryFirst<bool>("Select [isActive] from [dbo].[Assignment] where assignmentId=@assignmentId", new { assignmentId = solution.AssignmentId }, transaction: transaction);
                                     //check if assignment of the solution is active
@@ -78,16 +74,14 @@ namespace DatabaseLayer.DataAccessLayer
                                     {
                                         transaction.Commit();
                                         _db.Close();
-                                        return lastUsedId;
+                                        return noOfSolutions;
                                     }
                                 }
                             }
                         }
-                            
                         transaction.Rollback();
                         _db.Close();
                         return -1;
-
                     }
                     catch (SqlException e)
                     {

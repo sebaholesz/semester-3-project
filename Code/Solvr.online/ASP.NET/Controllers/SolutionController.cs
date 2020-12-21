@@ -179,7 +179,7 @@ namespace webApi.Controllers
                                     }
                                     else
                                     {
-                                        throw new Exception(createSolutionRM.ReasonPhrase);
+                                        throw new Exception(createSolutionRM.Content.ReadAsStringAsync().Result);
                                     }
                                 case 1:
                                     return Redirect("/assignment/update-assignment/" + assignmentId);
@@ -347,7 +347,7 @@ namespace webApi.Controllers
                                     }
                                     else
                                     {
-                                        throw new Exception(getCompleteAssignmentDataWithSolutionRM.ReasonPhrase);
+                                        throw new Exception(getCompleteAssignmentDataWithSolutionRM.Content.ReadAsStringAsync().Result);
                                     }
                                 }
                                 else

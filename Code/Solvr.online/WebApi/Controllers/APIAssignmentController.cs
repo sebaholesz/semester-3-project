@@ -27,9 +27,13 @@ namespace WebApi.Controllers
                 {
                     return Ok(insertedAssignmentId);
                 }
-                else
+                else if (insertedAssignmentId == -1)
                 {
                     return Conflict("A conflict occured while we were processing your request");
+                }
+                else
+                {
+                    return BadRequest("Invalid data inserted");
                 }
             }
             catch (Exception)
@@ -418,7 +422,7 @@ namespace WebApi.Controllers
         /*ONLY BY AUTHOR*/
         [Route("assignment/{assignmentId}")]
         [HttpPut]
-        public IActionResult Put([FromBody] Assignment assignment, int assignmentId)
+        public IActionResult UpdateAssignment([FromBody] Assignment assignment, int assignmentId)
         {
             try
             {
@@ -431,9 +435,13 @@ namespace WebApi.Controllers
                     {
                         return Ok("Assignment updated successfully!");
                     }
-                    else
+                    else if (noOfRowsAffected == -1)
                     {
                         return Conflict("A conflict occured while we were processing your request");
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid data inserted");
                     }
                 }
                 return Unauthorized("You are not allowed to access this resource");
@@ -558,7 +566,7 @@ namespace WebApi.Controllers
 
         [Route("assignment-admin/active/{assignmentId}")]
         [HttpPut]
-        public IActionResult MakActive(int assignmentId)
+        public IActionResult MakActiveByAdmin(int assignmentId)
         {
             try
             {
@@ -575,7 +583,7 @@ namespace WebApi.Controllers
                         return Conflict("A conflict occured while we were processing your request");
                     }
                 }
-                return NotFound("Neither admin nor moderator!");
+                return Unauthorized("You are not allowed to access this resource");
             }
             catch (Exception)
             {

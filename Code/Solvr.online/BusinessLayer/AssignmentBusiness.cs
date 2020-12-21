@@ -168,7 +168,7 @@ namespace BusinessLayer
                 {                    
                     return _dbAssignment.CreateAssignment(assignment);
                 }
-                return -1;
+                return -2;
             }
             catch (Exception e)
             {
@@ -272,7 +272,7 @@ namespace BusinessLayer
                 {
                     return _dbAssignment.UpdateAssignment(assignment, assignmentId);
                 }
-                return -1;
+                return -2;
             }
             catch (Exception e)
             {

@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MimeDetective;
 using ASP.NET.Controllers;
+using System.Net;
 
 namespace webApi.Controllers
 {
@@ -136,7 +137,7 @@ namespace webApi.Controllers
                             }
                             else
                             {
-                                throw new Exception(createAssignmentRM.ReasonPhrase);
+                                throw new Exception(createAssignmentRM.Content.ReadAsStringAsync().Result);
                             }
                         }
                         else
@@ -488,7 +489,7 @@ namespace webApi.Controllers
                                     }
                                     else
                                     {
-                                        throw new Exception(updateAssignmentRM.ReasonPhrase);
+                                        throw new Exception(updateAssignmentRM.Content.ReadAsStringAsync().Result);
                                     }
                                 case 2:
                                     return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
@@ -573,7 +574,7 @@ namespace webApi.Controllers
                                 }
                                 else
                                 {
-                                    throw new Exception(makeInactiveRM.ReasonPhrase);
+                                    throw new Exception(makeInactiveRM.Content.ReadAsStringAsync().Result);
                                 }
                             case 2:
                                 return Redirect("/solution/my-solution-for-assignment/" + assignmentId);
